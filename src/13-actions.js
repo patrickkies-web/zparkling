@@ -59,10 +59,10 @@ A.loadDemo = function () { demoEvent(); S.demo = true; save(); UI.confirm = null
 A.setupBack = function () { if (UI.step > 1) { UI.step -= 1; UI.setupErr = ''; render(); } else { S.event = null; go('welcome'); } };
 A.setupNext = function () {
   if (UI.step === 2 && !E().focus.length) { UI.setupErr = 'Leg mindestens eine Person an, die gefeiert wird.'; render(); return; }
-  if (UI.step >= 2 && !String(E().name || '').trim()) E().name = autoEventName();
+  if (UI.step >= 2 && !String(E().name || '').trim()) { E().name = autoEventName(); E().nameAuto = true; }
   UI.setupErr = ''; UI.step = Math.min(3, (UI.step || 1) + 1); go('setup');
 };
-A.setupFinish = function () { if (!String(E().name || '').trim()) E().name = autoEventName(); UI.homeIn = true; go('home'); };
+A.setupFinish = function () { if (!String(E().name || '').trim()) { E().name = autoEventName(); E().nameAuto = true; } UI.homeIn = true; go('home'); };
 A.setTypeOpen = function () { UI.setTypeOpen = !UI.setTypeOpen; render(); };
 A.setPilotOpen = function () { UI.setPilotOpen = !UI.setPilotOpen; render(); };
 A.setEventAnlass = function (d) {
@@ -71,6 +71,8 @@ A.setEventAnlass = function (d) {
   e.anlass = d.v;
   var t = evType();
   e.focus.forEach(function (p) { p.anlass = t.person; if (FA[t.person].kind === 'kranz') p.count = p.count || FA[t.person].count; if (p.av) avTheme(p.av, p.anlass); });
+  /* a name the app gave follows the occasion: no Kranz-Abend at a JGA */
+  if (e.nameAuto || !String(e.name || '').trim()) { e.name = autoEventName(); e.nameAuto = true; }
   if (!S.run || S.run.finished) S.runCfg = null;
   commit();
 };
@@ -991,7 +993,7 @@ function setBind(b, v) {
   if (b === 'pass.date') { UI.passDate = v; dateTyped('passDate'); return; }
   if (b === 'pass.move') { UI.passMoveDate = v; dateTyped('passMove'); return; }
   var parts = b.split('.');
-  if (b === 'event.name') { E().name = v; save(); return; }
+  if (b === 'event.name') { E().name = v; E().nameAuto = !String(v).trim(); save(); return; }
   if (b === 'event.target') { E().target = Number(v); save(); showText('targetShow', v + ' % · etwa ' + Math.round(E().max * Number(v) / 100)); return; }
   if (parts[0] === 'draft') { UI.draft[parts[1]] = v; return; }
   if (b === 'liveVal') {

@@ -894,7 +894,7 @@ function demoEvent() {
   S = fresh();
   var e = newEvent();
   e.anlass = 'socken';
-  e.name = 'Kranz-Abend Jonas & Mia';
+  e.name = 'Kranz-Abend Jonas & Mia'; e.nameAuto = true;
   var j = avDefault(); j.skin = '#C68A5E'; j.hair = 'wuschel'; j.hairColor = '#1E1611'; j.eyes = 'zwinker'; j.mouth = 'grinsen'; j.beard = 'dreitage'; j.hat = 'partyhut'; j.neck = 'sockenkranz'; j.outfit = 'trikot'; j.outfitColor = '#FF7A45'; j.bg = '#FFC940'; j.pat = 'konfetti';
   var m = avDefault(); m.skin = '#FBE0CB'; m.hair = 'dutt'; m.hairColor = '#C2552B'; m.eyes = 'gross'; m.mouth = 'lachen'; m.glasses = 'rund'; m.hat = 'schachteln'; m.neck = 'schachtelkranz'; m.outfit = 'ringel'; m.outfitColor = '#5B8CFF'; m.bg = '#48D9A6'; m.pat = 'punkte'; m.ex = { rouge: true, sommersprossen: true, ohrringe: true };
   e.focus = [
