@@ -7,7 +7,7 @@
    Now and then, instead, the Joker: it can free the birthday
    person from one drink, if its owner says yes.
    ========================================================= */
-var GK_MAX = 2, GK_UMF_CAP = 8, GK_DRAW_SECS = 45, GK_JOKER_P = 0.14;
+var GK_MAX = 2, GK_UMF_CAP = 8, GK_DRAW_SECS = 45, GK_JOKER_P = 0.14, GK_WEITER_P = 0.12, GK_REGEL_P = 0.1;
 var GK_KINDS = ['portrait', 'wenn', 'spruch', 'umfrage'];
 /* the timeline of the opening, in ms after the pack appears */
 var GK_T = { charge: 700, tear: 3000, rise: 3120, flip: 3740, flash2: 4180, stamp: 4380, panel: 4820, focus: 5150 };
@@ -24,7 +24,10 @@ GQ_STYLE.spruch = { c: '#FFA9A0', e: 'quote', stamp: 'Zitiert' };
 GQ_STYLE.umfrage = { c: '#6FD3FF', e: 'podium', stamp: 'Gezählt' };
 GQ_STYLE.joker = { c: '#FF6FD8', e: 'joker', stamp: 'Joker' };
 QK_SHORT.portrait = 'Porträt'; QK_SHORT.wenn = 'Wäre'; QK_SHORT.spruch = 'Spruch'; QK_SHORT.umfrage = 'Umfrage'; QK_SHORT.joker = 'Joker';
-function isCardType(t) { return GK_KINDS.indexOf(t) >= 0 || t === 'joker'; }
+/* the cards a guest keeps for the party (Joker, Weiterleiten, Regel): no content, they get redeemed */
+function gkSpecial(t) { return t === 'joker' || t === 'weiter' || t === 'regel'; }
+function gkBigRar(id) { return id === 'leg' || id === 'jok' || id === 'wei' || id === 'reg'; }
+function isCardType(t) { return GK_KINDS.indexOf(t) >= 0 || gkSpecial(t); }
 /* the kinds a guest picks directly in the form (without the bonus cards) */
 function formTypes() { return QTYPES.filter(function (t) { return t[3] !== 'karte'; }); }
 
@@ -91,8 +94,17 @@ function gkJokerOk() {
   return gkSubs().filter(function (q) { return q.type === 'joker'; }).length < gkJokerCap();
 }
 /* the app picks the kind the guests sent least, ties by chance */
+/* Weiterleiten and Regel: one of each per guest, a few per party */
+function gkPartyCap(t) { var n = E() ? E().focus.length : 1; return t === 'weiter' ? Math.max(3, n * 2 + 1) : Math.max(2, n + 1); }
+function gkPartyOk(t) {
+  if (gPass()[t] || (gForm().cards || []).some(function (c) { return c.type === t; })) return false;
+  return gkSubs().filter(function (q) { return q.type === t; }).length < gkPartyCap(t);
+}
 function gkPickType() {
-  if (gkJokerOk() && demoTypeOk('joker') && Math.random() < GK_JOKER_P) return { type: 'joker', n: -1 };
+  var r = Math.random();
+  if (gkJokerOk() && demoTypeOk('joker') && r < GK_JOKER_P) return { type: 'joker', n: -1 };
+  if (r >= GK_JOKER_P && r < GK_JOKER_P + GK_WEITER_P && gkPartyOk('weiter') && demoTypeOk('weiter')) return { type: 'weiter', n: -1 };
+  if (r >= GK_JOKER_P + GK_WEITER_P && r < GK_JOKER_P + GK_WEITER_P + GK_REGEL_P && gkPartyOk('regel') && demoTypeOk('regel')) return { type: 'regel', n: -1 };
   var kinds = GK_KINDS.filter(demoTypeOk), c = gkCounts(), mn = Math.min.apply(null, kinds.map(function (k) { return c[k]; }));
   return { type: pick(kinds.filter(function (k) { return c[k] === mn; })), n: mn };
 }
@@ -169,13 +181,15 @@ function drawSvg(str, size, cls) {
 
 /* ---------- the card's words ---------- */
 function gkUnit() { try { return E() ? U() : 'Pinnchen'; } catch (e) { return 'Pinnchen'; } }
-function gkKicker(k) { return { portrait: 'Porträt', wenn: 'Wenn … wäre', spruch: 'Lieblingsspruch', umfrage: 'Top-Antworten', joker: 'Joker' }[k.type]; }
+function gkKicker(k) { return { portrait: 'Porträt', wenn: 'Wenn … wäre', spruch: 'Lieblingsspruch', umfrage: 'Top-Antworten', joker: 'Joker', weiter: 'Weiterleiten', regel: 'Regel-Karte' }[k.type]; }
 function gkTitle(k) {
   var N = gkName(k.forId), c = wennCat(k.cat);
   if (k.type === 'portrait') return 'Mal ' + N + '!';
   if (k.type === 'wenn') return 'Wenn ' + N + ' ' + (c ? c[1] : 'ein Tier') + ' wäre …';
   if (k.type === 'spruch') return 'Was sagt ' + N + ' ständig?';
   if (k.type === 'joker') return 'Der Joker!';
+  if (k.type === 'weiter') return 'Weiterleiten!';
+  if (k.type === 'regel') return 'Die Regel-Karte!';
   return umfrageText(k.qk, N);
 }
 function gkSub(k) {
@@ -184,11 +198,13 @@ function gkSub(k) {
   if (k.type === 'wenn') return (c ? c[2] : 'Welches Tier') + ' wäre ' + N + '? Ein Wort reicht.';
   if (k.type === 'spruch') return 'Den einen Spruch, genau so, wie ' + N + ' ihn sagt.';
   if (k.type === 'joker') return 'Wer heute verliert, darf dich fragen, ob du ihn einlöst. Dann fällt ein ' + gkUnit() + ' weg. Du entscheidest.';
+  if (k.type === 'weiter') return 'Wählt dich jemand als Trinkbuddy, gibst du den Job an jemand anderen weiter. Einmal einsetzbar.';
+  if (k.type === 'regel') return 'Auf der Party stellst du eine Regel auf. Die Hauptpersonen halten sie fünf Minuten ein. Wer sie bricht, trinkt ein ' + gkUnit() + '.';
   return 'Ein Wort, das Erste, was dir einfällt. Die häufigsten Antworten landen auf der Tafel.';
 }
 function gkValid(k) {
   if (!k) return false;
-  if (k.type === 'joker') return true;
+  if (gkSpecial(k.type)) return true;
   if (k.type === 'portrait') return k.phase !== 'ready' && gkTotalPts(k.strokes) >= 10;
   var t = String(k.text || '').trim();
   return k.type === 'spruch' ? t.length >= 3 : t.length >= 2;
@@ -209,17 +225,17 @@ A.gDraw = function () {
 };
 function gkOpen() {
   if (UI.gk || !gkCanDraw()) return;
-  var p = gkPickType(), rar = p.type === 'joker' ? gkRar('jok') : gkRarity(p.n);
+  var p = gkPickType(), rar = p.type === 'joker' ? gkRar('jok') : p.type === 'weiter' ? gkRar('wei') : p.type === 'regel' ? gkRar('reg') : gkRarity(p.n);
   var k = { type: p.type, forId: '', rar: rar.id, pts: rar.pts, text: '', strokes: [], phase: 'ready', pen: 0, played: false, no: GK_MAX - gkLeft() + 1, key: 'c' + Date.now().toString(36) + Math.floor(Math.random() * 1000) };
   if (p.type === 'umfrage') { var u = gkUmfragePick(); k.forId = u.forId; k.qk = u.qk; }
-  else if (p.type !== 'joker') k.forId = gkForId(p.type);
+  else if (!gkSpecial(p.type)) k.forId = gkForId(p.type);
   if (p.type === 'wenn') k.cat = gkWennCat(k.forId)[0];
   UI.gk = k;
   var tok = UI.gkTok = (UI.gkTok || 0) + 1, live = function () { return UI.gkTok === tok && UI.gk === k; };
   gkMount(k);
   gkFxStart(k); gkSndOpening(k);
   setTimeout(function () { if (live()) gkVibeRamp(GK_T.tear - GK_T.charge - 120); }, GK_T.charge);
-  setTimeout(function () { if (live()) gVibe(k.rar === 'leg' || k.rar === 'jok' ? [180, 40, 90] : [150]); }, GK_T.tear);
+  setTimeout(function () { if (live()) gVibe(gkBigRar(k.rar) ? [180, 40, 90] : [150]); }, GK_T.tear);
   setTimeout(function () { if (live()) gkRevealFx(k); }, GK_T.flash2);
   setTimeout(function () { if (live()) gVibe([50]); }, GK_T.stamp);
   setTimeout(function () { if (live()) gkFocus(); }, GK_T.focus);
@@ -255,8 +271,8 @@ function gkVibeRamp(ms) {
 function gkRevealFx(k) {
   if (k.fxDone) return;
   k.fxDone = true;
-  gVibe(k.rar === 'leg' || k.rar === 'jok' ? [40, 40, 40, 40, 160] : [30, 40, 70]);
-  if (k.rar !== 'sel') gkConfetti(k.rar === 'leg' || k.rar === 'jok' ? 70 : 40);
+  gVibe(gkBigRar(k.rar) ? [40, 40, 40, 40, 160] : [30, 40, 70]);
+  if (k.rar !== 'sel') gkConfetti(gkBigRar(k.rar) ? 70 : 40);
 }
 /* confetti inside the card overlay, so it falls in front of the card */
 function gkConfetti(n) {
@@ -465,7 +481,7 @@ function gkCardHtml(k, rar, st) {
     '<div class="gk-top"><span class="gk-rar">' + esc(rar.name) + '</span><span class="gk-no">Karte ' + k.no + ' von ' + GK_MAX + '</span></div>' +
     '<div class="gk-art"><span class="gk-art-ring"></span><span class="gk-art-c">' + emb(st.e, 92) + '</span></div>' +
     '<div class="gk-txt"><small>' + esc(gkKicker(k)) + '</small><b' + (t.length > 34 ? ' class="long"' : '') + '>' + esc(t) + '</b><span>' + esc(gkSub(k)) + '</span></div>' +
-    '<div class="gk-foot"><span>+' + k.pts + ' Punkte</span><span>' + esc(k.type === 'joker' ? 'Für ' + gkName('') : gkName(k.forId)) + '</span></div></div>' +
+    '<div class="gk-foot"><span>+' + k.pts + ' Punkte</span><span>' + esc(gkSpecial(k.type) ? 'Für ' + gkName('') : gkName(k.forId)) + '</span></div></div>' +
     '<span class="gk-holo" aria-hidden="true"></span><span class="gk-stamp" aria-hidden="true">' + esc(rar.name) + '</span></div>' +
     '</div></div></div>';
 }
@@ -486,6 +502,8 @@ function gkPanelHtml(k) {
     return '<label class="field" for="gkin">Deine Bedingung (freiwillig)<input id="gkin" class="input gk-in jk" type="text" maxlength="60" autocomplete="off" autocapitalize="sentences" enterkeyhint="done" data-bind="gk.text" value="' + esc(k.text) + '" placeholder="z. B. Nur gegen eine Umarmung"></label>' +
       '<p class="gk-hint">Der Spielleiter sieht, dass du den Joker hast. Wer verliert, fragt dich, ob du ihn einlöst. Sagst du ja, fällt ein ' + esc(gkUnit()) + ' weg.</p>' + go('Joker einstecken · +' + k.pts) + later;
   }
+  if (k.type === 'weiter') return '<p class="gk-hint">Silber, und nur ganz wenige haben sie. Wählt dich eine Hauptperson als Trinkbuddy, zeigst du die Karte und suchst aus, wer stattdessen mittrinkt.</p>' + go('Karte einstecken · +' + k.pts) + later;
+  if (k.type === 'regel') return '<p class="gk-hint">Die Regel denkst du dir auf der Party aus, zum Beispiel: keine Hände benutzen oder nicht „Ja“ sagen. Der Spielleiter startet dann fünf Minuten. Bricht jemand im Mittelpunkt sie, trinkt er ein ' + esc(gkUnit()) + '.</p>' + go('Karte einstecken · +' + k.pts) + later;
   var long = k.type === 'spruch', c = wennCat(k.cat), uq = umfrageQ(k.qk);
   var ph = k.type === 'wenn' ? (c ? c[3] : '') : k.type === 'umfrage' ? (uq ? uq[2] : '') : 'z. B. Das kriegen wir schon hin!';
   var label = k.type === 'wenn' ? (c ? c[2] : 'Dein Wort') + '?' : k.type === 'umfrage' ? 'Deine Antwort, ein Wort' : 'Der Spruch';
@@ -526,7 +544,7 @@ function gkMiniHtml() {
   var just = UI.gkJust;
   return '<span class="eyebrow mt22 block">Deine Bonuskarten · ' + cards.length + ' von ' + GK_MAX + '</span>' + cards.map(function (c) {
     var rar = gkRar(c.rar), st = GQ_STYLE[c.type], N = gkName(c.forId), wc = wennCat(c.cat);
-    var line = c.type === 'joker' ? (c.text ? 'Dein Joker. Bedingung: ' + c.text : 'Dein Joker, ohne Bedingung') : c.type === 'portrait' ? 'Porträt von ' + N : c.type === 'wenn' ? 'Wenn ' + N + ' ' + (wc ? wc[1] : '') + ' wäre: ' + c.text : c.type === 'spruch' ? '„' + c.text + '“' : umfrageText(c.qk, N) + ' ' + c.text;
+    var line = c.type === 'joker' ? (c.text ? 'Dein Joker. Bedingung: ' + c.text : 'Dein Joker, ohne Bedingung') : c.type === 'weiter' ? 'Deine Weiterleiten-Karte, für den Fall, dass du Trinkbuddy wirst' : c.type === 'regel' ? 'Deine Regel-Karte, einlösbar auf der Party' : c.type === 'portrait' ? 'Porträt von ' + N : c.type === 'wenn' ? 'Wenn ' + N + ' ' + (wc ? wc[1] : '') + ' wäre: ' + c.text : c.type === 'spruch' ? '„' + c.text + '“' : umfrageText(c.qk, N) + ' ' + c.text;
     return '<div class="gk-mini r-' + rar.id + (just === c.key ? ' just' : '') + '" id="gkm-' + c.key + '" style="--rc:' + rar.c + ';--rc2:' + rar.c2 + ';--tc:' + st.c + '"><span class="gk-mini-art">' + (c.type === 'portrait' ? drawSvg(c.draw, 50) : emb(st.e, 34)) + '</span><span class="stack grow" style="gap:2px;min-width:0"><small>Bonuskarte · ' + esc(rar.name) + '</small><b>' + esc(qTypeLabel(c.type)) + '</b><span class="gk-mini-t">' + esc(line) + '</span></span><span class="gk-mini-p">+' + c.pts + '</span></div>';
   }).join('');
 }

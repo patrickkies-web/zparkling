@@ -328,6 +328,8 @@ function startRun() {
     used: { games: [], est: [], mc: [], wwe: [], partner: [] }, link: !!c.link, lastAction: '', kinds: [], lastCats: [], planSteps: cfgSteps(), decks: {}, plan: null, planPos: 0, dice: c.dice || 'app'
   };
   if (c.variant === 'abend') { r.acc = { items: [], swaps: 0 }; }
+  /* Trinkbuddys (on unless switched off in the setup) and the rules of the Regel-Karte */
+  r.bud = { on: c.buddy !== false, at: 0, map: {}, prev: {}, next: {}, fwd: {}, due: false, n: 0 }; r.rules = [];
   /* Junggesellenabschied: missions out in the city (or in the bar), crew jobs in between */
   if (evType().id === 'jga') { r.jga = { mode: c.jgaMode === 'drinnen' ? 'drinnen' : 'stadt' }; r.jcrew = { n: 0, last: -9, used: [], by: {} }; }
   var mk = function (ids, total) { return { id: uid('t'), ids: ids, total: total, pos: 0, done: false, checks: [], accIdx: 0, accDone: 0 }; };
@@ -950,6 +952,8 @@ function demoEvent() {
     { author: 'Tim', type: 'umfrage', forId: J, qk: 'dabei', text: 'Ladekabel', rar: 'sel' },
     { author: 'Max', type: 'joker', forId: '', text: 'Nur gegen eine Umarmung', rar: 'jok' },
     { author: 'Sara', type: 'joker', forId: '', text: '', rar: 'jok' },
+    { author: 'Lea', type: 'weiter', forId: '', text: '', rar: 'wei' },
+    { author: 'Tom', type: 'regel', forId: '', text: '', rar: 'reg' },
     { author: 'Nina', type: 'portrait', forId: Mi, text: 'Porträt', draw: demoDoodle(19, 3), rar: 'epi', st: 'offen' },
     { author: 'Tim', type: 'spruch', forId: Mi, text: 'Wer hat Hunger?', rar: 'epi', st: 'offen' }
   ]);

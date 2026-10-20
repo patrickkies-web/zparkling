@@ -50,7 +50,8 @@ const holes = s => /\{[A-Za-z]+\}|undefined|NaN/.test(s);
   ok(free.length === 2 && free.indexOf('Max') >= 0 && free.indexOf('Sara') >= 0, 'Demo: Max and Sara hold a Joker');
   c.go('questions');
   const h = c.V.questions();
-  ok(/Joker im Umlauf/.test(h) && /Nur gegen eine Umarmung/.test(h), 'The guests page lists the Jokers with their conditions');
+  c.A.openCards({ from: 'questions' }); const hc = c.V.cards();
+  ok(/Karten im Umlauf/.test(h) && /Max/.test(h) && /Der Joker|Joker/.test(hc) && /Nur gegen eine Umarmung/.test(hc), 'The guests page shows the cards, the card area the Jokers with their conditions');
   c.A.openRun(); c.A.startRun();
   ok(/Joker im Umlauf/.test(c.V.run()) && /Max/.test(c.V.run()), 'The run screen shows who holds one');
 }

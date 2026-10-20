@@ -2167,6 +2167,154 @@ body.desk .foot:not(.tabfoot) > * { width: 100%; max-width: 560px; box-sizing: b
 body.desk .toast { bottom: 40px; }
 @media (hover: hover) { body.desk .gtile:hover, body.desk .stat:hover { filter: brightness(1.05); } }
 @media (prefers-reduced-motion: reduce) { .hin .dk-a > *, .hin .dk-b > * { animation: none; } }
+
+/* ---------- v37: Weiterleiten (silver) and the Regel-Karte in the pack ---------- */
+.r-wei .gk-rays { background: repeating-conic-gradient(from 0deg, #FFFFFF 0deg 5deg, transparent 5deg 16deg, #AEB9C6 16deg 21deg, transparent 21deg 32deg); opacity: .75; }
+.r-wei .gk-front { background: linear-gradient(120deg, #FDFEFF 0%, #C6CFDA 16%, #8C98A8 32%, #F2F5F9 48%, #9AA6B5 64%, #FFFFFF 80%, #B4BEC9 100%); background-size: 260% 260%; animation: gkrainbow 3.2s ease-in-out infinite alternate; }
+.r-wei .gk-glow { width: 440px; height: 440px; margin: -220px 0 0 -220px; }
+.r-reg .gk-rays { background: repeating-conic-gradient(from 0deg, #FF7A45 0deg 6deg, transparent 6deg 18deg, #FFC940 18deg 24deg, transparent 24deg 36deg); opacity: .7; }
+.r-reg .gk-front { background: linear-gradient(135deg, #FF7A45, #FFC940, #FF5A5A, #FF7A45); background-size: 300% 300%; animation: gkrainbow 4s ease-in-out infinite alternate; }
+.r-reg .gk-glow { width: 440px; height: 440px; margin: -220px 0 0 -220px; }
+/* ---------- Trinkbuddys ---------- */
+.bd-hero { position: relative; text-align: center; padding: 22px 18px 20px; border-radius: 28px; background: radial-gradient(120% 90% at 50% 0%, rgba(255,201,64,.32), transparent 65%), linear-gradient(160deg, #3A2E7A, #241F4D); border: 1px solid #4A3F8F; overflow: hidden; }
+.bd-hero h1 { margin: 6px 0 0; font: 900 27px/1.1 var(--display); letter-spacing: -0.02em; color: var(--white); text-wrap: balance; }
+.bd-hero p { margin: 8px auto 0; max-width: 32em; font-size: 15px; line-height: 1.45; color: var(--muted); font-weight: 600; }
+.bd-glasses { display: inline-flex; animation: bdclink 1.1s cubic-bezier(.3,1.6,.5,1) both .1s; }
+@keyframes bdclink { 0% { transform: scale(.4) rotate(-20deg); opacity: 0; } 55% { transform: scale(1.12) rotate(6deg); opacity: 1; } 100% { transform: none; } }
+.bd-rows { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.bd-row { padding: 14px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+.bd-row.done { border-color: rgba(72,217,166,.5); }
+.bd-who { display: flex; align-items: center; gap: 12px; }
+.bd-who b { font-size: 17px; color: var(--white); }
+.bd-who span span { font-size: 13px; color: var(--muted); }
+.bd-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.bd-chip { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px 0 6px; border-radius: 999px; border: 2px solid var(--line-2); background: var(--surface-2); color: var(--text); font: 700 15px var(--body); }
+.bd-chip.add { padding-left: 12px; border-style: dashed; color: var(--muted); }
+.bd-chip:active { transform: scale(.97); }
+.bd-type { display: flex; gap: 8px; width: 100%; }
+.bd-type .input { flex: 1; min-width: 0; }
+.bd-type .btn-dark { flex: 0 0 auto; padding: 0 16px; height: 52px; }
+.bd-pick { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 10px 12px; border-radius: 18px; background: rgba(72,217,166,.12); }
+.bd-pick b { font-size: 17px; color: var(--white); }
+.bd-pick span span { font-size: 13px; color: var(--muted); }
+.bd-fwd { display: flex; align-items: center; gap: 10px; margin-top: 10px; padding: 10px 12px; border-radius: 18px; color: #1D2430; background: linear-gradient(120deg, #FDFEFF, #C6CFDA 30%, #EEF2F6 55%, #A7B2BF 80%, #F6F8FB); box-shadow: inset 0 -3px 0 rgba(0,0,0,.12); }
+.bd-fwd b { font-size: 14px; } .bd-fwd span span { font-size: 12px; color: #3A4352; }
+.bd-fwd-e { display: inline-flex; }
+.bd-fwd-go { flex: 0 0 auto; height: 38px; padding: 0 14px; border-radius: 12px; border: 0; background: #1D2430; color: #FFFFFF; font: 800 14px var(--body); }
+.bd-along { display: inline-flex !important; align-items: center; gap: 6px; color: var(--mint) !important; font-weight: 800; }
+/* ---------- rules and the cockpit block ---------- */
+.zc { display: flex; flex-direction: column; gap: 10px; }
+.zc-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+.zc-row b { color: var(--white); font-size: 15px; } .zc-row span span { font-size: 12.5px; color: var(--muted); }
+.zc-e { display: inline-flex; flex: 0 0 auto; }
+.zc-t .zt { display: inline-block; min-width: 54px; text-align: right; font: 800 20px var(--display); color: var(--sun); }
+.zc-pairs { display: flex; flex-direction: column; gap: 6px; margin-top: -4px; }
+.zc-pair { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 16px; background: var(--surface-2); font-size: 14px; color: var(--text); }
+.zc-pair b { color: var(--white); }
+.zc-pair .grow { margin-left: 6px; min-width: 0; }
+.zc-amp { width: 22px; height: 22px; border-radius: 50%; background: var(--sun); color: var(--ink); display: inline-flex; align-items: center; justify-content: center; margin: 0 -2px; z-index: 1; }
+.zc-fwd { display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 10px; border: 0; border-radius: 10px; color: #1D2430; background: linear-gradient(120deg, #FDFEFF, #C6CFDA 40%, #EEF2F6 70%, #A7B2BF); font: 800 12px var(--body); }
+.zc-go { display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 14px; border-radius: 18px; border: 1px dashed var(--line-2); background: transparent; color: var(--text); font: 700 15px var(--body); text-align: left; }
+.zc-n { font-size: 12px; font-weight: 800; color: var(--ink); background: var(--sun); padding: 3px 9px; border-radius: 999px; }
+.rl { padding: 12px 14px; border-radius: 20px; background: linear-gradient(135deg, rgba(255,122,69,.2), rgba(255,201,64,.12)); border: 1.5px solid rgba(255,154,98,.6); }
+.rl.over { background: var(--surface); border-color: var(--line); opacity: .8; }
+.rl-h { display: flex; align-items: center; gap: 10px; }
+.rl-h b { color: var(--white); font-size: 16px; } .rl-h span span { font-size: 12.5px; color: var(--muted); }
+.rl-e { display: inline-flex; flex: 0 0 auto; }
+.rl-t .zt { font: 900 24px var(--display); color: #FFB27A; }
+.rl-t.done { font: 800 13px var(--body); color: var(--muted); }
+.rl-ps { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.rl-p { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 12px 0 6px; border-radius: 999px; border: 1.5px solid rgba(255,154,98,.7); background: rgba(21,18,43,.5); color: var(--text); font: 700 13px var(--body); }
+.rl-p .t-face, .rl-p .av { flex: 0 0 auto; }
+.rl-p.broke { border-color: var(--orange); background: var(--orange); color: var(--ink); }
+.rl-p.ok { border-color: rgba(72,217,166,.6); color: var(--mint); }
+.rl.compact { padding: 10px 12px; }
+.rl.compact .rl-h b { font-size: 14px; }
+.rl.compact .rl-t .zt { font-size: 20px; }
+.rl-strip { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+/* ---------- the card area ---------- */
+.pc-kind { padding: 14px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); }
+.pc-kh { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.pc-kh b { font: 800 17px var(--display); color: var(--white); } .pc-kh span span { font-size: 13px; color: var(--muted); line-height: 1.35; }
+.pc-ke { width: 50px; height: 50px; border-radius: 16px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
+.pk-joker .pc-ke { background: linear-gradient(135deg, #FF6FD8, #FFC940, #6FE3FF); }
+.pk-weiter .pc-ke { background: linear-gradient(120deg, #FDFEFF, #C6CFDA 35%, #8C98A8 60%, #EEF2F6); }
+.pk-regel .pc-ke { background: linear-gradient(135deg, #FF7A45, #FFC940); }
+.pc-kn { min-width: 30px; height: 30px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; background: var(--surface-2); color: var(--white); font: 800 14px var(--display); display: inline-flex; align-items: center; justify-content: center; }
+.pc-item { display: flex; align-items: center; gap: 12px; padding: 12px 2px 2px; }
+.pc-item + .pc-item { border-top: 1px solid var(--line); margin-top: 10px; }
+.pc-item b { color: var(--white); font-size: 15px; } .pc-item b small { font-weight: 600; color: var(--muted); }
+.pc-item > .stack > span { font-size: 13px; color: var(--muted); line-height: 1.35; }
+.pc-item.used { opacity: .6; }
+.pc-item.open { display: block; padding: 14px; margin: 10px -4px 0; border-radius: 18px; background: rgba(255,154,98,.12); border: 1.5px solid rgba(255,154,98,.5); }
+.pc-act { flex: 0 0 auto; height: 40px; padding: 0 14px; border-radius: 13px; border: 0; background: var(--accent); color: var(--ink); font: 800 14px var(--body); }
+.pk-weiter .pc-act { color: #1D2430; background: linear-gradient(120deg, #FDFEFF, #C6CFDA 40%, #EEF2F6 70%, #A7B2BF); }
+.pc-sum { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.pc-sc { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px 8px 8px; border-radius: 18px; background: var(--surface); border: 1.5px solid var(--line-2); }
+.pc-sc b { color: var(--white); font-size: 14px; } .pc-sc small { color: var(--muted); font-size: 12px; }
+.pk-weiter.pc-sc { border-color: #AEB9C6; } .pk-regel.pc-sc { border-color: rgba(255,154,98,.7); } .pk-joker.pc-sc { border-color: rgba(255,111,216,.6); }
+.cr-btn { width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 20px; border: 1.5px dashed var(--line-2); background: transparent; color: var(--text); font: inherit; }
+.cr-btn b { font-size: 15px; color: var(--white); } .cr-btn span span { font-size: 13px; color: var(--muted); }
+.cr-box { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 20px; background: rgba(72,217,166,.12); border: 1.5px solid rgba(72,217,166,.45); color: var(--mint); }
+.cr-box b { color: var(--white); font-size: 15px; } .cr-box span span { font-size: 13px; color: var(--muted); }
+.cr-guest { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 60px 8px 20px; }
+.pr-wait { display: flex; align-items: flex-start; gap: 14px; padding: 16px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+.pr-wait b { color: var(--white); font-size: 16px; } .pr-wait span span { font-size: 14px; color: var(--muted); line-height: 1.45; }
+.pr-picks { display: flex; flex-direction: column; gap: 6px; }
+.pr-pick { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 6px 12px; border-radius: 16px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: 600 14px var(--body); text-align: left; }
+.pr-pick b { color: var(--white); }
+.pr-pick:not(.on) { opacity: .5; }
+.pr-box { width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--line-2); display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.pr-pick.on .pr-box { background: var(--mint); border-color: var(--mint); color: var(--ink); }
+.pr-prev { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; padding: 16px; border-radius: 22px; background: #E9E6F2; }
+.pr-cell { display: flex; justify-content: center; }
+.pr-cell .pc { font-size: 1.62mm; width: 39.3mm; height: 54.9mm; }
+.pr-prev.a4 { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.pr-prev.a4 .pc { font-size: 2.1mm; width: 50.9mm; height: 71.1mm; }
+/* ---------- the printed cards (the same look as the bonus cards) ---------- */
+.pc { position: relative; width: 63mm; height: 88mm; box-sizing: border-box; padding: .95em; border-radius: 1.5em; font-size: 2.6mm; font-family: var(--body); color: #FFFFFF; background: var(--pcf); -webkit-print-color-adjust: exact; print-color-adjust: exact; flex: 0 0 auto; box-shadow: 0 .5em 1.4em rgba(21,18,43,.25); }
+.pc * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.pc.big { width: 170mm; height: 237.5mm; font-size: 7.02mm; }
+.pc-in { position: relative; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; padding: .9em 1em .8em; border-radius: 1em; overflow: hidden; background: radial-gradient(120% 70% at 50% 0%, #3E3488, #1D1A40 62%, #141130); }
+.pc-in::before { content: ''; position: absolute; inset: 0; background: radial-gradient(rgba(255,255,255,.09) .07em, transparent .1em) 0 0 / 1.1em 1.1em; pointer-events: none; }
+.pc-in::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,.13) 44%, transparent 56%); pointer-events: none; }
+.pc-top { position: relative; z-index: 1; align-self: stretch; display: flex; align-items: center; justify-content: space-between; }
+.pc-chip { padding: .28em .85em; border-radius: 99em; background: var(--pcc); color: #15122B; font: 800 .78em var(--display); }
+.pc-brand { display: inline-flex; align-items: center; gap: .35em; font: 800 .72em var(--display); color: rgba(255,255,255,.78); }
+.pc-brand svg { width: 1.55em; height: 1.55em; }
+.pc-art { position: relative; z-index: 1; margin: 1.1em 0 .7em; width: 8.6em; height: 8.6em; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 35% 30%, #FFFFFF, var(--pca) 72%); box-shadow: 0 0 0 .22em rgba(255,255,255,.14), 0 0 2.2em var(--pcg); }
+.pc-ring { position: absolute; inset: -.55em; border-radius: 50%; border: .14em dashed var(--pcc); opacity: .7; }
+.pc-art svg { width: 5.8em; height: 5.8em; }
+.pc-k { position: relative; z-index: 1; font: 800 .66em var(--display); letter-spacing: .1em; color: var(--pcc); }
+.pc-t { position: relative; z-index: 1; margin-top: .2em; font: 900 1.95em/1.05 var(--display); letter-spacing: -0.02em; }
+.pc-x { position: relative; z-index: 1; margin: .6em 0 0; font-size: .88em; line-height: 1.35; font-weight: 600; color: rgba(255,255,255,.84); }
+.pc-cond { position: relative; z-index: 1; margin: .45em 0 0; font-size: .74em; font-weight: 800; color: var(--pcc); }
+.pc-for { position: relative; z-index: 1; margin-top: auto; align-self: stretch; display: flex; flex-direction: column; align-items: center; padding: .45em .6em .5em; border-radius: .9em; background: rgba(255,255,255,.08); border: .12em dashed rgba(255,255,255,.32); }
+.pc-for span { font-size: .68em; font-weight: 800; color: rgba(255,255,255,.7); }
+.pc-for b { font: 900 1.65em/1.1 var(--display); color: var(--pcc); overflow-wrap: anywhere; }
+.pc-foot { position: relative; z-index: 1; align-self: stretch; display: flex; justify-content: space-between; gap: .6em; margin-top: .55em; font-size: .6em; font-weight: 700; color: rgba(255,255,255,.62); }
+.pc-foot span:first-child { text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pc-joker { --pcf: linear-gradient(135deg, #FF6FD8, #FFC940 30%, #6FE3FF 60%, #9886FF 80%, #FF6FD8); --pcc: #FF9BE6; --pca: #FFD3F3; --pcg: rgba(255,111,216,.55); }
+.pc-weiter { --pcf: linear-gradient(120deg, #FDFEFF 0%, #C6CFDA 16%, #8C98A8 32%, #F2F5F9 48%, #9AA6B5 64%, #FFFFFF 80%, #B4BEC9 100%); --pcc: #E2E9F1; --pca: #DCE3EC; --pcg: rgba(226,233,241,.5); }
+.pc-weiter .pc-in { background: radial-gradient(120% 70% at 50% 0%, #56627A, #2A3142 62%, #1A1F2B); }
+.pc-weiter .pc-in::after { background: linear-gradient(115deg, transparent 26%, rgba(255,255,255,.2) 42%, transparent 52%, rgba(255,255,255,.1) 64%, transparent 72%); }
+.pc-regel { --pcf: linear-gradient(135deg, #FF7A45, #FFC940 50%, #FF5A5A); --pcc: #FFB27A; --pca: #FFD9B8; --pcg: rgba(255,122,69,.55); }
+#zpPrint { display: none; }
+@media print {
+  @page { size: A4 portrait; margin: 0; }
+  :root { padding: 0 !important; }
+  html, body { height: auto !important; overflow: visible !important; background: #FFFFFF !important; }
+  body > *:not(#zpPrint) { display: none !important; }
+  #zpPrint { display: block !important; }
+  .pp-page { width: 210mm; height: 296mm; box-sizing: border-box; display: flex; align-items: center; justify-content: center; overflow: hidden; break-after: page; page-break-after: always; }
+  .pp-page:last-child { break-after: auto; page-break-after: auto; }
+  .pp-grid { display: grid; grid-template-columns: repeat(3, 63mm); grid-auto-rows: 88mm; gap: 3mm; align-content: center; justify-content: center; }
+  .pp-cut { position: relative; }
+  .pp-cut::after { content: ''; position: absolute; inset: -.6mm; border: .2mm dashed #B8B3C9; border-radius: 4.5mm; }
+  .pc { box-shadow: none; }
+}
+@media (prefers-reduced-motion: reduce) { .r-wei .gk-front, .r-reg .gk-front, .bd-glasses { animation: none !important; } }
+body.desk .dk-cards { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 </style>
 
 <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
@@ -2175,7 +2323,7 @@ body.desk .toast { bottom: 40px; }
 <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
 <symbol id="i-next" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
 <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"></path></symbol>
-<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="currentColor"></rect><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"></path></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
+<symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V3.5h10V9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"></path><path d="M7 17.5H5a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4.5a2 2 0 0 1-2 2h-2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"></path><rect x="7" y="14" width="10" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="2.2"></rect></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="currentColor"></rect><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"></path></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path></symbol>
 <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor"></path></symbol>
 <symbol id="i-link" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"></path><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"></path></g></symbol>
 <symbol id="i-shuffle" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3.5c2 0 3.4.9 4.5 2.5l2 3c1.1 1.6 2.5 2.5 4.5 2.5H21"></path><path d="M18 12l3 3-3 3"></path><path d="M3 17h3.5c1.4 0 2.5-.4 3.4-1.2"></path><path d="M14 8.2c.9-.8 2-1.2 3.5-1.2H21"></path><path d="M18 4l3 3-3 3"></path></g></symbol>
@@ -4228,6 +4376,8 @@ function startRun() {
     used: { games: [], est: [], mc: [], wwe: [], partner: [] }, link: !!c.link, lastAction: '', kinds: [], lastCats: [], planSteps: cfgSteps(), decks: {}, plan: null, planPos: 0, dice: c.dice || 'app'
   };
   if (c.variant === 'abend') { r.acc = { items: [], swaps: 0 }; }
+  /* Trinkbuddys (on unless switched off in the setup) and the rules of the Regel-Karte */
+  r.bud = { on: c.buddy !== false, at: 0, map: {}, prev: {}, next: {}, fwd: {}, due: false, n: 0 }; r.rules = [];
   /* Junggesellenabschied: missions out in the city (or in the bar), crew jobs in between */
   if (evType().id === 'jga') { r.jga = { mode: c.jgaMode === 'drinnen' ? 'drinnen' : 'stadt' }; r.jcrew = { n: 0, last: -9, used: [], by: {} }; }
   var mk = function (ids, total) { return { id: uid('t'), ids: ids, total: total, pos: 0, done: false, checks: [], accIdx: 0, accDone: 0 }; };
@@ -4850,6 +5000,8 @@ function demoEvent() {
     { author: 'Tim', type: 'umfrage', forId: J, qk: 'dabei', text: 'Ladekabel', rar: 'sel' },
     { author: 'Max', type: 'joker', forId: '', text: 'Nur gegen eine Umarmung', rar: 'jok' },
     { author: 'Sara', type: 'joker', forId: '', text: '', rar: 'jok' },
+    { author: 'Lea', type: 'weiter', forId: '', text: '', rar: 'wei' },
+    { author: 'Tom', type: 'regel', forId: '', text: '', rar: 'reg' },
     { author: 'Nina', type: 'portrait', forId: Mi, text: 'Porträt', draw: demoDoodle(19, 3), rar: 'epi', st: 'offen' },
     { author: 'Tim', type: 'spruch', forId: Mi, text: 'Wer hat Hunger?', rar: 'epi', st: 'offen' }
   ]);
@@ -5675,7 +5827,7 @@ function face(p, size, style, mood) {
 }
 function groupFace(size) { return '<span class="ini" style="width:' + size + 'px;height:' + size + 'px;background:#F4F1FF">' + icon('i-users', Math.round(size * 0.5)) + '</span>'; }
 /* navigation says where it goes: an arrow and a word, never a bare symbol */
-var BACK_LABEL = { home: 'Party', run: 'Übersicht', questions: 'Fragen', games: 'Spiele', counter: 'Zähler', runSetup: 'Einrichten', crew: 'Gäste' };
+var BACK_LABEL = { home: 'Party', run: 'Übersicht', cards: 'Karten', questions: 'Fragen', games: 'Spiele', counter: 'Zähler', runSetup: 'Einrichten', crew: 'Gäste' };
 function navBtn(attrs, ic, label, cls) { return '<button type="button" class="navbtn' + (cls ? ' ' + cls : '') + '" ' + attrs + '>' + icon(ic, 18) + '<span>' + esc(label) + '</span></button>'; }
 function topbar(back, title, right) {
   return '<div class="topbar tb3">' +
@@ -6145,6 +6297,8 @@ function qDetails(q) {
   if (q.type === 'spruch') return '„' + esc(q.text) + '“';
   if (q.type === 'umfrage') return esc(umfrageText(q.qk, qAboutName(q))) + ' ' + esc(q.text);
   if (q.type === 'joker') return 'Joker' + (q.text ? ', Bedingung: ' + esc(q.text) : '');
+  if (q.type === 'weiter') return 'Weiterleiten-Karte';
+  if (q.type === 'regel') return 'Regel-Karte';
   return '';
 }
 function qAboutName(q) { return q.forId && isFocus(q.forId) ? person(q.forId).name : E() && E().focus.length ? focusNames() : 'das Geburtstagskind'; }
@@ -6171,6 +6325,8 @@ function qHeadline(q) {
   if (q.type === 'wenn') { var wc = wennCat(q.cat); return (wc ? 'Wäre ' + wc[1] + ': ' : '') + q.text; }
   if (q.type === 'umfrage') return 'Umfrage: ' + q.text;
   if (q.type === 'joker') return 'Joker von ' + q.author;
+  if (q.type === 'weiter') return 'Weiterleiten-Karte von ' + q.author;
+  if (q.type === 'regel') return 'Regel-Karte von ' + q.author;
   return q.text;
 }
 function qPills(q) {
@@ -6190,6 +6346,8 @@ function qPills(q) {
   if (q.type === 'spruch') return wrap(P('Sagt ' + esc(qAboutName(q)) + ' angeblich ständig'));
   if (q.type === 'umfrage') return wrap(P('Auf die Umfrage: ' + esc(umfrageText(q.qk, qAboutName(q)))));
   if (q.type === 'joker') return wrap(P(q.text ? 'Bedingung: ' + esc(q.text) : 'Ohne Bedingung') + P('Befreit einmal von einem ' + esc(U()), 'ok'));
+  if (q.type === 'weiter') return wrap(P('Gibt den Trinkbuddy-Job einmal weiter', 'ok'));
+  if (q.type === 'regel') return wrap(P('Eine Regel für fünf Minuten', 'ok') + P('Bruch kostet ein ' + esc(U())));
   return '';
 }
 function qCard(q, i) {
@@ -6273,13 +6431,13 @@ V.questions = function () {
   var rd = qRounds();
   var aufg = S.questions.filter(function (q) { return q.type === 'aufgabe' && questionPlayable(q); }).length;
   /* a long page: chips at the top jump to each part */
-  var jump = '<nav class="qx-jump" aria-label="Springen zu">' + [['qs-neu', 'Neu' + (open.length ? ' · ' + open.length : '')], ['qs-link', 'Einladen'], AI_HOST ? ['qs-ki', 'KI'] : null, jokerAll().length ? ['qs-joker', 'Joker'] : null, ['qs-runden', 'Runden'], ['qs-alle', 'Alle Beiträge']].filter(Boolean).map(function (x) { return '<button type="button" class="qx-jb' + (x[0] === 'qs-neu' && open.length ? ' hot' : '') + '" data-act="jump" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
+  var jump = '<nav class="qx-jump" aria-label="Springen zu">' + [['qs-neu', 'Neu' + (open.length ? ' · ' + open.length : '')], ['qs-link', 'Einladen'], AI_HOST ? ['qs-ki', 'KI'] : null, pcAny() || demoOn() ? ['qs-joker', 'Karten'] : null, ['qs-runden', 'Runden'], ['qs-alle', 'Alle Beiträge']].filter(Boolean).map(function (x) { return '<button type="button" class="qx-jb' + (x[0] === 'qs-neu' && open.length ? ' hot' : '') + '" data-act="jump" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
   var body = jump + '<div class="qx' + (enter ? ' enter' : '') + '">' + dk(qHero(rd.total) + qCollectOverview(),
-    '<div class="mt14" id="qs-link">' + collectShare() + '</div>') + '\u0001' +
+    '<div class="mt14" id="qs-link">' + collectShare() + collectCloseHtml() + '</div>') + '\u0001' +
     '<h3 class="qx-h" id="qs-neu">Neu eingegangen' + (open.length ? '<span class="qx-n">' + open.length + '</span>' : '') + (open.length >= 2 ? '<button type="button" class="qx-all" data-act="qAllOk">' + icon('i-check', 14) + 'Alle freigeben</button>' : '') + '</h3>' +
     (open.length ? open.map(qCard).join('') : '<div class="qx-empty">' + emb('letter', 34) + '<span>Alles geprüft. Neue Beiträge landen hier, du gibst sie mit einem Tipp frei.</span></div>') +
     '\u0002' + aiSection() +
-    jokerSection() +
+    pcSection() +
     '<h3 class="qx-h" id="qs-runden">Daraus baut die App Runden<span class="qx-n mint">' + rd.total + '</span></h3>' +
     '<p class="qx-lead">Welche Runde wann kommt, bleibt eine Überraschung. Je mehr die Gäste schicken, desto mehr davon.' + (aufg ? ' Dazu ' + aufg + (aufg === 1 ? ' Aufgabe, die einzeln kommt.' : ' Aufgaben, die einzeln kommen.') : '') + '</p>' +
     '<div class="qx-rounds">' + rd.html + '</div>' + '\u0003' +
@@ -6338,7 +6496,7 @@ function draftFields(d, bp, k) {
     (who.length > 1 ? who.map(function (p) { var s = d.forId === p.id; return '<button type="button" class="chip-btn sm' + (s ? ' is-sel' : '') + '" data-act="' + actF + '"' + dk + ' data-v="' + p.id + '" aria-pressed="' + s + '">' + esc(p.name) + '</button>'; }).join('') : '') + '</div>' : '';
   return forBlock + textField + extra;
 }
-V.guestForm = function () { return UI.guestMode === 'master' ? masterForm() : guestMultiForm(); };
+V.guestForm = function () { return UI.guestMode === 'master' ? masterForm() : S && S.collectClosed ? gClosedView() : guestMultiForm(); };
 function guestHead() {
   var banner = UI.guestMode === 'test' ? '<div class="testbanner">' + icon('i-user', 18) + '<span class="grow">Testansicht: So sieht der Link für Gäste aus.</span><button type="button" class="tag plain" data-act="go" data-to="' + UI.guestFrom + '" style="height:30px;color:var(--sun)">Zurück</button></div>' : '';
   return banner + '<div class="' + (banner ? 'mt14' : '') + '">' + guestHeader('Mitmachen') + '</div>';
@@ -6590,9 +6748,10 @@ function cfgStep3(c) {
   }).join('') +
     (shortPlan ? '<p class="small" style="padding:4px 0 10px">Pro Spiel fällt höchstens 1 ' + esc(e.unit) + '. Bei so wenigen Aufgaben wird das Ziel deshalb nicht ganz erreicht. Mehr ' + (fam === 'frei' ? (c.variant === 'wuerfel' ? 'Felder' : 'Runden') : fam === 'kranz' ? (c.variant === 'meter' ? 'Meter' : 'Stationen am Kranz') : 'Spielzeit') + ' oder ein kleineres Maximum helfen.</p>' : '');
   var link = '<label class="row mt14 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Gäste per Link einbinden</span><span class="sub">Bei Schätz- und Abstimmfragen</span></span><button type="button" class="switch" role="switch" aria-checked="' + !!c.link + '" data-act="cfgLink" aria-label="Gäste per Link einbinden"><span></span></button></label>';
+  var buddy = '<label class="row mt10 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Trinkbuddys</span><span class="sub">Ab Minute ' + BUD_MIN + ' wählt jede Hauptperson jemanden, der mittrinkt. Alle ' + BUD_MIN + ' Minuten wird getauscht.</span></span><button type="button" class="switch" role="switch" aria-checked="' + (c.buddy !== false) + '" data-act="cfgBuddy" aria-label="Trinkbuddys"><span></span></button></label>';
   return '<h1 class="h1 mt18">Alles bereit?</h1><p class="small mt6">Tipp eine Zeile an, um sie zu ändern.</p>' + sum +
     '<span class="eyebrow mt22 block">Plan des Piloten</span><div class="card padrows mt10">' + plan + '<div class="row" style="min-height:44px;border-top:1px solid var(--line)"><span class="grow small">So viel ' + esc(e.unit) + ' ist für heute eingeplant</span><button type="button" class="linkbtn" data-act="go" data-to="settings">Regeln</button></div></div>' +
-    '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (fam === 'kranz' ? cfgAccBlock(c).replace('<span class="eyebrow mt22 block">', '<span class="eyebrow mt14 block" style="font-size:13px">') : '') + (isJga() ? '' : crewSetupHtml(c)) + link +
+    '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (fam === 'kranz' ? cfgAccBlock(c).replace('<span class="eyebrow mt22 block">', '<span class="eyebrow mt14 block" style="font-size:13px">') : '') + (isJga() ? '' : crewSetupHtml(c)) + link + buddy +
     factCard('runSetup');
 }
 V.runSetup = function () {
@@ -6718,7 +6877,8 @@ V.run = function () {
     (r.hist && r.hist.some(function (h) { return h.kind === 'task'; }) ? ckTool('openRewind', '', 'i-undo', 'Zurückspulen') : '') +
     ckTool('openCrew', ' data-from="run"', 'i-users', r.jga ? 'Die Truppe' : 'Gäste vor Ort') +
     (zeit && r.variant === 'zeit' ? ckTool('runCheck', '', 'i-clock', 'Status-Check') : '') +
-    (zeit ? ckTool('runShift', '', 'i-plus', '+5 Min (Test)') : '') +
+    ckTool('openCards', ' data-from="run"', 'i-star', 'Karten') +
+    ckTool('runShift', '', 'i-plus', '+5 Min (Test)') +
     ckTool('askConfirm', ' data-v="endRun"', 'i-flag', 'Spiel beenden', 'end') + '</div>' +
     (UI.confirm === 'endRun' ? confirmBox('Spiel jetzt beenden?', 'Der Stand bleibt im Zähler erhalten.', 'endRun', 'Beenden') : '');
   var primary, demoEnd = !r.pending && demoRunOver(r);
@@ -6732,7 +6892,8 @@ V.run = function () {
   else if (r.variant === 'wuerfel') primary = '<button type="button" class="cta" data-act="runNext">' + icon('i-dice', 22) + (r.dice === 'echt' ? 'Gewürfelte Zahl eintragen' : 'Würfeln') + '</button>';
   else primary = '<button type="button" class="cta" data-act="runNext">' + (u.ic === 'sock' ? sockIc('currentColor', 15) : icon(u.ic || 'i-flag', 20)) + esc(u.unit) + ' ' + Math.min(tr.total, tr.pos + 1) + (fam === 'frei' ? ' starten' : ' aufdecken') + '</button>';
   var demoCard = demoEnd ? '<div class="dm-end mt14">' + emb('crown', 40) + '<span class="stack grow" style="gap:3px;min-width:0"><b>Das war der Beispiel-Abend</b><span>' + DEMO_STEPS + ' Stationen zum Reinschnuppern. Mit dem Game Pass spielt ihr den ganzen Abend, mit allen Spielen und Gäste-Runden.</span></span></div>' : '';
-  var body = dk(cockpit + demoCard + tiles + race, (demoEnd ? '' : peekCard()) + pilot + extras + hist + tools, 'dk-run');
+  ruleSweep();
+  var body = dk(cockpit + demoCard + tiles + race, (demoEnd ? '' : peekCard()) + partyRunHtml(r) + pilot + extras + hist + tools, 'dk-run');
   var head = '<div class="topbar tb3">' + navBtn('data-act="go" data-to="home" aria-label="Zur Party, das Spiel bleibt gespeichert"', 'i-back', 'Party') + '<span class="live"><i></i>Läuft</span>' +
     navBtn('data-act="runUndo" aria-label="Letzten Schritt rückgängig machen"' + (r.hist && r.hist.length ? '' : ' disabled'), 'i-undo', 'Rückgängig') + '</div>';
   /* remember what was shown once it had time to play, so the next visit animates only what changed */
@@ -7688,7 +7849,7 @@ function gFinale(head) {
    Now and then, instead, the Joker: it can free the birthday
    person from one drink, if its owner says yes.
    ========================================================= */
-var GK_MAX = 2, GK_UMF_CAP = 8, GK_DRAW_SECS = 45, GK_JOKER_P = 0.14;
+var GK_MAX = 2, GK_UMF_CAP = 8, GK_DRAW_SECS = 45, GK_JOKER_P = 0.14, GK_WEITER_P = 0.12, GK_REGEL_P = 0.1;
 var GK_KINDS = ['portrait', 'wenn', 'spruch', 'umfrage'];
 /* the timeline of the opening, in ms after the pack appears */
 var GK_T = { charge: 700, tear: 3000, rise: 3120, flip: 3740, flash2: 4180, stamp: 4380, panel: 4820, focus: 5150 };
@@ -7705,7 +7866,10 @@ GQ_STYLE.spruch = { c: '#FFA9A0', e: 'quote', stamp: 'Zitiert' };
 GQ_STYLE.umfrage = { c: '#6FD3FF', e: 'podium', stamp: 'Gezählt' };
 GQ_STYLE.joker = { c: '#FF6FD8', e: 'joker', stamp: 'Joker' };
 QK_SHORT.portrait = 'Porträt'; QK_SHORT.wenn = 'Wäre'; QK_SHORT.spruch = 'Spruch'; QK_SHORT.umfrage = 'Umfrage'; QK_SHORT.joker = 'Joker';
-function isCardType(t) { return GK_KINDS.indexOf(t) >= 0 || t === 'joker'; }
+/* the cards a guest keeps for the party (Joker, Weiterleiten, Regel): no content, they get redeemed */
+function gkSpecial(t) { return t === 'joker' || t === 'weiter' || t === 'regel'; }
+function gkBigRar(id) { return id === 'leg' || id === 'jok' || id === 'wei' || id === 'reg'; }
+function isCardType(t) { return GK_KINDS.indexOf(t) >= 0 || gkSpecial(t); }
 /* the kinds a guest picks directly in the form (without the bonus cards) */
 function formTypes() { return QTYPES.filter(function (t) { return t[3] !== 'karte'; }); }
 
@@ -7772,8 +7936,17 @@ function gkJokerOk() {
   return gkSubs().filter(function (q) { return q.type === 'joker'; }).length < gkJokerCap();
 }
 /* the app picks the kind the guests sent least, ties by chance */
+/* Weiterleiten and Regel: one of each per guest, a few per party */
+function gkPartyCap(t) { var n = E() ? E().focus.length : 1; return t === 'weiter' ? Math.max(3, n * 2 + 1) : Math.max(2, n + 1); }
+function gkPartyOk(t) {
+  if (gPass()[t] || (gForm().cards || []).some(function (c) { return c.type === t; })) return false;
+  return gkSubs().filter(function (q) { return q.type === t; }).length < gkPartyCap(t);
+}
 function gkPickType() {
-  if (gkJokerOk() && demoTypeOk('joker') && Math.random() < GK_JOKER_P) return { type: 'joker', n: -1 };
+  var r = Math.random();
+  if (gkJokerOk() && demoTypeOk('joker') && r < GK_JOKER_P) return { type: 'joker', n: -1 };
+  if (r >= GK_JOKER_P && r < GK_JOKER_P + GK_WEITER_P && gkPartyOk('weiter') && demoTypeOk('weiter')) return { type: 'weiter', n: -1 };
+  if (r >= GK_JOKER_P + GK_WEITER_P && r < GK_JOKER_P + GK_WEITER_P + GK_REGEL_P && gkPartyOk('regel') && demoTypeOk('regel')) return { type: 'regel', n: -1 };
   var kinds = GK_KINDS.filter(demoTypeOk), c = gkCounts(), mn = Math.min.apply(null, kinds.map(function (k) { return c[k]; }));
   return { type: pick(kinds.filter(function (k) { return c[k] === mn; })), n: mn };
 }
@@ -7850,13 +8023,15 @@ function drawSvg(str, size, cls) {
 
 /* ---------- the card's words ---------- */
 function gkUnit() { try { return E() ? U() : 'Pinnchen'; } catch (e) { return 'Pinnchen'; } }
-function gkKicker(k) { return { portrait: 'Porträt', wenn: 'Wenn … wäre', spruch: 'Lieblingsspruch', umfrage: 'Top-Antworten', joker: 'Joker' }[k.type]; }
+function gkKicker(k) { return { portrait: 'Porträt', wenn: 'Wenn … wäre', spruch: 'Lieblingsspruch', umfrage: 'Top-Antworten', joker: 'Joker', weiter: 'Weiterleiten', regel: 'Regel-Karte' }[k.type]; }
 function gkTitle(k) {
   var N = gkName(k.forId), c = wennCat(k.cat);
   if (k.type === 'portrait') return 'Mal ' + N + '!';
   if (k.type === 'wenn') return 'Wenn ' + N + ' ' + (c ? c[1] : 'ein Tier') + ' wäre …';
   if (k.type === 'spruch') return 'Was sagt ' + N + ' ständig?';
   if (k.type === 'joker') return 'Der Joker!';
+  if (k.type === 'weiter') return 'Weiterleiten!';
+  if (k.type === 'regel') return 'Die Regel-Karte!';
   return umfrageText(k.qk, N);
 }
 function gkSub(k) {
@@ -7865,11 +8040,13 @@ function gkSub(k) {
   if (k.type === 'wenn') return (c ? c[2] : 'Welches Tier') + ' wäre ' + N + '? Ein Wort reicht.';
   if (k.type === 'spruch') return 'Den einen Spruch, genau so, wie ' + N + ' ihn sagt.';
   if (k.type === 'joker') return 'Wer heute verliert, darf dich fragen, ob du ihn einlöst. Dann fällt ein ' + gkUnit() + ' weg. Du entscheidest.';
+  if (k.type === 'weiter') return 'Wählt dich jemand als Trinkbuddy, gibst du den Job an jemand anderen weiter. Einmal einsetzbar.';
+  if (k.type === 'regel') return 'Auf der Party stellst du eine Regel auf. Die Hauptpersonen halten sie fünf Minuten ein. Wer sie bricht, trinkt ein ' + gkUnit() + '.';
   return 'Ein Wort, das Erste, was dir einfällt. Die häufigsten Antworten landen auf der Tafel.';
 }
 function gkValid(k) {
   if (!k) return false;
-  if (k.type === 'joker') return true;
+  if (gkSpecial(k.type)) return true;
   if (k.type === 'portrait') return k.phase !== 'ready' && gkTotalPts(k.strokes) >= 10;
   var t = String(k.text || '').trim();
   return k.type === 'spruch' ? t.length >= 3 : t.length >= 2;
@@ -7890,17 +8067,17 @@ A.gDraw = function () {
 };
 function gkOpen() {
   if (UI.gk || !gkCanDraw()) return;
-  var p = gkPickType(), rar = p.type === 'joker' ? gkRar('jok') : gkRarity(p.n);
+  var p = gkPickType(), rar = p.type === 'joker' ? gkRar('jok') : p.type === 'weiter' ? gkRar('wei') : p.type === 'regel' ? gkRar('reg') : gkRarity(p.n);
   var k = { type: p.type, forId: '', rar: rar.id, pts: rar.pts, text: '', strokes: [], phase: 'ready', pen: 0, played: false, no: GK_MAX - gkLeft() + 1, key: 'c' + Date.now().toString(36) + Math.floor(Math.random() * 1000) };
   if (p.type === 'umfrage') { var u = gkUmfragePick(); k.forId = u.forId; k.qk = u.qk; }
-  else if (p.type !== 'joker') k.forId = gkForId(p.type);
+  else if (!gkSpecial(p.type)) k.forId = gkForId(p.type);
   if (p.type === 'wenn') k.cat = gkWennCat(k.forId)[0];
   UI.gk = k;
   var tok = UI.gkTok = (UI.gkTok || 0) + 1, live = function () { return UI.gkTok === tok && UI.gk === k; };
   gkMount(k);
   gkFxStart(k); gkSndOpening(k);
   setTimeout(function () { if (live()) gkVibeRamp(GK_T.tear - GK_T.charge - 120); }, GK_T.charge);
-  setTimeout(function () { if (live()) gVibe(k.rar === 'leg' || k.rar === 'jok' ? [180, 40, 90] : [150]); }, GK_T.tear);
+  setTimeout(function () { if (live()) gVibe(gkBigRar(k.rar) ? [180, 40, 90] : [150]); }, GK_T.tear);
   setTimeout(function () { if (live()) gkRevealFx(k); }, GK_T.flash2);
   setTimeout(function () { if (live()) gVibe([50]); }, GK_T.stamp);
   setTimeout(function () { if (live()) gkFocus(); }, GK_T.focus);
@@ -7936,8 +8113,8 @@ function gkVibeRamp(ms) {
 function gkRevealFx(k) {
   if (k.fxDone) return;
   k.fxDone = true;
-  gVibe(k.rar === 'leg' || k.rar === 'jok' ? [40, 40, 40, 40, 160] : [30, 40, 70]);
-  if (k.rar !== 'sel') gkConfetti(k.rar === 'leg' || k.rar === 'jok' ? 70 : 40);
+  gVibe(gkBigRar(k.rar) ? [40, 40, 40, 40, 160] : [30, 40, 70]);
+  if (k.rar !== 'sel') gkConfetti(gkBigRar(k.rar) ? 70 : 40);
 }
 /* confetti inside the card overlay, so it falls in front of the card */
 function gkConfetti(n) {
@@ -8146,7 +8323,7 @@ function gkCardHtml(k, rar, st) {
     '<div class="gk-top"><span class="gk-rar">' + esc(rar.name) + '</span><span class="gk-no">Karte ' + k.no + ' von ' + GK_MAX + '</span></div>' +
     '<div class="gk-art"><span class="gk-art-ring"></span><span class="gk-art-c">' + emb(st.e, 92) + '</span></div>' +
     '<div class="gk-txt"><small>' + esc(gkKicker(k)) + '</small><b' + (t.length > 34 ? ' class="long"' : '') + '>' + esc(t) + '</b><span>' + esc(gkSub(k)) + '</span></div>' +
-    '<div class="gk-foot"><span>+' + k.pts + ' Punkte</span><span>' + esc(k.type === 'joker' ? 'Für ' + gkName('') : gkName(k.forId)) + '</span></div></div>' +
+    '<div class="gk-foot"><span>+' + k.pts + ' Punkte</span><span>' + esc(gkSpecial(k.type) ? 'Für ' + gkName('') : gkName(k.forId)) + '</span></div></div>' +
     '<span class="gk-holo" aria-hidden="true"></span><span class="gk-stamp" aria-hidden="true">' + esc(rar.name) + '</span></div>' +
     '</div></div></div>';
 }
@@ -8167,6 +8344,8 @@ function gkPanelHtml(k) {
     return '<label class="field" for="gkin">Deine Bedingung (freiwillig)<input id="gkin" class="input gk-in jk" type="text" maxlength="60" autocomplete="off" autocapitalize="sentences" enterkeyhint="done" data-bind="gk.text" value="' + esc(k.text) + '" placeholder="z. B. Nur gegen eine Umarmung"></label>' +
       '<p class="gk-hint">Der Spielleiter sieht, dass du den Joker hast. Wer verliert, fragt dich, ob du ihn einlöst. Sagst du ja, fällt ein ' + esc(gkUnit()) + ' weg.</p>' + go('Joker einstecken · +' + k.pts) + later;
   }
+  if (k.type === 'weiter') return '<p class="gk-hint">Silber, und nur ganz wenige haben sie. Wählt dich eine Hauptperson als Trinkbuddy, zeigst du die Karte und suchst aus, wer stattdessen mittrinkt.</p>' + go('Karte einstecken · +' + k.pts) + later;
+  if (k.type === 'regel') return '<p class="gk-hint">Die Regel denkst du dir auf der Party aus, zum Beispiel: keine Hände benutzen oder nicht „Ja“ sagen. Der Spielleiter startet dann fünf Minuten. Bricht jemand im Mittelpunkt sie, trinkt er ein ' + esc(gkUnit()) + '.</p>' + go('Karte einstecken · +' + k.pts) + later;
   var long = k.type === 'spruch', c = wennCat(k.cat), uq = umfrageQ(k.qk);
   var ph = k.type === 'wenn' ? (c ? c[3] : '') : k.type === 'umfrage' ? (uq ? uq[2] : '') : 'z. B. Das kriegen wir schon hin!';
   var label = k.type === 'wenn' ? (c ? c[2] : 'Dein Wort') + '?' : k.type === 'umfrage' ? 'Deine Antwort, ein Wort' : 'Der Spruch';
@@ -8207,7 +8386,7 @@ function gkMiniHtml() {
   var just = UI.gkJust;
   return '<span class="eyebrow mt22 block">Deine Bonuskarten · ' + cards.length + ' von ' + GK_MAX + '</span>' + cards.map(function (c) {
     var rar = gkRar(c.rar), st = GQ_STYLE[c.type], N = gkName(c.forId), wc = wennCat(c.cat);
-    var line = c.type === 'joker' ? (c.text ? 'Dein Joker. Bedingung: ' + c.text : 'Dein Joker, ohne Bedingung') : c.type === 'portrait' ? 'Porträt von ' + N : c.type === 'wenn' ? 'Wenn ' + N + ' ' + (wc ? wc[1] : '') + ' wäre: ' + c.text : c.type === 'spruch' ? '„' + c.text + '“' : umfrageText(c.qk, N) + ' ' + c.text;
+    var line = c.type === 'joker' ? (c.text ? 'Dein Joker. Bedingung: ' + c.text : 'Dein Joker, ohne Bedingung') : c.type === 'weiter' ? 'Deine Weiterleiten-Karte, für den Fall, dass du Trinkbuddy wirst' : c.type === 'regel' ? 'Deine Regel-Karte, einlösbar auf der Party' : c.type === 'portrait' ? 'Porträt von ' + N : c.type === 'wenn' ? 'Wenn ' + N + ' ' + (wc ? wc[1] : '') + ' wäre: ' + c.text : c.type === 'spruch' ? '„' + c.text + '“' : umfrageText(c.qk, N) + ' ' + c.text;
     return '<div class="gk-mini r-' + rar.id + (just === c.key ? ' just' : '') + '" id="gkm-' + c.key + '" style="--rc:' + rar.c + ';--rc2:' + rar.c2 + ';--tc:' + st.c + '"><span class="gk-mini-art">' + (c.type === 'portrait' ? drawSvg(c.draw, 50) : emb(st.e, 34)) + '</span><span class="stack grow" style="gap:2px;min-width:0"><small>Bonuskarte · ' + esc(rar.name) + '</small><b>' + esc(qTypeLabel(c.type)) + '</b><span class="gk-mini-t">' + esc(line) + '</span></span><span class="gk-mini-p">+' + c.pts + '</span></div>';
   }).join('');
 }
@@ -8590,6 +8769,353 @@ function jokerRunCard() {
   return '<div class="card pad mt10 row jk-run" style="padding:10px 14px"><span class="jk-e" aria-hidden="true">' + emb('joker', 30) + '</span><span class="grow small" style="color:var(--text)"><b>Joker im Umlauf:</b> ' + esc(joinNames(names)) + '. Wer verliert, darf ' + (names.length === 1 ? 'fragen' : 'sie fragen') + '.</span></div>';
 }
 /* =========================================================
+   Party cards and Trinkbuddys.
+   - Two more bonus cards next to the Joker: Weiterleiten (silver) and
+     the Regel-Karte. Guests draw them in the guest link, the master
+     approves them, the guest keeps them for the party.
+   - Trinkbuddys, in every mode: from minute five on, at the next change
+     of task, everyone in the focus picks a buddy who drinks along.
+     Every five minutes, again at a change of task, the buddies swap.
+     Whoever is picked and holds Weiterleiten can pass the job on.
+   - The Regel-Karte: its holder names a rule, everyone in the focus
+     keeps it for five minutes. Breaking it costs one drink, once.
+   - The card area: every card in circulation, the timers, and, once the
+     guest round is closed, the cards to print with the holders' names.
+   ========================================================= */
+var BUD_MIN = 5, RULE_MIN = 5;
+var PC_KINDS = ['regel', 'weiter', 'joker'];
+QTYPES.push(
+  ['weiter', 'Weiterleiten', 'Bonuskarte: wer sie hat und als Trinkbuddy gewählt wird, gibt den Job an jemand anderen weiter.', 'karte'],
+  ['regel', 'Regel-Karte', 'Bonuskarte: auf der Party eine Regel aufstellen, die Hauptpersonen halten sie fünf Minuten ein.', 'karte']
+);
+GQ_STYLE.weiter = { c: '#D9E1EA', e: 'forward', stamp: 'Silber' };
+GQ_STYLE.regel = { c: '#FF9A62', e: 'gavel', stamp: 'Regel' };
+QK_SHORT.weiter = 'Weiterleiten'; QK_SHORT.regel = 'Regel';
+GK_RAR.push({ id: 'wei', name: 'Silber', c: '#EEF2F7', c2: '#8E9BAB', pts: 25 }, { id: 'reg', name: 'Regel', c: '#FF7A45', c2: '#FFC940', pts: 25 });
+GQ_REACT.done_weiter = ['Silber! Wer dich als Trinkbuddy will, muss sich warm anziehen.', 'Die Weiterleiten-Karte. Damit bist du schwer zu fassen.'];
+GQ_MOOD.done_weiter = 'jubel';
+GQ_REACT.done_regel = ['Du darfst eine Regel aufstellen? Bitte sei nett zu mir.', 'Eine Regel-Karte! Ich ahne Schlimmes.'];
+GQ_MOOD.done_regel = 'verliebt';
+EMB_ART.forward = '<g transform="rotate(-9 22 25)"><rect x="7" y="9" width="27" height="33" rx="5" fill="#E6ECF3" stroke="#1B1530" stroke-width="2.5"/><path d="M12 14l16 0" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity=".9"/></g>' +
+  '<path d="M13 35c3-10 11-15 23-14" fill="none" stroke="#1B1530" stroke-width="3.4" stroke-linecap="round"/><path d="M32 14l7 7-8 6" fill="none" stroke="#1B1530" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>' +
+  '<path d="M40 33l1.4 3.2 3.2 1.4-3.2 1.4-1.4 3.2-1.4-3.2-3.2-1.4 3.2-1.4z" fill="#FFFFFF" stroke="#1B1530" stroke-width="1.6" stroke-linejoin="round"/>';
+EMB_ART.gavel = '<g transform="rotate(-38 25 21)"><rect x="12" y="11" width="24" height="11" rx="3" fill="#FF9A62" stroke="#1B1530" stroke-width="2.5"/><rect x="8.5" y="12.5" width="4.5" height="8" rx="1.6" fill="#FFC940" stroke="#1B1530" stroke-width="2.2"/><rect x="35" y="12.5" width="4.5" height="8" rx="1.6" fill="#FFC940" stroke="#1B1530" stroke-width="2.2"/><rect x="21.6" y="22" width="4.8" height="20" rx="2.2" fill="#C98B55" stroke="#1B1530" stroke-width="2.2"/></g>' +
+  '<rect x="5" y="38" width="24" height="6" rx="2.2" fill="#FFC940" stroke="#1B1530" stroke-width="2.2"/>';
+
+/* ---------- the cards in circulation ---------- */
+function pcKey(n) { return String(n || '').trim().toLowerCase(); }
+/* the same person: the same name, or the same first name ("Lea" and "Lea M.") */
+function pcSame(a, b) { a = pcKey(a); b = pcKey(b); if (!a || !b) return false; return a === b || a.split(/\s+/)[0] === b.split(/\s+/)[0]; }
+function pcAll(t) { if (demoOn()) return []; return S.questions.filter(function (q) { return q.type === t && q.status !== 'nein' && isGuestAuthor(q.author); }); }
+function pcFree(t) { return pcAll(t).filter(function (q) { return q.status === 'ok' && !q.used; }); }
+function pcAny() { return PC_KINDS.some(function (t) { return pcAll(t).length > 0; }); }
+function pcName(t) { return { joker: 'Joker', weiter: 'Weiterleiten', regel: 'Regel-Karte' }[t]; }
+function pcTitle(t) { return { joker: 'Der Joker', weiter: 'Weiterleiten', regel: 'Die Regel-Karte' }[t]; }
+function pcText(t) {
+  if (t === 'joker') return 'Befreit eine Hauptperson einmal von einem ' + U() + '. Du entscheidest, ob du ihn einlöst.';
+  if (t === 'weiter') return 'Wirst du Trinkbuddy, gibst du den Job an jemand anderen weiter. Einmal einsetzbar.';
+  return 'Stell eine Regel auf. Die Hauptpersonen halten sie fünf Minuten ein. Wer sie bricht, trinkt ein ' + U() + '.';
+}
+function runLive() { var r = R(); return r && !r.finished ? r : null; }
+
+/* ---------- Trinkbuddys ---------- */
+function bud(r) { if (!r.bud) r.bud = { on: true, at: 0, map: {}, prev: {}, next: {}, fwd: {}, due: false, n: 0 }; if (!r.bud.next) r.bud.next = {}; if (!r.bud.fwd) r.bud.fwd = {}; return r.bud; }
+function budNextAt(r) { var b = bud(r); return (b.at || r.t0) + BUD_MIN * 60000; }
+/* called when the next task is drawn: after five minutes the buddies are due */
+function budCheck(r) { if (!r || r.finished) return; var b = bud(r); if (b.on && !b.due && now() >= budNextAt(r)) { b.due = true; b.next = {}; b.fwd = {}; } }
+function budDue(r) { return !!(r && !r.finished && r.pending && bud(r).on && bud(r).due); }
+/* who drinks along with this person right now */
+function budOf(pid) { var r = runLive(); if (!r || !bud(r).on || !isFocus(pid)) return ''; return bud(r).map[pid] || ''; }
+function budCard(name) { return pcFree('weiter').filter(function (q) { return pcSame(q.author, name); })[0] || null; }
+/* names to pick from: who is there tonight, not the previous buddy, not someone another focus person already took, not who just passed it on */
+function budPool(r, pid, picks) {
+  var b = bud(r), taken = {};
+  Object.keys(picks).forEach(function (k) { if (k !== pid && picks[k]) taken[pcKey(picks[k])] = 1; });
+  var all = presentNames().filter(function (n) { return !taken[pcKey(n)] && !pcSame(n, b.fwd[pid]); });
+  var fresh = all.filter(function (n) { return !pcSame(n, b.map[pid]); });
+  return fresh.length ? fresh : all;
+}
+function budMode() { var r = runLive(); if (!r) return ''; if (budDue(r)) return 'swap'; if (UI.budFwd && r.who.indexOf(UI.budFwd) >= 0) return 'fwd'; return ''; }
+V.buddy = function () {
+  var r = runLive(), mode = budMode();
+  if (!mode) { UI.budFwd = null; return V.run(); }
+  var b = bud(r), picks = mode === 'swap' ? b.next : {}, ids = mode === 'swap' ? r.who : [UI.budFwd];
+  var first = mode === 'swap' && !b.n, all = ids.every(function (id) { return picks[id]; });
+  var hero = '<div class="bd-hero' + (first ? ' first' : '') + '"><span class="bd-glasses" aria-hidden="true">' + emb('cheers', 92) + '</span>' +
+    '<h1>' + (mode === 'fwd' ? 'Weitergeleitet!' : first ? 'Zeit für Trinkbuddys!' : 'Trinkbuddys wechseln!') + '</h1>' +
+    '<p>' + (mode === 'fwd' ? esc(b.fwd[UI.budFwd] || '') + ' hat die Weiterleiten-Karte gezogen. Wer übernimmt den Job?' : first ? 'Jede Hauptperson sucht sich jemanden aus. Muss sie trinken, trinkt ihr Buddy mit. In fünf Minuten wird getauscht.' : 'Fünf Minuten sind um. Jede Hauptperson wählt jemand Neues, der ab jetzt mittrinkt.') + '</p></div>';
+  var rows = ids.map(function (id) {
+    var p = person(id), pick = picks[id], pool = budPool(r, id, picks), card = pick ? budCard(pick) : null;
+    var head = '<div class="bd-who">' + face(p, 46, '', 'jubel') + '<span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(p.name) + ' wählt</b><span>' + (b.fwd[id] ? esc(b.fwd[id]) + ' hat weitergeleitet' : b.map[id] && mode === 'swap' ? 'Bisher: ' + esc(b.map[id]) : 'Wer trinkt mit?') + '</span></span></div>';
+    if (pick) {
+      return '<div class="bd-row done">' + head + '<div class="bd-pick">' + guestFace(pick, 44, '', 'jubel') + '<span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(pick) + '</b><span>trinkt mit, wenn ' + esc(p.name) + ' trinkt</span></span><button type="button" class="linkbtn" data-act="budClear" data-id="' + id + '">Ändern</button></div>' +
+        (card ? '<div class="bd-fwd"><span class="bd-fwd-e">' + emb('forward', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(pick) + ' hat eine Weiterleiten-Karte</b><span>Setzt sie die Karte ein, sucht sie aus, wer stattdessen mittrinkt.</span></span><button type="button" class="bd-fwd-go" data-act="budFwd" data-id="' + id + '">Weiterleiten</button></div>' : '') + '</div>';
+    }
+    var typing = UI.budType === id;
+    var chips = pool.map(function (n) { return '<button type="button" class="bd-chip" data-act="budPick" data-id="' + id + '" data-v="' + esc(n) + '">' + guestFace(n, 30) + '<span>' + esc(n) + '</span></button>'; }).join('');
+    var type = typing ? '<div class="bd-type"><input id="budIn" class="input" type="text" maxlength="24" autocomplete="off" autocapitalize="words" enterkeyhint="done" data-bind="bud.txt" value="' + esc(UI.budTxt || '') + '" placeholder="Name"><button type="button" class="btn-dark" data-act="budTypeOk" data-id="' + id + '">Übernehmen</button></div>'
+      : '<button type="button" class="bd-chip add" data-act="budTypeOpen" data-id="' + id + '">' + icon('i-plus', 16) + '<span>' + (pool.length ? 'Jemand anderes' : 'Namen eintippen') + '</span></button>';
+    return '<div class="bd-row">' + head + (pool.length ? '' : '<p class="small mt8">Noch niemand von heute eingetragen. Tipp den Namen einfach ein.</p>') + '<div class="bd-chips">' + chips + type + '</div></div>';
+  }).join('');
+  var body = hero + '<div class="bd-rows">' + rows + '</div>';
+  var foot = mode === 'swap' ? '<button type="button" class="cta mint" data-act="budGo"' + (all ? '' : ' disabled') + '>' + icon('i-check', 18) + (all ? 'Prost, weiter zur Aufgabe' : 'Erst alle Buddys wählen') + '</button>' : '';
+  return scr(topbar(mode === 'fwd' ? (UI.budFrom || 'run') : 'run', mode === 'fwd' ? 'Weiterleiten' : 'Trinkbuddys'), body, foot, 'bdscr');
+};
+A.budPick = function (d) {
+  var r = runLive(), name = String(d.v || '').trim(); if (!r || !name || !d.id) return;
+  var b = bud(r), mode = budMode(); notePresent(name); UI.budType = null; UI.budTxt = '';
+  if (mode === 'fwd') {
+    b.map[d.id] = name; delete b.fwd[d.id]; UI.budFwd = null;
+    logRun('info', name + ' übernimmt als Trinkbuddy für ' + person(d.id).name);
+    commit(); go(UI.budFrom || 'run'); setToast(name + ' trinkt jetzt mit ' + person(d.id).name + ' mit'); return;
+  }
+  b.next[d.id] = name; commit();
+};
+A.budClear = function (d) { var r = runLive(); if (!r) return; delete bud(r).next[d.id]; commit(); };
+A.budTypeOpen = function (d) { UI.budType = d.id; UI.budTxt = ''; render(); var el = document.getElementById('budIn'); if (el && el.focus) try { el.focus(); } catch (e) {} };
+A.budTypeOk = function (d) { var v = String(UI.budTxt || '').trim(); if (v.length < 2) { setToast('Bitte einen Namen eintippen'); return; } A.budPick({ id: d.id, v: v }); };
+/* the picked buddy plays Weiterleiten: the card is used, someone else has to be chosen */
+A.budFwd = function (d) {
+  var r = runLive(); if (!r) return;
+  var b = bud(r), swap = budDue(r), name = swap ? b.next[d.id] : b.map[d.id], q = budCard(name);
+  if (!name || !q) return;
+  q.used = true; q.usedAt = now(); q.usedFor = person(d.id).name;
+  b.fwd[d.id] = name;
+  if (swap) delete b.next[d.id];
+  else { UI.budFwd = d.id; UI.budFrom = UI.screen === 'buddy' ? (UI.budFrom || 'run') : UI.screen; }
+  logRun('info', name + ' setzt die Weiterleiten-Karte ein');
+  try { if (navigator.vibrate) navigator.vibrate([30, 40, 30, 40, 90]); } catch (e) {}
+  commit(); if (!swap) go('buddy'); setToast(name + ' leitet weiter!');
+};
+A.budGo = function () {
+  var r = runLive(); if (!r) return; var b = bud(r);
+  if (!b.due || !r.who.every(function (id) { return b.next[id]; })) return;
+  b.prev = b.map; b.map = b.next; b.next = {}; b.fwd = {}; b.at = now(); b.due = false; b.n += 1;
+  logRun('info', (b.n === 1 ? 'Trinkbuddys: ' : 'Neue Trinkbuddys: ') + r.who.map(function (id) { return person(id).name + ' mit ' + b.map[id]; }).join(', '));
+  commit(); go('step');
+};
+
+/* ---------- rules ---------- */
+function rulesOf(r) { if (!r.rules) r.rules = []; return r.rules; }
+function ruleLive(x) { return !x.done && now() < x.until; }
+/* rules whose five minutes are over: closed once, with a line in the log */
+function ruleSweep() {
+  var r = runLive(); if (!r) return false;
+  var ch = false;
+  rulesOf(r).forEach(function (x) {
+    if (x.done || now() < x.until) return;
+    x.done = true; ch = true;
+    var ok = x.who.filter(function (id) { return !x.broke[id]; }).map(function (id) { return person(id).name; });
+    logRun('info', 'Regel vorbei' + (ok.length ? ': ' + joinNames(ok) + (ok.length === 1 ? ' hat' : ' haben') + ' durchgehalten' : ''));
+  });
+  return ch;
+}
+A.ruleOpen = function (d) {
+  if (!runLive()) { setToast('Regeln gehen los, sobald das Spiel läuft'); return; }
+  UI.ruleDraft = { qid: d.id, text: '' }; render();
+  var el = document.getElementById('ruleIn'); if (el && el.focus) try { el.focus(); } catch (e) {}
+};
+A.ruleCancel = function () { UI.ruleDraft = null; render(); };
+A.ruleStart = function () {
+  var r = runLive(), dr = UI.ruleDraft; if (!r || !dr) return;
+  var q = pcFree('regel').filter(function (x) { return x.id === dr.qid; })[0], text = String(dr.text || '').trim();
+  if (!q || text.length < 2) { setToast('Wie lautet die Regel?'); return; }
+  q.used = true; q.usedAt = now(); q.usedFor = text;
+  rulesOf(r).push({ id: uid('rl'), qid: q.id, by: q.author, text: text, t0: now(), until: now() + RULE_MIN * 60000, who: r.who.slice(), broke: {}, done: false });
+  UI.ruleDraft = null;
+  logRun('info', 'Regel von ' + q.author + ': ' + text);
+  try { if (navigator.vibrate) navigator.vibrate([40, 50, 40]); } catch (e) {}
+  commit(); setToast('Die Regel gilt jetzt fünf Minuten');
+};
+/* broken: one drink, no matter how often; never over the maximum */
+A.ruleBroke = function (d) {
+  var r = runLive(); if (!r) return;
+  var x = rulesOf(r).filter(function (y) { return y.id === d.id; })[0];
+  if (!x || !ruleLive(x) || x.broke[d.pid] || x.who.indexOf(d.pid) < 0) return;
+  x.broke[d.pid] = true;
+  var p = person(d.pid), bg = budget(d.pid), bd = budOf(d.pid);
+  if (bg.C < bg.M) { addDrink(d.pid, 1, 'regel', 'Regel gebrochen: ' + x.text); setToast(p.name + ' trinkt ein ' + U() + (bd ? ', ' + bd + ' trinkt mit' : '')); x.water = x.water || {}; }
+  else { x.water = x.water || {}; x.water[d.pid] = true; setToast(p.name + ' ist am Maximum, es gibt Wasser'); }
+  logRun('fail', p.name + ' hat die Regel gebrochen' + (bg.C < bg.M ? ' und trinkt ein ' + U() : ', am Maximum gibt es Wasser'));
+  commit();
+};
+
+/* ---------- live timers ---------- */
+function mmss(ms) { var s = Math.max(0, Math.ceil(ms / 1000)), m = Math.floor(s / 60); s = s % 60; return m + ':' + (s < 10 ? '0' : '') + s; }
+function zt(until, done, rer) { return '<b class="zt num" data-until="' + until + '"' + (done ? ' data-done="' + esc(done) + '"' : '') + (rer ? ' data-rerender="1"' : '') + '>' + (until > now() ? mmss(until - now()) : esc(done || '0:00')) + '</b>'; }
+function ztTick() {
+  if (typeof document === 'undefined' || !document.querySelectorAll) return;
+  var els = document.querySelectorAll('[data-until]'), re = false;
+  for (var i = 0; i < els.length; i++) {
+    var el = els[i], left = +el.getAttribute('data-until') - now();
+    if (left > 0) el.textContent = mmss(left);
+    else { el.textContent = el.getAttribute('data-done') || '0:00'; if (el.getAttribute('data-rerender')) re = true; }
+  }
+  if (re && ruleSweep()) commit();
+}
+if (typeof window !== 'undefined' && window.requestAnimationFrame && typeof setInterval === 'function') setInterval(ztTick, 1000);
+
+/* one active rule: the text, the clock, who broke it */
+function ruleHtml(x, compact) {
+  var live = ruleLive(x);
+  var ppl = x.who.map(function (id) {
+    var p = person(id);
+    if (x.broke[id]) return '<span class="rl-p broke">' + face(p, 24) + esc(p.name) + (x.water && x.water[id] ? ' · Wasser' : ' trinkt') + '</span>';
+    if (!live) return '<span class="rl-p ok">' + face(p, 24) + esc(p.name) + ' hat durchgehalten</span>';
+    return '<button type="button" class="rl-p" data-act="ruleBroke" data-id="' + x.id + '" data-pid="' + id + '">' + face(p, 24) + esc(p.name) + ' hat sie gebrochen</button>';
+  }).join('');
+  return '<div class="rl' + (live ? '' : ' over') + (compact ? ' compact' : '') + '"><div class="rl-h"><span class="rl-e">' + emb('gavel', compact ? 26 : 32) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>„' + esc(x.text) + '“</b><span>Regel von ' + esc(x.by) + '</span></span>' +
+    (live ? '<span class="rl-t">' + zt(x.until, 'vorbei', true) + '</span>' : '<span class="rl-t done">vorbei</span>') + '</div><div class="rl-ps">' + ppl + '</div></div>';
+}
+/* on the step screens: only what runs right now */
+function ruleStrip() {
+  var r = runLive(); if (!r) return '';
+  var live = rulesOf(r).filter(ruleLive);
+  return live.length ? '<div class="rl-strip">' + live.map(function (x) { return ruleHtml(x, true); }).join('') + '</div>' : '';
+}
+/* in the cockpit and the card area: buddies, rules, the way to the cards */
+function partyRunHtml(r, full) {
+  var b = bud(r), out = '';
+  if (b.on) {
+    var pairs = r.who.filter(function (id) { return b.map[id]; });
+    if (!pairs.length) out += '<div class="zc-row"><span class="zc-e">' + emb('cheers', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Trinkbuddys</b><span>Erste Wahl bei der Aufgabe nach Minute ' + BUD_MIN + '</span></span><span class="zc-t">' + zt(budNextAt(r), 'fällig') + '</span></div>';
+    else {
+      out += '<div class="zc-row"><span class="zc-e">' + emb('cheers', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Trinkbuddys</b><span>Wechsel bei der nächsten Aufgabe nach</span></span><span class="zc-t">' + zt(budNextAt(r), 'fällig') + '</span></div>' +
+        '<div class="zc-pairs">' + pairs.map(function (id) {
+          var n = b.map[id], card = budCard(n);
+          return '<div class="zc-pair">' + face(person(id), 30) + '<span class="zc-amp">' + icon('i-cup', 14) + '</span>' + guestFace(n, 30) + '<span class="grow"><b>' + esc(person(id).name) + '</b> mit <b>' + esc(n) + '</b></span>' + (card ? '<button type="button" class="zc-fwd" data-act="budFwd" data-id="' + id + '">' + emb('forward', 18) + 'Weiterleiten</button>' : '') + '</div>';
+        }).join('') + '</div>';
+    }
+  }
+  var rules = rulesOf(r).filter(function (x) { return ruleLive(x) || (full && x.done); });
+  out += rules.map(function (x) { return ruleHtml(x, false); }).join('');
+  var free = 0; PC_KINDS.forEach(function (t) { free += pcFree(t).length; });
+  if (!full) out += '<button type="button" class="zc-go" data-act="openCards" data-from="run">' + icon('i-star', 16) + '<span class="grow">Kartenbereich</span>' + (free ? '<span class="zc-n">' + free + ' im Umlauf</span>' : '') + icon('i-next', 16) + '</button>';
+  return out ? '<span class="eyebrow mt18 block">Karten und Timer</span><div class="zc mt10">' + out + '</div>' : '';
+}
+
+/* ---------- the card area ---------- */
+A.openCards = function (d) { UI.cardsFrom = (d && d.from) || (runLive() ? 'run' : 'questions'); UI.ruleDraft = null; go('cards'); };
+function pcStatus(q) {
+  var t = q.type, tm = q.usedAt ? new Date(q.usedAt).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) : '';
+  if (q.status === 'offen') return 'Wartet unter „Neu eingegangen“ auf deine Freigabe';
+  if (q.used) return t === 'regel' ? 'Eingelöst um ' + tm + ': „' + (q.usedFor || '') + '“' : t === 'weiter' ? 'Eingesetzt um ' + tm + (q.usedFor ? ', für ' + q.usedFor : '') : 'Eingelöst für ' + (q.usedFor || 'eine Hauptperson');
+  if (t === 'joker') return 'Wird beim Ergebnis gefragt, wenn jemand trinken muss';
+  if (t === 'weiter') { var r = runLive(); return r && bud(r).on && r.who.some(function (id) { return pcSame(bud(r).map[id], q.author); }) ? 'Ist gerade Trinkbuddy und kann weiterleiten' : 'Kommt zum Einsatz, wenn ' + q.author + ' Trinkbuddy wird'; }
+  return runLive() ? 'Einlösbar, sobald ' + q.author + ' eine Regel ansagt' : 'Einlösbar, sobald das Spiel läuft';
+}
+function pcItem(q) {
+  var t = q.type, act = '';
+  if (q.status === 'ok' && !q.used && t === 'regel' && runLive()) {
+    if (UI.ruleDraft && UI.ruleDraft.qid === q.id) {
+      return '<div class="pc-item open"><div class="row gap10">' + guestFace(q.author, 40) + '<span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(q.author) + ' sagt eine Regel an</b><span>Gilt fünf Minuten für ' + esc(joinNames(runLive().who.map(function (id) { return person(id).name; }))) + '</span></span></div>' +
+        '<input id="ruleIn" class="input mt10" type="text" maxlength="80" autocomplete="off" autocapitalize="sentences" enterkeyhint="done" data-bind="rule.text" value="' + esc(UI.ruleDraft.text || '') + '" placeholder="z. B. Keine Hände benutzen">' +
+        '<div class="cta-row mt10"><button type="button" class="btn-dark" style="flex:0 0 auto;padding:0 18px" data-act="ruleCancel">Abbrechen</button><button type="button" class="cta" id="ruleGo" data-act="ruleStart"' + (String(UI.ruleDraft.text || '').trim().length >= 2 ? '' : ' disabled') + '>' + icon('i-clock', 18) + 'Fünf Minuten starten</button></div></div>';
+    }
+    act = '<button type="button" class="pc-act" data-act="ruleOpen" data-id="' + q.id + '">Einlösen</button>';
+  }
+  if (q.status === 'ok' && !q.used && t === 'weiter') {
+    var r = runLive(), pid = r && bud(r).on ? r.who.filter(function (id) { return pcSame(bud(r).map[id], q.author); })[0] : null;
+    if (pid) act = '<button type="button" class="pc-act" data-act="budFwd" data-id="' + pid + '">Weiterleiten</button>';
+  }
+  return '<div class="pc-item' + (q.used ? ' used' : '') + '">' + guestFace(q.author, 40) + '<span class="stack grow" style="gap:2px;min-width:0"><b>' + esc(q.author) + (q.text && t === 'joker' ? ' <small>· Bedingung: ' + esc(q.text) + '</small>' : '') + '</b><span>' + esc(pcStatus(q)) + '</span></span>' + act + '</div>';
+}
+function pcKindBlock(t) {
+  var all = pcAll(t); if (!all.length) return '';
+  var free = all.filter(function (q) { return q.status === 'ok' && !q.used; }).length;
+  return '<div class="pc-kind pk-' + t + ' mt14"><div class="pc-kh"><span class="pc-ke">' + emb(GQ_STYLE[t].e, 34) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(pcName(t)) + '</b><span>' + esc(pcText(t)) + '</span></span><span class="pc-kn">' + free + '</span></div>' +
+    all.map(pcItem).join('') + '</div>';
+}
+V.cards = function () {
+  ruleSweep();
+  var r = runLive(), from = UI.cardsFrom || (r ? 'run' : 'questions'), body;
+  if (demoOn()) body = '<p class="lead">Joker, Weiterleiten und die Regel-Karte ziehen eure Gäste als Bonuskarte. Hier löst du sie auf der Party ein und druckst sie vorher aus.</p>' + demoLockRow('Die Karten gibt es mit dem Game Pass.');
+  else {
+    var timers = r ? partyRunHtml(r, true) : '';
+    var lists = PC_KINDS.map(pcKindBlock).join('');
+    if (!lists) lists = '<div class="qx-empty mt14">' + emb('forward', 34) + '<span>Noch keine Karten im Umlauf. Gäste ziehen sie als Bonuskarte im Gäste-Link: den Joker, Weiterleiten in Silber und die Regel-Karte.</span></div>';
+    body = dk(timers + '<span class="eyebrow mt18 block">Im Umlauf</span>' + lists, printBlock(), 'dk-cards');
+  }
+  return scr(topbar(from, 'Karten'), body, '');
+};
+
+/* ---------- closing the guest round ---------- */
+function collectCloseHtml() {
+  if (demoOn()) return '';
+  if (S.collectClosed) return '<div class="cr-box mt10">' + icon('i-lock', 18) + '<span class="stack grow" style="gap:2px;min-width:0"><b>Gäste-Runde geschlossen</b><span>Neue Beiträge und Bonuskarten kommen nicht mehr an. Jetzt kannst du die Karten drucken.</span></span></div>' +
+    '<div class="cta-row mt10">' + (UI.screen === 'cards' ? '' : '<button type="button" class="btn-dark" style="flex:1" data-act="openCards" data-from="questions">' + icon('i-print', 18) + 'Karten drucken</button>') + '<button type="button" class="btn-ghost" style="' + (UI.screen === 'cards' ? 'flex:1' : 'flex:0 0 auto;width:auto;padding:0 18px') + '" data-act="collectOpen">Gäste-Runde wieder öffnen</button></div>';
+  if (UI.confirm === 'collectClose') return confirmBox('Gäste-Runde schließen?', 'Danach können Gäste nichts mehr schicken und keine Bonuskarten mehr ziehen. Du kannst sie jederzeit wieder öffnen.', 'collectClose', 'Schließen');
+  return '<button type="button" class="cr-btn mt10" data-act="askConfirm" data-v="collectClose">' + icon('i-lock', 18) + '<span class="stack grow" style="gap:2px;min-width:0;text-align:left"><b>Gäste-Runde schließen</b><span>Kurz vor der Party. Danach druckst du die Karten mit den Namen.</span></span>' + icon('i-next', 16) + '</button>';
+}
+A.collectClose = function () { S.collectClosed = true; S.collectClosedAt = now(); UI.confirm = null; commit(); setToast('Gäste-Runde geschlossen'); };
+A.collectOpen = function () { S.collectClosed = false; commit(); setToast('Gäste-Runde wieder offen'); };
+/* the guest link after closing */
+function gClosedView() {
+  var head = UI.guestMode === 'test' ? '<div class="testbanner">' + icon('i-user', 18) + '<span class="grow">Testansicht: So sieht der Link für Gäste aus.</span><button type="button" class="tag plain" data-act="go" data-to="' + UI.guestFrom + '" style="height:30px;color:var(--sun)">Zurück</button></div>' : '';
+  var body = '<div class="cr-guest">' + emb('lock', 70) + '<h1 class="h1 mt18">Die Runde ist geschlossen</h1><p class="lead mt10">Danke an alle, die mitgemacht haben! Die Party ist in Vorbereitung. Wer eine Bonuskarte gezogen hat, bekommt sie vor dem Start in die Hand.</p></div>';
+  return scr(head, body, '', 'crscr');
+}
+
+/* ---------- printing ---------- */
+function printCards() { var out = []; PC_KINDS.forEach(function (t) { pcAll(t).forEach(function (q) { if (q.status === 'ok' && !q.used) out.push(q); }); }); return out; }
+function pcLogo() { return '<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#FF7A45"></rect><g transform="translate(6.5 6.3) scale(.95)"><path d="M8 2H28V31L35 38C39.5 42.5 38 50.5 31.5 51.5C28.5 52 25.5 51 23 48.5L11 36.5C9 34.5 8 32 8 29Z" fill="#15122B"></path></g><path d="M48 5Q49.6 12.4 57 14Q49.6 15.6 48 23Q46.4 15.6 39 14Q46.4 12.4 48 5Z" fill="#FFC940" stroke="#15122B" stroke-width="2.2" stroke-linejoin="round"></path></svg>'; }
+function pcCardHtml(q, big) {
+  var t = q.type, e = E(), date = typeof gWelcomeDate === 'function' ? gWelcomeDate() : '';
+  return '<div class="pc pc-' + t + (big ? ' big' : '') + '"><div class="pc-in">' +
+    '<div class="pc-top"><span class="pc-chip">' + esc(t === 'weiter' ? 'Silber' : t === 'regel' ? 'Regel' : 'Joker') + '</span><span class="pc-brand">' + pcLogo() + 'zparkling</span></div>' +
+    '<div class="pc-art"><span class="pc-ring"></span>' + emb(GQ_STYLE[t].e, 60) + '</div>' +
+    '<span class="pc-k">Bonuskarte</span><b class="pc-t">' + esc(pcTitle(t)) + '</b><p class="pc-x">' + esc(pcText(t)) + '</p>' +
+    (t === 'joker' && q.text ? '<p class="pc-cond">Bedingung: ' + esc(q.text) + '</p>' : '') +
+    '<div class="pc-for"><span>Für</span><b>' + esc(q.author) + '</b></div>' +
+    '<div class="pc-foot"><span>' + esc(e && e.name ? e.name : focusNames()) + '</span><span>' + esc(date) + '</span></div></div></div>';
+}
+function printBlock() {
+  if (!S.collectClosed) return '<span class="eyebrow mt18 block">Drucken</span><div class="pr-wait mt10">' + emb('lock', 40) + '<span class="stack grow" style="gap:4px;min-width:0"><b>Erst die Gäste-Runde schließen</b><span>Solange Gäste noch Karten ziehen, kann sich die Liste ändern. Schließ die Runde kurz vor der Party, dann druckst du die Karten mit den Namen aus und verteilst sie vor dem Start.</span></span></div>' + collectCloseHtml();
+  var list = printCards(), fmt = UI.prFmt || 'karte', sel = UI.prOff || {};
+  if (!list.length) return '<span class="eyebrow mt18 block">Drucken</span><div class="pr-wait mt10">' + emb('forward', 40) + '<span class="stack grow" style="gap:4px;min-width:0"><b>Nichts zu drucken</b><span>Es ist keine freigegebene Karte im Umlauf.</span></span></div>' + collectCloseHtml();
+  var n = list.filter(function (q) { return !sel[q.id]; }).length;
+  var seg = '<div class="seg mt10" style="grid-template-columns:repeat(2,minmax(0,1fr));height:48px" role="group" aria-label="Format">' + [['karte', 'Spielkarte'], ['a4', 'A4, eine pro Seite']].map(function (x) { var s = fmt === x[0]; return '<button type="button" class="' + (s ? 'is-sel' : '') + '" data-act="prFmt" data-v="' + x[0] + '" aria-pressed="' + s + '">' + x[1] + '</button>'; }).join('') + '</div>';
+  var pick = list.map(function (q) { var on = !sel[q.id]; return '<button type="button" class="pr-pick' + (on ? ' on' : '') + '" data-act="prToggle" data-id="' + q.id + '" aria-pressed="' + on + '"><span class="pr-box">' + (on ? icon('i-check', 14) : '') + '</span>' + emb(GQ_STYLE[q.type].e, 24) + '<span class="grow"><b>' + esc(pcName(q.type)) + '</b> für ' + esc(q.author) + '</span></button>'; }).join('');
+  var prev = list.filter(function (q) { return !sel[q.id]; }).slice(0, 6).map(function (q) { return '<div class="pr-cell">' + pcCardHtml(q, false) + '</div>'; }).join('');
+  return '<span class="eyebrow mt18 block">Drucken</span><p class="small mt6">' + (fmt === 'a4' ? 'Jede Karte groß auf einer eigenen A4-Seite, zum Überreichen.' : 'Neun Karten pro A4-Blatt in Spielkartengröße (63 × 88 mm), zum Ausschneiden.') + '</p>' + seg +
+    '<div class="pr-picks mt10">' + pick + '</div>' +
+    (prev ? '<div class="pr-prev mt14' + (fmt === 'a4' ? ' a4' : '') + '">' + prev + '</div>' : '') +
+    '<button type="button" class="cta mt14" data-act="prGo"' + (n ? '' : ' disabled') + '>' + icon('i-print', 18) + (n === 1 ? 'Eine Karte drucken' : n + ' Karten drucken') + '</button>' +
+    '<p class="small mt8">Im Druckdialog „Hintergrundgrafiken“ einschalten, damit die Farben mitkommen. Als PDF speichern geht dort auch.</p>' + collectCloseHtml();
+}
+A.prFmt = function (d) { UI.prFmt = d.v === 'a4' ? 'a4' : 'karte'; render(); };
+A.prToggle = function (d) { UI.prOff = UI.prOff || {}; UI.prOff[d.id] = !UI.prOff[d.id]; render(); };
+/* the pages go into a print-only layer outside the app, then the browser prints */
+function printPagesHtml(list, fmt) {
+  if (fmt === 'a4') return list.map(function (q) { return '<div class="pp-page pp-one">' + pcCardHtml(q, true) + '</div>'; }).join('');
+  var out = '';
+  for (var i = 0; i < list.length; i += 9) out += '<div class="pp-page pp-grid">' + list.slice(i, i + 9).map(function (q) { return '<div class="pp-cut">' + pcCardHtml(q, false) + '</div>'; }).join('') + '</div>';
+  return out;
+}
+A.prGo = function () {
+  var sel = UI.prOff || {}, list = printCards().filter(function (q) { return !sel[q.id]; }); if (!list.length) return;
+  var html = printPagesHtml(list, UI.prFmt || 'karte');
+  if (typeof document === 'undefined' || !document.body) return html;
+  var el = document.getElementById('zpPrint');
+  if (!el) { el = document.createElement('div'); el.id = 'zpPrint'; document.body.appendChild(el); }
+  el.innerHTML = html;
+  setTimeout(function () { try { window.print(); } catch (e) { setToast('Drucken klappt hier nicht. Öffne zparkling im Browser.'); } }, 120);
+  return html;
+};
+/* ---------- on the guests' page ---------- */
+function pcSection() {
+  if (demoOn()) return '<h3 class="qx-h" id="qs-joker">Karten für die Party</h3>' + demoLockRow('Joker, Weiterleiten in Silber und die Regel-Karte gibt es mit dem Game Pass.');
+  var all = []; PC_KINDS.forEach(function (t) { all = all.concat(pcAll(t)); });
+  if (!all.length) return '';
+  var free = all.filter(function (q) { return q.status === 'ok' && !q.used; }).length;
+  return '<h3 class="qx-h" id="qs-joker">Karten im Umlauf<span class="qx-n">' + free + '</span></h3><p class="qx-lead">Gäste ziehen sie als Bonuskarte und lösen sie auf der Party ein. Der Joker erlässt ein ' + esc(U()) + ', Weiterleiten gibt den Trinkbuddy-Job ab, die Regel-Karte startet eine Regel für fünf Minuten.</p>' +
+    '<div class="pc-sum">' + PC_KINDS.map(function (t) {
+      var a = pcAll(t), f = a.filter(function (q) { return q.status === 'ok' && !q.used; }).length;
+      return a.length ? '<span class="pc-sc pk-' + t + '">' + emb(GQ_STYLE[t].e, 26) + '<span class="stack" style="gap:0"><b>' + f + ' ' + esc(pcName(t)) + '</b><small>' + esc(joinNames(a.map(function (q) { return q.author; }).slice(0, 3))) + (a.length > 3 ? ' und mehr' : '') + '</small></span></span>' : '';
+    }).join('') + '</div>' +
+    '<button type="button" class="qx-own mt10" data-act="openCards" data-from="questions"><span class="qx-own-ic">' + emb('forward', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Zum Kartenbereich</b><small>' + (S.collectClosed ? 'Einlösen und drucken' : 'Einlösen, und drucken nach dem Schließen der Gäste-Runde') + '</small></span>' + icon('i-next', 16) + '</button>';
+}
+/* =========================================================
    The invitation. A guest who opens the link for the first time gets
    a letter: it drops in, the sock seal pops, the flap opens and the
    invitation slides out, with who is celebrated, when and what this is.
@@ -8849,6 +9375,8 @@ function resultView(P) {
     if (r.freed) left = '<span class="jk-face">' + left + '<i>' + emb('joker', 20) + '</i></span>';
     if (r.alt) txt += '<span class="sub block" style="color:var(--sun)">' + esc(r.alt) + '</span>';
     if (r.pilot) txt += '<span class="sub block" style="color:var(--violet-text)">' + esc(r.pilot) + '</span>';
+    var bd = r.pid && r.n > 0 && !r.water && !r.freed && !r.group ? budOf(r.pid) : '';
+    if (bd) txt += '<span class="sub block bd-along">' + emb('cheers', 16) + 'Trinkbuddy ' + esc(bd) + ' trinkt mit</span>';
     var ctrl = '';
     if (!r.group && !r.water && r.pid && r.n > 0) {
       ctrl = (jokersLeft(r.pid) > 0 && isFocus(r.pid) ? '<button type="button" class="tag plain" data-act="stepJoker" data-i="' + i + '" style="height:32px;color:var(--mint)">' + icon('i-drop', 14) + 'Joker</button>' : '') +
@@ -9271,7 +9799,12 @@ function prepHint(P) {
   if (['spiel', 'frage', 'schaetzen', 'quiz', 'wwe', 'gast', 'partner', 'glueck', 'toast', 'menge', 'mission'].indexOf(P.kind) < 0 || P.last) return '';
   return peekCard();
 }
-V.step = function () { return renderStepScreen(R() && R().pending, false); };
+V.step = function () {
+  var r = R(); if (budDue(r)) return V.buddy();
+  ruleSweep();
+  var h = renderStepScreen(r && r.pending, false), st = ruleStrip();
+  return st ? h.replace('<div class="body">', '<div class="body">' + st) : h;
+};
 V.free = function () { return renderStepScreen(S.free && S.free.step, true); };
 
 /* =========================================================
@@ -11170,7 +11703,7 @@ A.gSubmit = function () {
   if (UI.guestMode === 'link') { var inbox = lsGet(INBOX_Q) || []; lsSet(INBOX_Q, inbox.concat(out)); }
   else { S.questions = S.questions.concat(out); save(); }
   var names = {}; guestSubmissions().forEach(function (q) { names[String(q.author).toLowerCase()] = 1; });
-  var pass = gPass(); pass.name = author; pass.bank = pts; pass.stickers = stickers; pass.sent = (pass.sent || 0) + out.length; pass.cards = (pass.cards || 0) + cardsDone.length; if (cardsDone.some(function (c) { return c.type === 'joker'; })) pass.joker = true; gPassSave();
+  var pass = gPass(); pass.name = author; pass.bank = pts; pass.stickers = stickers; pass.sent = (pass.sent || 0) + out.length; pass.cards = (pass.cards || 0) + cardsDone.length; cardsDone.forEach(function (c) { if (gkSpecial(c.type)) pass[c.type] = true; }); gPassSave();
   var types = {}; out.forEach(function (q) { types[q.type] = (types[q.type] || 0) + 1; });
   UI.gFinal = { pts: pts, n: out.length, no: Object.keys(names).length, stickers: stickers, types: types };
   UI.qSent = author; UI.gSentN = out.length; UI.gForm = { author: author, items: [], cards: [] }; UI.gDrawSeen = false;
@@ -11193,7 +11726,7 @@ A.qrBig = function (d) { UI.qrBig = { code: d.code, title: d.title }; render(); 
 A.qrClose = function () { UI.qrBig = null; render(); };
 
 /* counter */
-A.drinkPlus = function (d) { addDrink(d.id, 1, 'manuell'); commit(); setToast('+1 ' + U() + ' für ' + person(d.id).name); };
+A.drinkPlus = function (d) { var bd = budOf(d.id); addDrink(d.id, 1, 'manuell'); commit(); setToast('+1 ' + U() + ' für ' + person(d.id).name + (bd ? ', ' + bd + ' trinkt mit' : '')); };
 A.drinkMinus = function (d) { if (drinksOf(d.id) <= 0) return; addDrink(d.id, -1, 'manuell', 'Korrektur'); commit(); };
 A.addCounterPerson = function () { var id = addPersonByName(UI.counterName); UI.counterName = ''; commit(); if (id) setToast(person(id).name + ' ist im Zähler'); var i = document.getElementById('cName'); if (i) i.focus(); };
 A.undoDrink = function () { S.drinks.pop(); commit(); setToast('Letzter Eintrag gelöscht'); };
@@ -11301,6 +11834,7 @@ A.cfgAccAdd = function () {
 A.cfgAccDel = function (d) { var c = cfgDefaults(); c.acc.items.splice(+d.i, 1); if (c.acc.items.length < 2) c.acc.swaps = 0; commit(); };
 A.cfgSwaps = function (d) { var c = cfgDefaults(); c.acc.swaps = clamp(c.acc.swaps + (+d.d), 0, 30); commit(); };
 A.cfgLink = function () { var c = cfgDefaults(); c.link = !c.link; commit(); };
+A.cfgBuddy = function () { var c = cfgDefaults(); c.buddy = c.buddy === false; commit(); };
 A.startRun = function () { if (needPass('Das Spiel starten geht mit dem Game Pass.')) return;
   /* a Junggesellenabschied needs its crew: the master enters who is there */
   if (isJga() && crewList().length < 2) { UI.cfgErr = 'Tragt zuerst die Truppe ein, mindestens zwei Namen. Beim Junggesellenabschied spielt sie mit.'; UI.cfgStep = 1; render(); return; }
@@ -11347,6 +11881,7 @@ A.runNext = function () {
   r.pending = nextStep();
   r.hist[r.hist.length - 1].meta.next = pendingLabel(r.pending);
   UI.checkVals = {};
+  budCheck(r); ruleSweep();
   commit(); go('step');
 };
 A.rollPick = function (d) {
@@ -11869,6 +12404,8 @@ app.addEventListener('click', function (e) {
 });
 function showText(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
 function setBind(b, v) {
+  if (b === 'rule.text') { if (UI.ruleDraft) { UI.ruleDraft.text = String(v).slice(0, 80); var rg = document.getElementById('ruleGo'); if (rg) rg.disabled = UI.ruleDraft.text.trim().length < 2; } return; }
+  if (b === 'bud.txt') { UI.budTxt = String(v).slice(0, 24); return; }
   if (b === 'tour.name') { UI.tourName = v; tourPatch(); return; }
   if (b === 'pass.date') { UI.passDate = v; render(); return; }
   if (b === 'pass.move') { UI.passMoveDate = v; render(); return; }

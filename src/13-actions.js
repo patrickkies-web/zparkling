@@ -256,7 +256,7 @@ A.gSubmit = function () {
   if (UI.guestMode === 'link') { var inbox = lsGet(INBOX_Q) || []; lsSet(INBOX_Q, inbox.concat(out)); }
   else { S.questions = S.questions.concat(out); save(); }
   var names = {}; guestSubmissions().forEach(function (q) { names[String(q.author).toLowerCase()] = 1; });
-  var pass = gPass(); pass.name = author; pass.bank = pts; pass.stickers = stickers; pass.sent = (pass.sent || 0) + out.length; pass.cards = (pass.cards || 0) + cardsDone.length; if (cardsDone.some(function (c) { return c.type === 'joker'; })) pass.joker = true; gPassSave();
+  var pass = gPass(); pass.name = author; pass.bank = pts; pass.stickers = stickers; pass.sent = (pass.sent || 0) + out.length; pass.cards = (pass.cards || 0) + cardsDone.length; cardsDone.forEach(function (c) { if (gkSpecial(c.type)) pass[c.type] = true; }); gPassSave();
   var types = {}; out.forEach(function (q) { types[q.type] = (types[q.type] || 0) + 1; });
   UI.gFinal = { pts: pts, n: out.length, no: Object.keys(names).length, stickers: stickers, types: types };
   UI.qSent = author; UI.gSentN = out.length; UI.gForm = { author: author, items: [], cards: [] }; UI.gDrawSeen = false;
@@ -279,7 +279,7 @@ A.qrBig = function (d) { UI.qrBig = { code: d.code, title: d.title }; render(); 
 A.qrClose = function () { UI.qrBig = null; render(); };
 
 /* counter */
-A.drinkPlus = function (d) { addDrink(d.id, 1, 'manuell'); commit(); setToast('+1 ' + U() + ' für ' + person(d.id).name); };
+A.drinkPlus = function (d) { var bd = budOf(d.id); addDrink(d.id, 1, 'manuell'); commit(); setToast('+1 ' + U() + ' für ' + person(d.id).name + (bd ? ', ' + bd + ' trinkt mit' : '')); };
 A.drinkMinus = function (d) { if (drinksOf(d.id) <= 0) return; addDrink(d.id, -1, 'manuell', 'Korrektur'); commit(); };
 A.addCounterPerson = function () { var id = addPersonByName(UI.counterName); UI.counterName = ''; commit(); if (id) setToast(person(id).name + ' ist im Zähler'); var i = document.getElementById('cName'); if (i) i.focus(); };
 A.undoDrink = function () { S.drinks.pop(); commit(); setToast('Letzter Eintrag gelöscht'); };
@@ -387,6 +387,7 @@ A.cfgAccAdd = function () {
 A.cfgAccDel = function (d) { var c = cfgDefaults(); c.acc.items.splice(+d.i, 1); if (c.acc.items.length < 2) c.acc.swaps = 0; commit(); };
 A.cfgSwaps = function (d) { var c = cfgDefaults(); c.acc.swaps = clamp(c.acc.swaps + (+d.d), 0, 30); commit(); };
 A.cfgLink = function () { var c = cfgDefaults(); c.link = !c.link; commit(); };
+A.cfgBuddy = function () { var c = cfgDefaults(); c.buddy = c.buddy === false; commit(); };
 A.startRun = function () { if (needPass('Das Spiel starten geht mit dem Game Pass.')) return;
   /* a Junggesellenabschied needs its crew: the master enters who is there */
   if (isJga() && crewList().length < 2) { UI.cfgErr = 'Tragt zuerst die Truppe ein, mindestens zwei Namen. Beim Junggesellenabschied spielt sie mit.'; UI.cfgStep = 1; render(); return; }
@@ -433,6 +434,7 @@ A.runNext = function () {
   r.pending = nextStep();
   r.hist[r.hist.length - 1].meta.next = pendingLabel(r.pending);
   UI.checkVals = {};
+  budCheck(r); ruleSweep();
   commit(); go('step');
 };
 A.rollPick = function (d) {
@@ -955,6 +957,8 @@ app.addEventListener('click', function (e) {
 });
 function showText(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
 function setBind(b, v) {
+  if (b === 'rule.text') { if (UI.ruleDraft) { UI.ruleDraft.text = String(v).slice(0, 80); var rg = document.getElementById('ruleGo'); if (rg) rg.disabled = UI.ruleDraft.text.trim().length < 2; } return; }
+  if (b === 'bud.txt') { UI.budTxt = String(v).slice(0, 24); return; }
   if (b === 'tour.name') { UI.tourName = v; tourPatch(); return; }
   if (b === 'pass.date') { UI.passDate = v; render(); return; }
   if (b === 'pass.move') { UI.passMoveDate = v; render(); return; }

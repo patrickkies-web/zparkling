@@ -12,7 +12,7 @@ function face(p, size, style, mood) {
 }
 function groupFace(size) { return '<span class="ini" style="width:' + size + 'px;height:' + size + 'px;background:#F4F1FF">' + icon('i-users', Math.round(size * 0.5)) + '</span>'; }
 /* navigation says where it goes: an arrow and a word, never a bare symbol */
-var BACK_LABEL = { home: 'Party', run: 'Übersicht', questions: 'Fragen', games: 'Spiele', counter: 'Zähler', runSetup: 'Einrichten', crew: 'Gäste' };
+var BACK_LABEL = { home: 'Party', run: 'Übersicht', cards: 'Karten', questions: 'Fragen', games: 'Spiele', counter: 'Zähler', runSetup: 'Einrichten', crew: 'Gäste' };
 function navBtn(attrs, ic, label, cls) { return '<button type="button" class="navbtn' + (cls ? ' ' + cls : '') + '" ' + attrs + '>' + icon(ic, 18) + '<span>' + esc(label) + '</span></button>'; }
 function topbar(back, title, right) {
   return '<div class="topbar tb3">' +
@@ -482,6 +482,8 @@ function qDetails(q) {
   if (q.type === 'spruch') return '„' + esc(q.text) + '“';
   if (q.type === 'umfrage') return esc(umfrageText(q.qk, qAboutName(q))) + ' ' + esc(q.text);
   if (q.type === 'joker') return 'Joker' + (q.text ? ', Bedingung: ' + esc(q.text) : '');
+  if (q.type === 'weiter') return 'Weiterleiten-Karte';
+  if (q.type === 'regel') return 'Regel-Karte';
   return '';
 }
 function qAboutName(q) { return q.forId && isFocus(q.forId) ? person(q.forId).name : E() && E().focus.length ? focusNames() : 'das Geburtstagskind'; }
@@ -508,6 +510,8 @@ function qHeadline(q) {
   if (q.type === 'wenn') { var wc = wennCat(q.cat); return (wc ? 'Wäre ' + wc[1] + ': ' : '') + q.text; }
   if (q.type === 'umfrage') return 'Umfrage: ' + q.text;
   if (q.type === 'joker') return 'Joker von ' + q.author;
+  if (q.type === 'weiter') return 'Weiterleiten-Karte von ' + q.author;
+  if (q.type === 'regel') return 'Regel-Karte von ' + q.author;
   return q.text;
 }
 function qPills(q) {
@@ -527,6 +531,8 @@ function qPills(q) {
   if (q.type === 'spruch') return wrap(P('Sagt ' + esc(qAboutName(q)) + ' angeblich ständig'));
   if (q.type === 'umfrage') return wrap(P('Auf die Umfrage: ' + esc(umfrageText(q.qk, qAboutName(q)))));
   if (q.type === 'joker') return wrap(P(q.text ? 'Bedingung: ' + esc(q.text) : 'Ohne Bedingung') + P('Befreit einmal von einem ' + esc(U()), 'ok'));
+  if (q.type === 'weiter') return wrap(P('Gibt den Trinkbuddy-Job einmal weiter', 'ok'));
+  if (q.type === 'regel') return wrap(P('Eine Regel für fünf Minuten', 'ok') + P('Bruch kostet ein ' + esc(U())));
   return '';
 }
 function qCard(q, i) {
@@ -610,13 +616,13 @@ V.questions = function () {
   var rd = qRounds();
   var aufg = S.questions.filter(function (q) { return q.type === 'aufgabe' && questionPlayable(q); }).length;
   /* a long page: chips at the top jump to each part */
-  var jump = '<nav class="qx-jump" aria-label="Springen zu">' + [['qs-neu', 'Neu' + (open.length ? ' · ' + open.length : '')], ['qs-link', 'Einladen'], AI_HOST ? ['qs-ki', 'KI'] : null, jokerAll().length ? ['qs-joker', 'Joker'] : null, ['qs-runden', 'Runden'], ['qs-alle', 'Alle Beiträge']].filter(Boolean).map(function (x) { return '<button type="button" class="qx-jb' + (x[0] === 'qs-neu' && open.length ? ' hot' : '') + '" data-act="jump" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
+  var jump = '<nav class="qx-jump" aria-label="Springen zu">' + [['qs-neu', 'Neu' + (open.length ? ' · ' + open.length : '')], ['qs-link', 'Einladen'], AI_HOST ? ['qs-ki', 'KI'] : null, pcAny() || demoOn() ? ['qs-joker', 'Karten'] : null, ['qs-runden', 'Runden'], ['qs-alle', 'Alle Beiträge']].filter(Boolean).map(function (x) { return '<button type="button" class="qx-jb' + (x[0] === 'qs-neu' && open.length ? ' hot' : '') + '" data-act="jump" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
   var body = jump + '<div class="qx' + (enter ? ' enter' : '') + '">' + dk(qHero(rd.total) + qCollectOverview(),
-    '<div class="mt14" id="qs-link">' + collectShare() + '</div>') + '\u0001' +
+    '<div class="mt14" id="qs-link">' + collectShare() + collectCloseHtml() + '</div>') + '\u0001' +
     '<h3 class="qx-h" id="qs-neu">Neu eingegangen' + (open.length ? '<span class="qx-n">' + open.length + '</span>' : '') + (open.length >= 2 ? '<button type="button" class="qx-all" data-act="qAllOk">' + icon('i-check', 14) + 'Alle freigeben</button>' : '') + '</h3>' +
     (open.length ? open.map(qCard).join('') : '<div class="qx-empty">' + emb('letter', 34) + '<span>Alles geprüft. Neue Beiträge landen hier, du gibst sie mit einem Tipp frei.</span></div>') +
     '\u0002' + aiSection() +
-    jokerSection() +
+    pcSection() +
     '<h3 class="qx-h" id="qs-runden">Daraus baut die App Runden<span class="qx-n mint">' + rd.total + '</span></h3>' +
     '<p class="qx-lead">Welche Runde wann kommt, bleibt eine Überraschung. Je mehr die Gäste schicken, desto mehr davon.' + (aufg ? ' Dazu ' + aufg + (aufg === 1 ? ' Aufgabe, die einzeln kommt.' : ' Aufgaben, die einzeln kommen.') : '') + '</p>' +
     '<div class="qx-rounds">' + rd.html + '</div>' + '\u0003' +
@@ -675,7 +681,7 @@ function draftFields(d, bp, k) {
     (who.length > 1 ? who.map(function (p) { var s = d.forId === p.id; return '<button type="button" class="chip-btn sm' + (s ? ' is-sel' : '') + '" data-act="' + actF + '"' + dk + ' data-v="' + p.id + '" aria-pressed="' + s + '">' + esc(p.name) + '</button>'; }).join('') : '') + '</div>' : '';
   return forBlock + textField + extra;
 }
-V.guestForm = function () { return UI.guestMode === 'master' ? masterForm() : guestMultiForm(); };
+V.guestForm = function () { return UI.guestMode === 'master' ? masterForm() : S && S.collectClosed ? gClosedView() : guestMultiForm(); };
 function guestHead() {
   var banner = UI.guestMode === 'test' ? '<div class="testbanner">' + icon('i-user', 18) + '<span class="grow">Testansicht: So sieht der Link für Gäste aus.</span><button type="button" class="tag plain" data-act="go" data-to="' + UI.guestFrom + '" style="height:30px;color:var(--sun)">Zurück</button></div>' : '';
   return banner + '<div class="' + (banner ? 'mt14' : '') + '">' + guestHeader('Mitmachen') + '</div>';

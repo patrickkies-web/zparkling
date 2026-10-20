@@ -103,9 +103,10 @@ function cfgStep3(c) {
   }).join('') +
     (shortPlan ? '<p class="small" style="padding:4px 0 10px">Pro Spiel fällt höchstens 1 ' + esc(e.unit) + '. Bei so wenigen Aufgaben wird das Ziel deshalb nicht ganz erreicht. Mehr ' + (fam === 'frei' ? (c.variant === 'wuerfel' ? 'Felder' : 'Runden') : fam === 'kranz' ? (c.variant === 'meter' ? 'Meter' : 'Stationen am Kranz') : 'Spielzeit') + ' oder ein kleineres Maximum helfen.</p>' : '');
   var link = '<label class="row mt14 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Gäste per Link einbinden</span><span class="sub">Bei Schätz- und Abstimmfragen</span></span><button type="button" class="switch" role="switch" aria-checked="' + !!c.link + '" data-act="cfgLink" aria-label="Gäste per Link einbinden"><span></span></button></label>';
+  var buddy = '<label class="row mt10 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Trinkbuddys</span><span class="sub">Ab Minute ' + BUD_MIN + ' wählt jede Hauptperson jemanden, der mittrinkt. Alle ' + BUD_MIN + ' Minuten wird getauscht.</span></span><button type="button" class="switch" role="switch" aria-checked="' + (c.buddy !== false) + '" data-act="cfgBuddy" aria-label="Trinkbuddys"><span></span></button></label>';
   return '<h1 class="h1 mt18">Alles bereit?</h1><p class="small mt6">Tipp eine Zeile an, um sie zu ändern.</p>' + sum +
     '<span class="eyebrow mt22 block">Plan des Piloten</span><div class="card padrows mt10">' + plan + '<div class="row" style="min-height:44px;border-top:1px solid var(--line)"><span class="grow small">So viel ' + esc(e.unit) + ' ist für heute eingeplant</span><button type="button" class="linkbtn" data-act="go" data-to="settings">Regeln</button></div></div>' +
-    '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (fam === 'kranz' ? cfgAccBlock(c).replace('<span class="eyebrow mt22 block">', '<span class="eyebrow mt14 block" style="font-size:13px">') : '') + (isJga() ? '' : crewSetupHtml(c)) + link +
+    '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (fam === 'kranz' ? cfgAccBlock(c).replace('<span class="eyebrow mt22 block">', '<span class="eyebrow mt14 block" style="font-size:13px">') : '') + (isJga() ? '' : crewSetupHtml(c)) + link + buddy +
     factCard('runSetup');
 }
 V.runSetup = function () {
@@ -231,7 +232,8 @@ V.run = function () {
     (r.hist && r.hist.some(function (h) { return h.kind === 'task'; }) ? ckTool('openRewind', '', 'i-undo', 'Zurückspulen') : '') +
     ckTool('openCrew', ' data-from="run"', 'i-users', r.jga ? 'Die Truppe' : 'Gäste vor Ort') +
     (zeit && r.variant === 'zeit' ? ckTool('runCheck', '', 'i-clock', 'Status-Check') : '') +
-    (zeit ? ckTool('runShift', '', 'i-plus', '+5 Min (Test)') : '') +
+    ckTool('openCards', ' data-from="run"', 'i-star', 'Karten') +
+    ckTool('runShift', '', 'i-plus', '+5 Min (Test)') +
     ckTool('askConfirm', ' data-v="endRun"', 'i-flag', 'Spiel beenden', 'end') + '</div>' +
     (UI.confirm === 'endRun' ? confirmBox('Spiel jetzt beenden?', 'Der Stand bleibt im Zähler erhalten.', 'endRun', 'Beenden') : '');
   var primary, demoEnd = !r.pending && demoRunOver(r);
@@ -245,7 +247,8 @@ V.run = function () {
   else if (r.variant === 'wuerfel') primary = '<button type="button" class="cta" data-act="runNext">' + icon('i-dice', 22) + (r.dice === 'echt' ? 'Gewürfelte Zahl eintragen' : 'Würfeln') + '</button>';
   else primary = '<button type="button" class="cta" data-act="runNext">' + (u.ic === 'sock' ? sockIc('currentColor', 15) : icon(u.ic || 'i-flag', 20)) + esc(u.unit) + ' ' + Math.min(tr.total, tr.pos + 1) + (fam === 'frei' ? ' starten' : ' aufdecken') + '</button>';
   var demoCard = demoEnd ? '<div class="dm-end mt14">' + emb('crown', 40) + '<span class="stack grow" style="gap:3px;min-width:0"><b>Das war der Beispiel-Abend</b><span>' + DEMO_STEPS + ' Stationen zum Reinschnuppern. Mit dem Game Pass spielt ihr den ganzen Abend, mit allen Spielen und Gäste-Runden.</span></span></div>' : '';
-  var body = dk(cockpit + demoCard + tiles + race, (demoEnd ? '' : peekCard()) + pilot + extras + hist + tools, 'dk-run');
+  ruleSweep();
+  var body = dk(cockpit + demoCard + tiles + race, (demoEnd ? '' : peekCard()) + partyRunHtml(r) + pilot + extras + hist + tools, 'dk-run');
   var head = '<div class="topbar tb3">' + navBtn('data-act="go" data-to="home" aria-label="Zur Party, das Spiel bleibt gespeichert"', 'i-back', 'Party') + '<span class="live"><i></i>Läuft</span>' +
     navBtn('data-act="runUndo" aria-label="Letzten Schritt rückgängig machen"' + (r.hist && r.hist.length ? '' : ' disabled'), 'i-undo', 'Rückgängig') + '</div>';
   /* remember what was shown once it had time to play, so the next visit animates only what changed */

@@ -31,7 +31,7 @@ const holes = s => /\{[A-Za-z]+\}|undefined|NaN|null/.test(s);
 /* 2. the app picks the kind the guests sent least */
 {
   const c = party(2);
-  guest(c); c.GK_JOKER_P = 0;
+  guest(c); c.GK_JOKER_P = 0; c.GK_WEITER_P = 0; c.GK_REGEL_P = 0;
   const cnt = c.gkCounts();
   const mn = Math.min.apply(null, c.GK_KINDS.map(k => cnt[k]));
   const seen = {};
@@ -156,7 +156,7 @@ const holes = s => /\{[A-Za-z]+\}|undefined|NaN|null/.test(s);
   ok(c.S.questions.filter(q => c.isCardType(q.type)).every(q => c.questionSlots(q) === 0), 'Cards hold no single-question slots');
   for (let k = 0; k < 30; k++) { const st = c.buildFree('frage'); if (st && c.isCardType((c.S.questions.filter(q => q.id === st.qid)[0] || {}).type)) { ok(false, 'a card came as a single question'); break; } }
   ok(c.rareTypes(c.typeCounts()).every(t => !c.isCardType(t)), 'The rare-kinds nudge only names kinds a guest can pick');
-  ok(c.formTypes().length === 9 && c.QTYPES.length === 14, 'Nine kinds in the form, five more from the cards');
+  ok(c.formTypes().length === 9 && c.QTYPES.length === 16, 'Nine kinds in the form, seven more from the cards');
 }
 /* 8. the rounds */
 function forceRound(c, id, main) {
