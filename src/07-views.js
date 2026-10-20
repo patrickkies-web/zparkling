@@ -72,7 +72,7 @@ function garland(width, fills, shape) {
   return out + '</svg>';
 }
 /* the example evening: a golden banner on every screen of the master, it leads to the Game Pass */
-var DEMO_HIDE = ['pass', 'tour', 'welcome', 'guestForm', 'guestLive'];
+var DEMO_HIDE = ['pass', 'tour', 'welcome', 'guestForm', 'guestLive', 'landing'];
 function demoBanner() {
   if (!S || !S.demo || UI.guestMode === 'link' || DEMO_HIDE.indexOf(UI.screen) >= 0) return '';
   var bub = ''; for (var i = 0; i < 10; i++) bub += '<i style="--x:' + (6 + i * 9.5).toFixed(1) + '%;--d:' + ((i * 0.53) % 2.4).toFixed(2) + 's;--s:' + (3 + (i * 7) % 5) + 'px"></i>';
@@ -124,7 +124,7 @@ V.welcome = function () {
   var ts = tourSaved(), j = ts.name ? tourAvFor(ts.name, ts.roll || 0) : avDefault(); j.hat = 'krone'; j.neck = 'sockenkranz'; j.mouth = 'lachen'; if (!ts.name) j.eyes = 'sterne'; j.bg = '#FFC940'; j.pat = 'strahlen';
   var body = '<div class="welcome-hero">' + garland(350, ['#15122B', '#FFFFFF', '#48D9A6', '#9886FF', '#FFC940', '#15122B'], 'mix') +
     '<span class="av live" style="width:132px;height:132px;position:absolute;right:20px;bottom:22px;border:5px solid var(--ink);box-sizing:border-box">' + avatarSVG(j) + '</span>' +
-    '<div style="position:absolute;left:22px;bottom:22px;color:var(--ink)"><span style="font:900 40px/1 var(--display);letter-spacing:-0.03em">alte<br>socke</span></div></div>' +
+    '<div style="position:absolute;left:22px;bottom:22px;color:var(--ink)"><span style="font:900 40px/1 var(--display);letter-spacing:-0.03em">zparkling</span></div></div>' +
     '<h1 class="h1 mt22">Euer Abend, gespielt statt geplant.</h1>' +
     '<p class="lead mt10">Eure Gäste schicken per Link Steckbriefe, Lügen und Erinnerungen. Die App baut daraus euren ganz eigenen Abend und achtet darauf, dass es nicht ausartet.</p>';
   body += '<button type="button" class="tourcard plain mt18" data-act="openTour"><span class="tc-e" aria-hidden="true">' + emb('garland', 40) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Was kann die App?</b><span>Das Intro in einer Minute</span></span>' + icon('i-play', 18) + '</button>';

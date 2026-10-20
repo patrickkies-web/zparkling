@@ -1,0 +1,3 @@
+# Noch nicht in Suchmaschinen: diese Zeilen und das robots-Meta in src/site-head.html entfernen, wenn es losgehen soll.
+/*
+  X-Robots-Tag: noindex, nofollow

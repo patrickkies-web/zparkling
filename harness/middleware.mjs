@@ -1,0 +1,11 @@
+import { onRequest } from '../functions/_middleware.js';
+const next = async () => new Response('<html>app</html>', { status: 200, headers: { 'Content-Type': 'text/html' } });
+const run = u => onRequest({ request: new Request(u), next });
+const fails = [];
+let r = await run('https://zparkling.com/?x=1');
+if (r.status !== 301 || r.headers.get('Location') !== 'https://www.zparkling.com/?x=1') fails.push('apex redirect: ' + r.status + ' ' + r.headers.get('Location'));
+r = await run('https://www.zparkling.com/');
+if (r.status !== 200 || r.headers.get('X-Robots-Tag') !== 'noindex, nofollow' || (await r.text()) !== '<html>app</html>') fails.push('www: ' + r.status + ' ' + r.headers.get('X-Robots-Tag'));
+r = await run('https://zparkling.pages.dev/manifest.webmanifest');
+if (r.status !== 200 || r.headers.get('X-Robots-Tag') !== 'noindex, nofollow') fails.push('pages.dev: ' + r.status);
+console.log(fails.length ? 'FAIL\n' + fails.join('\n') : 'middleware ok');

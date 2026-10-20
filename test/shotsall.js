@@ -1,14 +1,14 @@
 /* screenshots of every screen: node test/shotsall.js [outdir] */
 const { chromium } = (() => { try { return require('playwright'); } catch (e) { return require('/opt/npm-tools/node_modules/playwright'); } })();
 const path = require('path'), fs = require('fs');
-const OUT = path.join(__dirname, process.argv[2] || 'all');
+const OUT = path.join(__dirname, process.argv[2] || 'all'), W = +(process.env.W || 400), H = +(process.env.H || 860);
 fs.mkdirSync(OUT, { recursive: true });
 const DUMPS = path.join(__dirname, 'dumps');
 (async () => {
   const browser = await chromium.launch();
   const errors = [];
   const mk = async (tourDone, hash) => {
-    const page = await browser.newPage({ viewport: { width: 400, height: 860 } });
+    const page = await browser.newPage({ viewport: { width: W, height: H } });
     page.on('pageerror', e => errors.push(page.__name + ': ' + e.message));
     await page.addInitScript((td) => { try { if (td) localStorage.setItem('altesocke.tour', JSON.stringify({ done: 1, name: '', roll: 0 })); } catch (e) {} }, tourDone);
     await page.goto('file://' + path.join(__dirname, 'debug.html') + (hash || ''));
@@ -19,10 +19,10 @@ const DUMPS = path.join(__dirname, 'dumps');
     page.__name = name;
     await page.waitForTimeout((opt && opt.wait) || 450);
     const h = await page.evaluate(() => { const b = document.querySelector('.body'); return b ? b.scrollHeight + (document.querySelector('.foot') ? document.querySelector('.foot').offsetHeight : 0) + 140 : 860; });
-    if (!(opt && opt.fixed)) await page.setViewportSize({ width: 400, height: Math.max(860, Math.min(3200, h)) });
+    if (!(opt && opt.fixed)) await page.setViewportSize({ width: W, height: Math.max(H, Math.min(3200, h)) });
     await page.waitForTimeout(200);
     await page.screenshot({ path: path.join(OUT, name + '.png') });
-    await page.setViewportSize({ width: 400, height: 860 });
+    await page.setViewportSize({ width: W, height: H });
   };
   /* fresh install: the tour */
   let p = await mk(false);

@@ -5,11 +5,12 @@ var app = document.getElementById('app');
 var toastTimer = null;
 function render() {
   if (UI.guestMode !== 'link') {
-    if (!E() && ['welcome', 'setup', 'person', 'tour', 'pass'].indexOf(UI.screen) < 0) UI.screen = 'welcome';
+    if (UI.screen === 'welcome') UI.screen = 'landing';
+    if (!E() && ['landing', 'setup', 'person', 'tour', 'pass'].indexOf(UI.screen) < 0) UI.screen = 'landing';
   }
   var body = app.querySelector('.body');
   var keep = body && app.getAttribute('data-screen') === UI.screen ? body.scrollTop : 0;
-  var fn = V[UI.screen] || V.welcome;
+  var fn = V[UI.screen] || V.landing;
   app.innerHTML = fn() + (UI.qrBig ? qrBigHtml() : '') + (UI.toast ? '<div class="toast" role="status">' + esc(UI.toast) + '</div>' : '');
   app.setAttribute('data-screen', UI.screen);
   if (UI.screen !== 'guestForm' && app.classList) app.classList.remove('gglow');
@@ -1132,15 +1133,11 @@ setInterval(function () {
    Device frame
    ========================================================= */
 var wrap = document.getElementById('wrap'), device = document.getElementById('device');
+/* a website on every device: the app always fills the window (no phone frame);
+   on wide screens the content stands in a centered column (--gx in the style) */
 function fit() {
-  var full = window.innerWidth <= 520;
-  document.body.classList.toggle('full', full);
-  if (full) return;
-  var s = Math.min(1, (window.innerHeight - 32) / 864, (window.innerWidth - 32) / 410);
-  s = Math.max(0.45, s);
-  device.style.transform = 'scale(' + s + ')';
-  wrap.style.width = Math.round(410 * s) + 'px';
-  wrap.style.height = Math.round(864 * s) + 'px';
+  document.body.classList.add('full');
+  document.body.classList.toggle('wide', window.innerWidth > 640);
 }
 window.addEventListener('resize', fit);
 
@@ -1172,7 +1169,7 @@ if (hash === 'gast-fragen') { UI.guestMode = 'link'; UI.screen = 'guestForm'; UI
 else if (hash === 'gast-live') { UI.guestMode = 'link'; UI.screen = 'guestLive'; }
 else {
   mergeInbox();
-  UI.screen = S.event ? 'home' : tourSeen() ? 'welcome' : 'tour';
+  UI.screen = S.event ? 'home' : 'landing';
 }
 fit();
 render();
