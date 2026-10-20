@@ -76,7 +76,7 @@ var DEMO_HIDE = ['pass', 'tour', 'welcome', 'guestForm', 'guestLive', 'landing']
 function demoBanner() {
   if (!S || !S.demo || UI.guestMode === 'link' || DEMO_HIDE.indexOf(UI.screen) >= 0) return '';
   var bub = ''; for (var i = 0; i < 10; i++) bub += '<i style="--x:' + (6 + i * 9.5).toFixed(1) + '%;--d:' + ((i * 0.53) % 2.4).toFixed(2) + 's;--s:' + (3 + (i * 7) % 5) + 'px"></i>';
-  return '<button type="button" class="demobar" data-act="go" data-to="pass"><span class="db-fizz" aria-hidden="true">' + bub + '</span><span class="db-shine" aria-hidden="true"></span><span class="db-e" aria-hidden="true">' + emb('crown', 28) + '</span><span class="stack grow" style="gap:1px;min-width:0;text-align:left"><b>Beispiel-Abend</b><small>Zum Reinschnuppern</small></span><span class="db-cta">' + icon('i-star', 14) + 'Game Pass</span></button>';
+  return '<button type="button" class="demobar" data-tint="#F5B740" data-act="go" data-to="pass"><span class="db-fizz" aria-hidden="true">' + bub + '</span><span class="db-shine" aria-hidden="true"></span><span class="db-e" aria-hidden="true">' + emb('crown', 28) + '</span><span class="stack grow" style="gap:1px;min-width:0;text-align:left"><b>Beispiel-Abend</b><small>Zum Reinschnuppern</small></span><span class="db-cta">' + icon('i-star', 14) + 'Game Pass</span></button>';
 }
 /* on a laptop these pages use the full width, in two columns (dk); the rest stays a centered column */
 var DESK_WIDE = ['home', 'games', 'questions', 'counter', 'run', 'cards'];
@@ -631,7 +631,7 @@ V.questions = function () {
     '<div class="qx-types" role="group" aria-label="Nach Art filtern">' + QTYPES.filter(function (t) { return demoTypeOk(t[0]); }).map(function (t) { var s = kind === t[0], n = tc[t[0]], st = qStyle(t[0]); return '<button type="button" class="qx-t' + (s ? ' is-sel' : '') + (n ? '' : ' zero') + '" style="--tc:' + st.c + '" data-act="qKind" data-v="' + t[0] + '" aria-pressed="' + s + '">' + emb(st.e, 26) + '<span><b>' + n + '</b><small>' + esc(QK_SHORT[t[0]]) + '</small></span></button>'; }).join('') + '</div>' +
     (kind ? '<button type="button" class="qx-clear" data-act="qKind" data-v="' + kind + '">' + icon('i-close', 14) + 'Nur ' + esc(QK_SHORT[kind]) + ', alle zeigen</button>' : '') +
     (list.length ? '<div class="qx-list">' + (more ? list.slice(0, 6) : list).map(qRow).join('') + '</div>' + (more ? '<button type="button" class="qx-clear" data-act="qAllShow">' + icon('i-next', 14) + 'Alle ' + list.length + ' zeigen</button>' : '') : '<div class="qx-empty">' + emb('jar', 34) + '<span>' + (f === 'nein' ? 'Nichts abgelehnt.' : 'Hier ist noch nichts freigegeben.') + '</span></div>') +
-    '<button type="button" class="qx-own" data-act="openMasterForm"><span class="qx-own-ic">' + emb('pen', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Eigene Frage anlegen</b><small>Landet direkt bei den freigegebenen</small></span>' + icon('i-plus', 20) + '</button>' +
+    '<button type="button" class="qx-own" data-act="openMasterForm"><span class="qx-own-ic">' + emb('pen', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Selbst Fragen eintragen</b><small>Geführt, mit eigenen Leveln. Sofort freigegeben.</small></span>' + icon('i-next', 16) + '</button>' +
     factCard('questions') + '</div>';
   var c1 = body.indexOf('\u0001'), c2 = body.indexOf('\u0002'), c3 = body.indexOf('\u0003');
   body = body.slice(0, c1) + dk(body.slice(c1 + 1, c2), body.slice(c2 + 1, c3)) + body.slice(c3 + 1);
@@ -681,7 +681,7 @@ function draftFields(d, bp, k) {
     (who.length > 1 ? who.map(function (p) { var s = d.forId === p.id; return '<button type="button" class="chip-btn sm' + (s ? ' is-sel' : '') + '" data-act="' + actF + '"' + dk + ' data-v="' + p.id + '" aria-pressed="' + s + '">' + esc(p.name) + '</button>'; }).join('') : '') + '</div>' : '';
   return forBlock + textField + extra;
 }
-V.guestForm = function () { return UI.guestMode === 'master' ? masterForm() : S && S.collectClosed ? gClosedView() : guestMultiForm(); };
+V.guestForm = function () { return UI.guestMode === 'master' ? masterStudio() : S && S.collectClosed ? gClosedView() : guestMultiForm(); };
 function guestHead() {
   var banner = UI.guestMode === 'test' ? '<div class="testbanner">' + icon('i-user', 18) + '<span class="grow">Testansicht: So sieht der Link für Gäste aus.</span><button type="button" class="tag plain" data-act="go" data-to="' + UI.guestFrom + '" style="height:30px;color:var(--sun)">Zurück</button></div>' : '';
   return banner + '<div class="' + (banner ? 'mt14' : '') + '">' + guestHeader('Mitmachen') + '</div>';
@@ -705,9 +705,10 @@ function masterForm() {
 }
 /* guests: tap a kind once per contribution, the fields appear below */
 var GQ_VERB = { worte: ['Du schickst', 'In zwei Worten'], steckbrief: ['Du füllst', 'Steckbrief aus'], luege: ['Du schickst', 'Zwei Wahrheiten, eine Lüge'], wer: ['Du schreibst', 'Erinnerung'], tipp: ['Du gibst', 'Tipp ab'], schaetzen: ['Du stellst', 'Schätzfrage'], auswahl: ['Du stellst', 'Auswahl-Frage'], bereich: ['Du stellst', 'Bereich-Frage'], aufgabe: ['Du stellst', 'Aufgabe'] };
-function gForm() { return UI.gForm || (UI.gForm = { author: '', items: [] }); }
+/* the master keeps his own form, so a test as guest and his own entries never mix */
+function gForm() { if (UI.guestMode === 'master') return UI.mForm || (UI.mForm = { author: 'Spielleiter', items: [], cards: [] }); return UI.gForm || (UI.gForm = { author: '', items: [] }); }
 function gCount(t) { return gForm().items.filter(function (x) { return x.type === t; }).length; }
-function gMax(t) { return t === 'tipp' ? 1 : t === 'steckbrief' || t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) : 5; }
+function gMax(t) { if (UI.guestMode === 'master') return t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) * 3 : 20; return t === 'tipp' ? 1 : t === 'steckbrief' || t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) : 5; }
 
 /* =========================================================
    Games catalog

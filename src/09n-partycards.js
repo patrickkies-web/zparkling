@@ -205,7 +205,7 @@ function ruleStrip() {
 }
 /* in the cockpit and the card area: buddies, rules, the way to the cards */
 function partyRunHtml(r, full) {
-  var b = bud(r), out = '';
+  var b = bud(r), out = accRunHtml(r);
   if (b.on) {
     var pairs = r.who.filter(function (id) { return b.map[id]; });
     if (!pairs.length) out += '<div class="zc-row"><span class="zc-e">' + emb('cheers', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Trinkbuddys</b><span>Erste Wahl bei der Aufgabe nach Minute ' + BUD_MIN + '</span></span><span class="zc-t">' + zt(budNextAt(r), 'fällig') + '</span></div>';

@@ -68,7 +68,7 @@ function party(seed, anlass) { const c = load({ seed }); c.A.loadDemo(); c.A.mat
 {
   const c = party(4, 'treppe');
   c.A.openRun(); c.A.cfgNext();
-  ok(/Wie lange dauert das Event\?/.test(c.V.runSetup()) && /Zubehör-Wechsel/.test(c.V.runSetup()), 'Event: step 2 asks how long, with the tools to switch');
+  ok(/Wie lange dauert das Event\?/.test(c.V.runSetup()) && /Wie viele Teile\?/.test(c.V.runSetup()) && /data-act="cfgAccN"/.test(c.V.runSetup()), 'Event: step 2 asks how long and how many accessories');
   c.A.cfgNext(); c.A.startRun();
   const h = c.V.run();
   ok(/Event läuft/.test(h) && /Minuten/.test(h) && /Status-Check/.test(h) && !holes(h), 'Event cockpit: minutes ring and Status-Check');

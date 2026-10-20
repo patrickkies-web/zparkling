@@ -18,6 +18,8 @@ function render() {
   if (nb) nb.scrollTop = keep;
   if (UI.gk && UI.screen === 'guestForm') gkRestore();
   KB = null;
+  tintSoon();
+  if (UI.screen === 'landing' && UI.slotOn !== app.querySelector('#lpslot')) { UI.slotOn = app.querySelector('#lpslot'); slotRun(); }
 }
 function go(screen) { UI.confirm = null; UI.qrBig = null; UI.screen = screen; if (S && S.event) save(); render(); var b = app.querySelector('.body'); if (b) b.scrollTop = 0; }
 function commit() { save(); render(); }
@@ -128,7 +130,7 @@ A.resetAll = function () { S = fresh(); lsDel(LIVE_KEY); lsDel(INBOX_Q); save();
 /* questions */
 function gReset() { UI.gForm = null; UI.gPassData = null; UI.gBubble = null; UI.gPts = null; UI.gHudFx = null; UI.gRare = null; UI.gFinal = null; UI.gLast = {}; UI.gGreeted = ''; gkClose(); UI.gk = null; UI.gDrawSeen = false; UI.gkBusy = false; UI.gkClosing = false; UI.gkFresh = false; UI.gkWaitBlur = false; clearTimeout(UI.gkRevealT); }
 A.openGuestForm = function () { UI.guestMode = 'test'; UI.guestFrom = UI.screen; UI.qDraft = qDraftNew(''); gReset(); UI.qSent = ''; UI.qErr = ''; go('guestForm'); gAfter(); };
-A.openMasterForm = function () { UI.guestMode = 'master'; UI.qDraft = qDraftNew('Spielleiter'); UI.qSent = ''; UI.qErr = ''; go('guestForm'); };
+A.openMasterForm = function () { UI.guestMode = 'master'; UI.qDraft = qDraftNew('Spielleiter'); UI.qSent = ''; UI.qErr = ''; UI.mSaved = null; UI.gHudFx = null; go('guestForm'); gAfter(); };
 A.qType = function (d) { UI.qDraft.type = d.v; UI.qErr = ''; if (d.v === 'luege' && UI.qDraft.correct > 2) UI.qDraft.correct = 0; render(); };
 A.qFor = function (d) { UI.qDraft.forId = d.v; render(); };
 A.qCorrect = function (d) { UI.qDraft.correct = +d.i; render(); };
@@ -192,8 +194,9 @@ A.qSubmit = function () {
 /* guests: several contributions at once */
 function scrollToEl(id) { var el = document.getElementById(id), b = app.querySelector('.body'); if (el && b && el.getBoundingClientRect) b.scrollTop += el.getBoundingClientRect().top - b.getBoundingClientRect().top - 12; }
 A.gAdd = function (d) {
-  if (!demoTypeOk(d.v)) { A.demoInfo(); return; }
+  if (!(UI.guestMode === 'master' ? mDemoOk(d.v) : demoTypeOk(d.v))) { A.demoInfo(); return; }
   var G = gForm(), t = d.v, n = gCount(t), mx = gMax(t);
+  if (UI.guestMode === 'master') UI.mSaved = null;
   if (n >= mx) { setToast(t === 'tipp' ? 'Ein Tipp pro Person reicht' : t === 'steckbrief' ? (mx === 1 ? 'Ein Steckbrief reicht' : 'Ein Steckbrief pro Person im Fokus') : t === 'worte' ? (mx === 1 ? 'Zwei Worte reichen' : 'Zwei Worte pro Person im Fokus') : 'Mehr als ' + mx + ' auf einmal geht nicht'); return; }
   var it = qDraftNew(G.author); it.type = t; it.key = 'k' + Date.now().toString(36) + Math.floor(Math.random() * 1000);
   if (t === 'luege' || t === 'auswahl') it.correct = -1;
@@ -434,7 +437,7 @@ A.runNext = function () {
   r.pending = nextStep();
   r.hist[r.hist.length - 1].meta.next = pendingLabel(r.pending);
   UI.checkVals = {};
-  budCheck(r); ruleSweep();
+  budCheck(r); ruleSweep(); accOffer(r);
   commit(); go('step');
 };
 A.rollPick = function (d) {
@@ -469,7 +472,7 @@ A.runOther = function () {
   step.track = P.track; step.unitNo = P.unitNo; step.roll = P.roll;
   if (P.last) { step.last = true; step.reader = P.reader; }
   if (P.host && step.kind === 'frage') step.host = P.host;
-  r.pending = step; UI.checkVals = {}; UI.timer = null; commit(); setToast('Andere Aufgabe gezogen');
+  r.pending = step; accOffer(r); UI.checkVals = {}; UI.timer = null; commit(); setToast('Andere Aufgabe gezogen');
 };
 /* the Schweizer Taschenmesser may swap one task, once */
 A.roleSwap = function () {
@@ -960,8 +963,8 @@ function setBind(b, v) {
   if (b === 'rule.text') { if (UI.ruleDraft) { UI.ruleDraft.text = String(v).slice(0, 80); var rg = document.getElementById('ruleGo'); if (rg) rg.disabled = UI.ruleDraft.text.trim().length < 2; } return; }
   if (b === 'bud.txt') { UI.budTxt = String(v).slice(0, 24); return; }
   if (b === 'tour.name') { UI.tourName = v; tourPatch(); return; }
-  if (b === 'pass.date') { UI.passDate = v; render(); return; }
-  if (b === 'pass.move') { UI.passMoveDate = v; render(); return; }
+  if (b === 'pass.date') { UI.passDate = v; dateTyped('passDate'); return; }
+  if (b === 'pass.move') { UI.passMoveDate = v; dateTyped('passMove'); return; }
   var parts = b.split('.');
   if (b === 'event.name') { E().name = v; save(); return; }
   if (b === 'event.target') { E().target = Number(v); save(); showText('targetShow', v + ' % · etwa ' + Math.round(E().max * Number(v) / 100)); return; }
@@ -1009,6 +1012,21 @@ function setBind(b, v) {
   if (['ch', 'hc', 'gl', 'kc', 'lip'].indexOf(parts[0]) >= 0) { var Pn = curStep(); if (Pn && Pn[parts[0]]) { Pn[parts[0]][parts[1]] = String(v).slice(0, 24); Pn[parts[0]].typed = !!String(v).trim(); save(); } return; }
   if (parts[0] === 'partner') { var P2 = curStep(); if (P2) { P2.teams[+parts[1]][parts[2]] = v; save(); } return; }
 }
+/* a date picked: the buy button follows at once, the rest of the page when the field is left */
+function dateTyped(id) {
+  UI.dateDirty = id;
+  var bb = id === 'passDate' && app.querySelector ? app.querySelector('.p-buy') : null;
+  if (bb) {
+    var date = UI.passDate, plan = UI.passPlan || (date && dayStart(date) - dayStart(isoDay(Date.now())) > 14 * DAY ? 30 : 14);
+    var pl = PASS_PLANS.filter(function (x) { return x.days === plan; })[0] || PASS_PLANS[0];
+    bb.disabled = !date;
+    bb.innerHTML = icon('i-star', 18) + (date ? esc(pl.label) + ' holen · ' + esc(pl.price) : 'Erst das Datum wählen') + '<i class="p-buy-shine" aria-hidden="true"></i>';
+  }
+}
+app.addEventListener('focusout', function (e) {
+  var t = e.target; if (!t || t.type !== 'date' || UI.dateDirty !== t.id) return;
+  setTimeout(function () { var el = document.getElementById(UI.dateDirty || ''); if (UI.dateDirty && document.activeElement !== el) { UI.dateDirty = null; render(); } }, 320);
+});
 app.addEventListener('input', function (e) {
   var el = e.target, b = el.getAttribute && el.getAttribute('data-bind');
   if (b) setBind(b, el.value);
@@ -1020,7 +1038,7 @@ app.addEventListener('change', function (e) {
 app.addEventListener('keydown', function (e) {
   if (e.key !== 'Enter') return;
   if (UI.gk && e.target && e.target.getAttribute && e.target.getAttribute('data-bind') === 'gk.text') { e.preventDefault(); if (gkValid(UI.gk)) A.gkDone(); else gShakeEl(e.target); return; }
-  if (UI.screen === 'guestForm' && UI.guestMode !== 'master' && e.target && e.target.getAttribute && /^g\./.test(e.target.getAttribute('data-bind') || '')) { gEnter(e.target, e); return; }
+  if (UI.screen === 'guestForm' && e.target && e.target.getAttribute && /^g\./.test(e.target.getAttribute('data-bind') || '')) { gEnter(e.target, e); return; }
   if (e.target.id === 'tName') { e.preventDefault(); e.target.blur(); A.tourNext(); return; }
   if (e.target.id === 'cName') { e.preventDefault(); A.addCounterPerson(); }
   if (e.target.id === 'accName') { e.preventDefault(); A.cfgAccAdd(); }

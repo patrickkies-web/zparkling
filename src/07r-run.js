@@ -81,7 +81,7 @@ function cfgStep2(c) {
   }
   var dur = !timed ? '<div class="card pad mt10"><div class="row"><span class="stack grow"><span class="name">Wie lange ungefähr?</span><span class="sub">Der Pilot passt das Tempo daran an</span></span>' + stepper('cfgMinutes', c.minutes + ' Min', '', 'Dauer') + '</div></div>' : '';
   return head + (vs.length > 1 ? '<p class="small mt6">Die Spiele selbst sucht die App aus und verrät sie erst, wenn es so weit ist.</p>' : '') + vopts + dice +
-    '<span class="eyebrow mt22 block">' + (timed ? 'Dauer' : 'Länge') + '</span>' + len + dur + (fam === 'zeit' ? cfgAccBlock(c) : '');
+    '<span class="eyebrow mt22 block">' + (timed ? 'Dauer' : 'Länge') + '</span>' + len + dur + (fam === 'zeit' ? accCountBlock(c) : '');
 }
 /* step 3: the plan at a glance, the extras, then go */
 function cfgStep3(c) {
@@ -106,7 +106,7 @@ function cfgStep3(c) {
   var buddy = '<label class="row mt10 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Trinkbuddys</span><span class="sub">Ab Minute ' + BUD_MIN + ' wählt jede Hauptperson jemanden, der mittrinkt. Alle ' + BUD_MIN + ' Minuten wird getauscht.</span></span><button type="button" class="switch" role="switch" aria-checked="' + (c.buddy !== false) + '" data-act="cfgBuddy" aria-label="Trinkbuddys"><span></span></button></label>';
   return '<h1 class="h1 mt18">Alles bereit?</h1><p class="small mt6">Tipp eine Zeile an, um sie zu ändern.</p>' + sum +
     '<span class="eyebrow mt22 block">Plan des Piloten</span><div class="card padrows mt10">' + plan + '<div class="row" style="min-height:44px;border-top:1px solid var(--line)"><span class="grow small">So viel ' + esc(e.unit) + ' ist für heute eingeplant</span><button type="button" class="linkbtn" data-act="go" data-to="settings">Regeln</button></div></div>' +
-    '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (fam === 'kranz' ? cfgAccBlock(c).replace('<span class="eyebrow mt22 block">', '<span class="eyebrow mt14 block" style="font-size:13px">') : '') + (isJga() ? '' : crewSetupHtml(c)) + link + buddy +
+    '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (isJga() ? '' : crewSetupHtml(c)) + link + buddy +
     factCard('runSetup');
 }
 V.runSetup = function () {

@@ -222,12 +222,14 @@ function gPassFx(left) {
   gHudFxResume(el);
 }
 /* a celebration inside the pass bar; it survives a re-render and carries on where it was */
+/* the bar at the top: the guest's pass, or the master's level */
+function gHudEl() { return document.getElementById(UI.guestMode === 'master' ? 'mpass' : 'gpass'); }
 function gHudFx(kind, inner, ms) {
   UI.gHudFx = { kind: kind, inner: inner, t0: Date.now(), ms: ms };
-  var el = document.getElementById('gpass'); if (el) { var o = el.querySelector('.ghfx'); if (o) o.remove(); }
+  var el = gHudEl(); if (el) { var o = el.querySelector('.ghfx'); if (o) o.remove(); }
   gHudFxResume(el, true);
   clearTimeout(UI.gHudFxT);
-  UI.gHudFxT = setTimeout(function () { UI.gHudFx = null; var h = document.getElementById('gpass'); if (!h) return; var x = h.querySelector('.ghfx'); if (x) x.remove(); h.classList.remove('fxon', 'fx-lv', 'fx-st'); }, ms);
+  UI.gHudFxT = setTimeout(function () { UI.gHudFx = null; var h = gHudEl(); if (!h) return; var x = h.querySelector('.ghfx'); if (x) x.remove(); h.classList.remove('fxon', 'fx-lv', 'fx-st'); }, ms);
 }
 function gHudFxResume(el, fresh) {
   var f = UI.gHudFx; if (!el || !f) return;
@@ -443,18 +445,20 @@ function gLive(i) {
   gPassFx(); gCtaPatch();
 }
 function gCtaLabel() {
+  if (UI.guestMode === 'master') return mCtaLabel();
   var G = gForm(), c = (G.cards || []).length, n = G.items.length + c, d = G.items.filter(gDone).length + c;
   if (!n) return 'Abschicken';
   if (d === n) return (n === 1 ? '1 Beitrag' : n + ' Beiträge') + ' abschicken';
   return (n === 1 ? '1 Beitrag' : n + ' Beiträge') + ' · ' + d + ' von ' + n + ' bereit';
 }
 function gAllReady() { var G = gForm(); return G.items.length + (G.cards || []).length > 0 && G.items.every(gDone); }
-function gCtaPatch() { var b = document.getElementById('gcta'); if (b) { var all = gAllReady(); b.textContent = gCtaLabel(); b.classList.toggle('mint', all); b.classList.toggle('gready', all); } gkBtnPatch(); }
+function gCtaPatch() { var b = document.getElementById('gcta'); if (b) { var all = gAllReady(); b.textContent = gCtaLabel(); b.classList.toggle('mint', all); b.classList.toggle('gready', all); } if (UI.guestMode === 'master') mHudPatch(); else gkBtnPatch(); }
 /* after a full render: clear one-shot effects, run the pass animation */
 function gAfter() {
   var fly = UI.gFlyT, spark = UI.gSpark, just = UI.gJust;
   UI.gPop = false; UI.gBump = ''; UI.gNew = ''; UI.gJust = ''; UI.gLie = ''; UI.gSpark = ''; UI.gShake = false; UI.gFlyT = null; UI.gkJust = ''; UI.gIn = false;
   if (UI.screen === 'guestForm' && UI.guestMode !== 'master') gPassFx();
+  if (UI.screen === 'guestForm' && UI.guestMode === 'master') gHudFxResume(gHudEl());
   if (fly) gFly(fly.t, fly.i);
   if (spark) { var on = app.querySelector('.gabc.spark'); if (on) gBurst(on, on.closest('.gcard') ? getComputedStyle(on.closest('.gcard')).getPropertyValue('--tc') || '#FFC940' : '#FFC940', 12); }
   if (just) { var jc = app.querySelector('.gcard.just-done'); if (jc) gBurst(jc.querySelector('.ghead .e'), getComputedStyle(jc).getPropertyValue('--tc') || '#FFC940', 12); }

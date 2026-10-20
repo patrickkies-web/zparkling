@@ -129,7 +129,7 @@ function resultView(P) {
     var ic = l.ok === true ? '<span class="tile-ic" style="width:26px;height:26px;border-radius:9px;background:var(--mint)">' + icon('i-check', 14) + '</span>' : l.ok === false ? '<span class="tile-ic" style="width:26px;height:26px;border-radius:9px;background:var(--orange)">' + icon('i-close', 14) + '</span>' : '';
     return '<div class="res" style="min-height:44px">' + ic + '<span class="grow" style="font-size:14px;font-weight:700;line-height:1.35">' + esc(l.t) + '</span></div>';
   }).join('');
-  return '<div style="position:relative">' + fx + card + '</div>' +
+  return '<div style="position:relative">' + fx + card + '</div>' + accResultHtml(P) +
     (rows ? '<div class="card padrows mt14">' + rows + '</div>' + jokerAskHtml(P) + ((res.rows || []).some(function (r) { return !r.group && !r.water && r.pid && r.n > 0; }) ? '<p class="res-hint"><span class="checkbox is-sel" aria-hidden="true">' + icon('i-check', 11) + '</span>Haken = getrunken, das landet im Zähler. Gäste zählen nicht.</p>' : '') : '') + move +
     revancheHtml(P) + hcReleaseHtml(P) +
     (lines ? '<span class="eyebrow mt18 block">Auflösung</span><div class="card padrows mt10">' + lines + '</div>' : '');
@@ -532,8 +532,8 @@ function prepHint(P) {
 }
 V.step = function () {
   var r = R(); if (budDue(r)) return V.buddy();
-  ruleSweep();
-  var h = renderStepScreen(r && r.pending, false), st = ruleStrip();
+  ruleSweep(); if (r && r.pending && r.pending.result) accSettle(r.pending);
+  var h = renderStepScreen(r && r.pending, false), st = ruleStrip() + accTaskHtml(r && r.pending);
   return st ? h.replace('<div class="body">', '<div class="body">' + st) : h;
 };
 V.free = function () { return renderStepScreen(S.free && S.free.step, true); };

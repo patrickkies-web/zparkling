@@ -2315,6 +2315,99 @@ body.desk .toast { bottom: 40px; }
 }
 @media (prefers-reduced-motion: reduce) { .r-wei .gk-front, .r-reg .gk-front, .bd-glasses { animation: none !important; } }
 body.desk .dk-cards { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+
+/* ---------- v38: date fields fit their box (iPhone gives them their own width otherwise) ---------- */
+input[type="date"].input { display: block; width: 100%; max-width: 100%; min-width: 0; -webkit-appearance: none; appearance: none; text-align: left; line-height: 44px; }
+input[type="date"].input::-webkit-date-and-time-value { text-align: left; margin: 0; min-height: 44px; }
+input[type="date"].input::-webkit-calendar-picker-indicator { filter: invert(1); opacity: .6; cursor: pointer; }
+
+/* ---------- v38: the slot machine on the landing page ---------- */
+.lp-slot { --sh: 74px; --n: 3; position: relative; z-index: 3; display: flex; align-items: center; gap: 16px; margin: 8px var(--gx) 4px; padding: 14px 12px; border-radius: 24px; background: linear-gradient(180deg, #2E2668, #19153D); border: 2px solid #F2B33D; box-shadow: 0 0 0 4px rgba(242,179,61,.16), 0 18px 40px rgba(0,0,0,.35); }
+.lp-slot-k { display: none; flex-direction: column; gap: 2px; padding-left: 8px; }
+.lp-slot-k b { font: 800 19px/1.15 var(--display); color: var(--white); letter-spacing: -0.01em; }
+.lp-slot-k small { font-size: 13px; color: var(--muted); font-weight: 600; }
+.lp-reels { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 8px; }
+.lp-reel { position: relative; height: calc(var(--sh) * 1.42); overflow: hidden; border-radius: 15px; background: linear-gradient(180deg, #0B0920 0%, #2A2358 50%, #0B0920 100%); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.08); }
+.lp-reel:nth-child(n+4) { display: none; }
+.lp-reel::before, .lp-reel::after { content: ''; position: absolute; left: 0; right: 0; height: calc(var(--sh) * .3); z-index: 2; pointer-events: none; }
+.lp-reel::before { top: 0; background: linear-gradient(180deg, rgba(11,9,32,.95), rgba(11,9,32,0)); border-bottom: 1.5px solid rgba(242,179,61,.5); }
+.lp-reel::after { bottom: 0; background: linear-gradient(0deg, rgba(11,9,32,.95), rgba(11,9,32,0)); border-top: 1.5px solid rgba(242,179,61,.5); }
+.lp-strip { position: absolute; left: 0; right: 0; top: calc(var(--sh) * .21); will-change: transform; }
+.lp-reel.spin .lp-strip { filter: blur(1.6px); }
+.lp-reel.stop { animation: lpstop .42s cubic-bezier(.3,1.6,.5,1); }
+@keyframes lpstop { 0% { transform: translateY(-3px); } 45% { transform: translateY(3px); } 100% { transform: none; } }
+.lp-sym { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; height: var(--sh); width: 100%; padding: 0 4px; box-sizing: border-box; border: 0; background: transparent; color: var(--white); text-align: center; font: inherit; }
+.lp-sym-ic { width: 34px; height: 34px; border-radius: 11px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; color: var(--ink); box-shadow: inset 0 -3px 0 rgba(0,0,0,.15); }
+.lp-sym-t { display: flex; flex-direction: column; min-width: 0; max-width: 100%; }
+.lp-sym-t b { font: 800 13px/1.15 var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lp-sym-t .lp-long, .lp-sym-t small { display: none; }
+.lp-sym-t small { font-size: 12px; color: var(--muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lp-bulbs { position: absolute; left: 22px; right: 22px; height: 7px; display: flex; justify-content: space-between; pointer-events: none; }
+.lp-bulbs.top { top: -4.5px; } .lp-bulbs.bot { bottom: -4.5px; }
+.lp-bulbs i { width: 7px; height: 7px; border-radius: 50%; background: #FFE9A8; box-shadow: 0 0 8px #FFC940; animation: lpbulb 1.1s steps(1) infinite; }
+.lp-bulbs i:nth-child(2n) { animation-delay: .55s; }
+.lp-bulbs.bot i { animation-delay: .55s; } .lp-bulbs.bot i:nth-child(2n) { animation-delay: 0s; }
+@keyframes lpbulb { 0% { opacity: 1; } 50% { opacity: .25; } }
+@media (min-width: 700px) {
+  .lp-slot { --n: 4; --sh: 84px; padding: 14px 16px; }
+  .lp-slot-k { display: flex; }
+  .lp-reel:nth-child(4) { display: block; }
+  .lp-sym-ic { width: 40px; height: 40px; border-radius: 13px; }
+  .lp-sym-t b { font-size: 15px; }
+}
+@media (min-width: 1040px) { .lp-slot { --n: 5; } .lp-reel:nth-child(5) { display: block; } }
+@media (prefers-reduced-motion: reduce) { .lp-bulbs i, .lp-reel.stop { animation: none; } .lp-reel.spin .lp-strip { filter: none; } }
+
+/* ---------- v38: the master's studio ---------- */
+.mscr .body { padding-top: 168px; }
+body.desk .mscr .body { padding-top: 176px; }
+.mhud .pts { font: 900 26px var(--display); color: var(--sun); }
+.mhud-s { font-size: 11px; font-weight: 700; color: var(--muted); }
+.mbar { position: relative; }
+.mbar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: inherit; background: rgba(255,201,64,.32); transition: width .4s ease; }
+.mbar b { position: relative; }
+.m-saved { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 18px; background: rgba(72,217,166,.14); border: 1.5px solid rgba(72,217,166,.5); color: var(--mint); font-weight: 700; font-size: 14px; }
+.m-saved .grow { color: var(--white); }
+.m-next { padding: 16px; border-radius: 24px; background: #2A2550; background: linear-gradient(140deg, color-mix(in srgb, var(--tc) 28%, #211D3D), #211D3D 72%); border: 2px solid var(--tc); }
+.m-next-k { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--tc); color: var(--ink); font: 800 12px var(--display); }
+.m-next b { font: 800 19px/1.2 var(--display); color: var(--white); }
+.m-next .stack span { font-size: 14px; color: var(--text); line-height: 1.4; }
+.m-next-e { width: 54px; height: 54px; border-radius: 17px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.m-next-go { margin-top: 14px; width: 100%; height: 50px; border: 0; border-radius: 16px; background: var(--tc); color: var(--ink); font: 800 16px var(--body); display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: inset 0 -4px 0 rgba(0,0,0,.15); }
+.m-next.done { --tc: var(--mint); }
+.m-plan { display: flex; flex-direction: column; gap: 8px; }
+.m-goal { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border-radius: 18px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; text-align: left; }
+.m-goal b { color: var(--white); font-size: 15px; }
+.m-goal small { font-size: 12.5px; color: var(--muted); }
+.m-goal-e { width: 42px; height: 42px; border-radius: 13px; background: #2C2750; background: color-mix(in srgb, var(--tc) 28%, transparent); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.m-goal-n { font: 800 13px var(--display); color: var(--tc); white-space: nowrap; }
+.m-goal-bar { display: block; height: 6px; border-radius: 6px; background: var(--surface-2); overflow: hidden; }
+.m-goal-bar i { display: block; height: 100%; border-radius: inherit; background: var(--tc); transition: width .5s ease; }
+.m-goal-add { width: 34px; height: 34px; border-radius: 11px; background: var(--surface-2); color: var(--white); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.m-goal.full { border-color: var(--tc); }
+.m-goal.lock { opacity: .6; }
+.m-goal:active { transform: scale(.985); }
+body.desk .dk-master { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); margin-top: 6px; }
+@media (hover: hover) { .m-goal:hover { border-color: var(--tc); } }
+/* ---------- v38: accessories when sweeping ---------- */
+.acc-ladder { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.acc-step { padding: 6px 12px; border-radius: 999px; background: var(--surface-2); font: 700 13px var(--body); color: var(--text); }
+.acc-step.first { background: var(--orange); color: var(--ink); }
+.acc-step.last { background: var(--mint); color: var(--ink); }
+.acc-arr { color: var(--muted); display: inline-flex; }
+.acc-chance { display: flex; align-items: center; gap: 12px; padding: 12px 14px; margin-bottom: 12px; border-radius: 20px; background: linear-gradient(135deg, rgba(72,217,166,.22), rgba(72,217,166,.07)); border: 1.5px dashed rgba(72,217,166,.75); }
+.acc-chance b { color: var(--white); font-size: 15px; }
+.acc-chance span span { font-size: 13px; color: var(--text); line-height: 1.4; }
+.acc-e { width: 40px; height: 40px; border-radius: 13px; background: var(--mint); color: var(--ink); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.acc-res { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 20px; background: var(--surface); border: 1.5px solid var(--line-2); }
+.acc-res b { color: var(--white); font-size: 16px; }
+.acc-res span span { font-size: 13.5px; color: var(--muted); line-height: 1.4; }
+.acc-res.won { background: linear-gradient(135deg, #48D9A6, #2FB98A); border-color: transparent; animation: accwin .7s cubic-bezier(.3,1.6,.5,1) both .2s; }
+.acc-res.won b, .acc-res.won span span { color: var(--ink); }
+.acc-res.won .acc-e { background: #FFFFFF; }
+@keyframes accwin { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+.acc-ic { color: var(--mint); }
+@media (prefers-reduced-motion: reduce) { .acc-res.won { animation: none; } }
 </style>
 
 <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
@@ -4377,6 +4470,8 @@ function startRun() {
   };
   if (c.variant === 'abend') { r.acc = { items: [], swaps: 0 }; }
   /* Trinkbuddys (on unless switched off in the setup) and the rules of the Regel-Karte */
+  /* accessories only when sweeping or cleaning: the count from the setup, from the hardest to the easiest */
+  r.acc = c.fam === 'zeit' ? { items: accItems(accJob(), accN(c)), swaps: 0 } : { items: [], swaps: 0 }; r.accAt = r.t0;
   r.bud = { on: c.buddy !== false, at: 0, map: {}, prev: {}, next: {}, fwd: {}, due: false, n: 0 }; r.rules = [];
   /* Junggesellenabschied: missions out in the city (or in the bar), crew jobs in between */
   if (evType().id === 'jga') { r.jga = { mode: c.jgaMode === 'drinnen' ? 'drinnen' : 'stadt' }; r.jcrew = { n: 0, last: -9, used: [], by: {} }; }
@@ -5891,7 +5986,7 @@ var DEMO_HIDE = ['pass', 'tour', 'welcome', 'guestForm', 'guestLive', 'landing']
 function demoBanner() {
   if (!S || !S.demo || UI.guestMode === 'link' || DEMO_HIDE.indexOf(UI.screen) >= 0) return '';
   var bub = ''; for (var i = 0; i < 10; i++) bub += '<i style="--x:' + (6 + i * 9.5).toFixed(1) + '%;--d:' + ((i * 0.53) % 2.4).toFixed(2) + 's;--s:' + (3 + (i * 7) % 5) + 'px"></i>';
-  return '<button type="button" class="demobar" data-act="go" data-to="pass"><span class="db-fizz" aria-hidden="true">' + bub + '</span><span class="db-shine" aria-hidden="true"></span><span class="db-e" aria-hidden="true">' + emb('crown', 28) + '</span><span class="stack grow" style="gap:1px;min-width:0;text-align:left"><b>Beispiel-Abend</b><small>Zum Reinschnuppern</small></span><span class="db-cta">' + icon('i-star', 14) + 'Game Pass</span></button>';
+  return '<button type="button" class="demobar" data-tint="#F5B740" data-act="go" data-to="pass"><span class="db-fizz" aria-hidden="true">' + bub + '</span><span class="db-shine" aria-hidden="true"></span><span class="db-e" aria-hidden="true">' + emb('crown', 28) + '</span><span class="stack grow" style="gap:1px;min-width:0;text-align:left"><b>Beispiel-Abend</b><small>Zum Reinschnuppern</small></span><span class="db-cta">' + icon('i-star', 14) + 'Game Pass</span></button>';
 }
 /* on a laptop these pages use the full width, in two columns (dk); the rest stays a centered column */
 var DESK_WIDE = ['home', 'games', 'questions', 'counter', 'run', 'cards'];
@@ -6446,7 +6541,7 @@ V.questions = function () {
     '<div class="qx-types" role="group" aria-label="Nach Art filtern">' + QTYPES.filter(function (t) { return demoTypeOk(t[0]); }).map(function (t) { var s = kind === t[0], n = tc[t[0]], st = qStyle(t[0]); return '<button type="button" class="qx-t' + (s ? ' is-sel' : '') + (n ? '' : ' zero') + '" style="--tc:' + st.c + '" data-act="qKind" data-v="' + t[0] + '" aria-pressed="' + s + '">' + emb(st.e, 26) + '<span><b>' + n + '</b><small>' + esc(QK_SHORT[t[0]]) + '</small></span></button>'; }).join('') + '</div>' +
     (kind ? '<button type="button" class="qx-clear" data-act="qKind" data-v="' + kind + '">' + icon('i-close', 14) + 'Nur ' + esc(QK_SHORT[kind]) + ', alle zeigen</button>' : '') +
     (list.length ? '<div class="qx-list">' + (more ? list.slice(0, 6) : list).map(qRow).join('') + '</div>' + (more ? '<button type="button" class="qx-clear" data-act="qAllShow">' + icon('i-next', 14) + 'Alle ' + list.length + ' zeigen</button>' : '') : '<div class="qx-empty">' + emb('jar', 34) + '<span>' + (f === 'nein' ? 'Nichts abgelehnt.' : 'Hier ist noch nichts freigegeben.') + '</span></div>') +
-    '<button type="button" class="qx-own" data-act="openMasterForm"><span class="qx-own-ic">' + emb('pen', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Eigene Frage anlegen</b><small>Landet direkt bei den freigegebenen</small></span>' + icon('i-plus', 20) + '</button>' +
+    '<button type="button" class="qx-own" data-act="openMasterForm"><span class="qx-own-ic">' + emb('pen', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Selbst Fragen eintragen</b><small>Geführt, mit eigenen Leveln. Sofort freigegeben.</small></span>' + icon('i-next', 16) + '</button>' +
     factCard('questions') + '</div>';
   var c1 = body.indexOf('\u0001'), c2 = body.indexOf('\u0002'), c3 = body.indexOf('\u0003');
   body = body.slice(0, c1) + dk(body.slice(c1 + 1, c2), body.slice(c2 + 1, c3)) + body.slice(c3 + 1);
@@ -6496,7 +6591,7 @@ function draftFields(d, bp, k) {
     (who.length > 1 ? who.map(function (p) { var s = d.forId === p.id; return '<button type="button" class="chip-btn sm' + (s ? ' is-sel' : '') + '" data-act="' + actF + '"' + dk + ' data-v="' + p.id + '" aria-pressed="' + s + '">' + esc(p.name) + '</button>'; }).join('') : '') + '</div>' : '';
   return forBlock + textField + extra;
 }
-V.guestForm = function () { return UI.guestMode === 'master' ? masterForm() : S && S.collectClosed ? gClosedView() : guestMultiForm(); };
+V.guestForm = function () { return UI.guestMode === 'master' ? masterStudio() : S && S.collectClosed ? gClosedView() : guestMultiForm(); };
 function guestHead() {
   var banner = UI.guestMode === 'test' ? '<div class="testbanner">' + icon('i-user', 18) + '<span class="grow">Testansicht: So sieht der Link für Gäste aus.</span><button type="button" class="tag plain" data-act="go" data-to="' + UI.guestFrom + '" style="height:30px;color:var(--sun)">Zurück</button></div>' : '';
   return banner + '<div class="' + (banner ? 'mt14' : '') + '">' + guestHeader('Mitmachen') + '</div>';
@@ -6520,9 +6615,10 @@ function masterForm() {
 }
 /* guests: tap a kind once per contribution, the fields appear below */
 var GQ_VERB = { worte: ['Du schickst', 'In zwei Worten'], steckbrief: ['Du füllst', 'Steckbrief aus'], luege: ['Du schickst', 'Zwei Wahrheiten, eine Lüge'], wer: ['Du schreibst', 'Erinnerung'], tipp: ['Du gibst', 'Tipp ab'], schaetzen: ['Du stellst', 'Schätzfrage'], auswahl: ['Du stellst', 'Auswahl-Frage'], bereich: ['Du stellst', 'Bereich-Frage'], aufgabe: ['Du stellst', 'Aufgabe'] };
-function gForm() { return UI.gForm || (UI.gForm = { author: '', items: [] }); }
+/* the master keeps his own form, so a test as guest and his own entries never mix */
+function gForm() { if (UI.guestMode === 'master') return UI.mForm || (UI.mForm = { author: 'Spielleiter', items: [], cards: [] }); return UI.gForm || (UI.gForm = { author: '', items: [] }); }
 function gCount(t) { return gForm().items.filter(function (x) { return x.type === t; }).length; }
-function gMax(t) { return t === 'tipp' ? 1 : t === 'steckbrief' || t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) : 5; }
+function gMax(t) { if (UI.guestMode === 'master') return t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) * 3 : 20; return t === 'tipp' ? 1 : t === 'steckbrief' || t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) : 5; }
 
 /* =========================================================
    Games catalog
@@ -6726,7 +6822,7 @@ function cfgStep2(c) {
   }
   var dur = !timed ? '<div class="card pad mt10"><div class="row"><span class="stack grow"><span class="name">Wie lange ungefähr?</span><span class="sub">Der Pilot passt das Tempo daran an</span></span>' + stepper('cfgMinutes', c.minutes + ' Min', '', 'Dauer') + '</div></div>' : '';
   return head + (vs.length > 1 ? '<p class="small mt6">Die Spiele selbst sucht die App aus und verrät sie erst, wenn es so weit ist.</p>' : '') + vopts + dice +
-    '<span class="eyebrow mt22 block">' + (timed ? 'Dauer' : 'Länge') + '</span>' + len + dur + (fam === 'zeit' ? cfgAccBlock(c) : '');
+    '<span class="eyebrow mt22 block">' + (timed ? 'Dauer' : 'Länge') + '</span>' + len + dur + (fam === 'zeit' ? accCountBlock(c) : '');
 }
 /* step 3: the plan at a glance, the extras, then go */
 function cfgStep3(c) {
@@ -6751,7 +6847,7 @@ function cfgStep3(c) {
   var buddy = '<label class="row mt10 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Trinkbuddys</span><span class="sub">Ab Minute ' + BUD_MIN + ' wählt jede Hauptperson jemanden, der mittrinkt. Alle ' + BUD_MIN + ' Minuten wird getauscht.</span></span><button type="button" class="switch" role="switch" aria-checked="' + (c.buddy !== false) + '" data-act="cfgBuddy" aria-label="Trinkbuddys"><span></span></button></label>';
   return '<h1 class="h1 mt18">Alles bereit?</h1><p class="small mt6">Tipp eine Zeile an, um sie zu ändern.</p>' + sum +
     '<span class="eyebrow mt22 block">Plan des Piloten</span><div class="card padrows mt10">' + plan + '<div class="row" style="min-height:44px;border-top:1px solid var(--line)"><span class="grow small">So viel ' + esc(e.unit) + ' ist für heute eingeplant</span><button type="button" class="linkbtn" data-act="go" data-to="settings">Regeln</button></div></div>' +
-    '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (fam === 'kranz' ? cfgAccBlock(c).replace('<span class="eyebrow mt22 block">', '<span class="eyebrow mt14 block" style="font-size:13px">') : '') + (isJga() ? '' : crewSetupHtml(c)) + link + buddy +
+    '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (isJga() ? '' : crewSetupHtml(c)) + link + buddy +
     factCard('runSetup');
 }
 V.runSetup = function () {
@@ -7458,12 +7554,14 @@ function gPassFx(left) {
   gHudFxResume(el);
 }
 /* a celebration inside the pass bar; it survives a re-render and carries on where it was */
+/* the bar at the top: the guest's pass, or the master's level */
+function gHudEl() { return document.getElementById(UI.guestMode === 'master' ? 'mpass' : 'gpass'); }
 function gHudFx(kind, inner, ms) {
   UI.gHudFx = { kind: kind, inner: inner, t0: Date.now(), ms: ms };
-  var el = document.getElementById('gpass'); if (el) { var o = el.querySelector('.ghfx'); if (o) o.remove(); }
+  var el = gHudEl(); if (el) { var o = el.querySelector('.ghfx'); if (o) o.remove(); }
   gHudFxResume(el, true);
   clearTimeout(UI.gHudFxT);
-  UI.gHudFxT = setTimeout(function () { UI.gHudFx = null; var h = document.getElementById('gpass'); if (!h) return; var x = h.querySelector('.ghfx'); if (x) x.remove(); h.classList.remove('fxon', 'fx-lv', 'fx-st'); }, ms);
+  UI.gHudFxT = setTimeout(function () { UI.gHudFx = null; var h = gHudEl(); if (!h) return; var x = h.querySelector('.ghfx'); if (x) x.remove(); h.classList.remove('fxon', 'fx-lv', 'fx-st'); }, ms);
 }
 function gHudFxResume(el, fresh) {
   var f = UI.gHudFx; if (!el || !f) return;
@@ -7679,18 +7777,20 @@ function gLive(i) {
   gPassFx(); gCtaPatch();
 }
 function gCtaLabel() {
+  if (UI.guestMode === 'master') return mCtaLabel();
   var G = gForm(), c = (G.cards || []).length, n = G.items.length + c, d = G.items.filter(gDone).length + c;
   if (!n) return 'Abschicken';
   if (d === n) return (n === 1 ? '1 Beitrag' : n + ' Beiträge') + ' abschicken';
   return (n === 1 ? '1 Beitrag' : n + ' Beiträge') + ' · ' + d + ' von ' + n + ' bereit';
 }
 function gAllReady() { var G = gForm(); return G.items.length + (G.cards || []).length > 0 && G.items.every(gDone); }
-function gCtaPatch() { var b = document.getElementById('gcta'); if (b) { var all = gAllReady(); b.textContent = gCtaLabel(); b.classList.toggle('mint', all); b.classList.toggle('gready', all); } gkBtnPatch(); }
+function gCtaPatch() { var b = document.getElementById('gcta'); if (b) { var all = gAllReady(); b.textContent = gCtaLabel(); b.classList.toggle('mint', all); b.classList.toggle('gready', all); } if (UI.guestMode === 'master') mHudPatch(); else gkBtnPatch(); }
 /* after a full render: clear one-shot effects, run the pass animation */
 function gAfter() {
   var fly = UI.gFlyT, spark = UI.gSpark, just = UI.gJust;
   UI.gPop = false; UI.gBump = ''; UI.gNew = ''; UI.gJust = ''; UI.gLie = ''; UI.gSpark = ''; UI.gShake = false; UI.gFlyT = null; UI.gkJust = ''; UI.gIn = false;
   if (UI.screen === 'guestForm' && UI.guestMode !== 'master') gPassFx();
+  if (UI.screen === 'guestForm' && UI.guestMode === 'master') gHudFxResume(gHudEl());
   if (fly) gFly(fly.t, fly.i);
   if (spark) { var on = app.querySelector('.gabc.spark'); if (on) gBurst(on, on.closest('.gcard') ? getComputedStyle(on.closest('.gcard')).getPropertyValue('--tc') || '#FFC940' : '#FFC940', 12); }
   if (just) { var jc = app.querySelector('.gcard.just-done'); if (jc) gBurst(jc.querySelector('.ghead .e'), getComputedStyle(jc).getPropertyValue('--tc') || '#FFC940', 12); }
@@ -8975,7 +9075,7 @@ function ruleStrip() {
 }
 /* in the cockpit and the card area: buddies, rules, the way to the cards */
 function partyRunHtml(r, full) {
-  var b = bud(r), out = '';
+  var b = bud(r), out = accRunHtml(r);
   if (b.on) {
     var pairs = r.who.filter(function (id) { return b.map[id]; });
     if (!pairs.length) out += '<div class="zc-row"><span class="zc-e">' + emb('cheers', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Trinkbuddys</b><span>Erste Wahl bei der Aufgabe nach Minute ' + BUD_MIN + '</span></span><span class="zc-t">' + zt(budNextAt(r), 'fällig') + '</span></div>';
@@ -9115,6 +9215,99 @@ function pcSection() {
     }).join('') + '</div>' +
     '<button type="button" class="qx-own mt10" data-act="openCards" data-from="questions"><span class="qx-own-ic">' + emb('forward', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Zum Kartenbereich</b><small>' + (S.collectClosed ? 'Einlösen und drucken' : 'Einlösen, und drucken nach dem Schließen der Gäste-Runde') + '</small></span>' + icon('i-next', 16) + '</button>';
 }
+/* =========================================================
+   The master's own entries. As interactive as the guest link (the same
+   cards, the same live checks), but for someone who enters a lot:
+   - a plan for the evening: per kind what is there and what a good
+     evening needs, one tap adds a card
+   - "Als Nächstes": the kind that is missing most, with an idea
+   - master levels on a larger scale; a level-up shows in the bar at the
+     top when saving, nothing pops in between
+   Everything saved is approved at once.
+   ========================================================= */
+var M_KINDS = ['worte', 'schaetzen', 'auswahl', 'bereich', 'aufgabe'];
+var M_LEVELS = [[0, 'Planer', 'pen'], [5, 'Gastgeber', 'balloon'], [12, 'Quizmaster', 'target'], [22, 'Showmaster', 'popper'], [35, 'Spielleiter-Profi', 'crown'], [50, 'Legende des Abends', 'trophy']];
+function mGoal(t) { var f = E() ? E().focus.length : 1; return { worte: f, schaetzen: 5, auswahl: 5, bereich: 3, aufgabe: 4 }[t] || 3; }
+/* the example evening opens two kinds, the rest comes with the Game Pass */
+function mDemoOk(t) { return !demoOn() || t === 'worte' || t === 'schaetzen'; }
+function mSaved() { return S.questions.filter(function (q) { return !q.ai && q.author === 'Spielleiter' && q.status !== 'nein'; }).length; }
+function mReady() { return gForm().items.filter(gDone).length; }
+function mLevel(n) { var i = 0; M_LEVELS.forEach(function (x, k) { if (n >= x[0]) i = k; }); return { i: i, l: M_LEVELS[i], next: M_LEVELS[i + 1] || null }; }
+/* what the evening already has of a kind: approved from anyone, plus what is ready in the form */
+function mHave(t) { return S.questions.filter(function (q) { return q.type === t && q.status === 'ok' && !q.ai; }).length + gForm().items.filter(function (it) { return it.type === t && gDone(it); }).length; }
+function mNext() {
+  var list = M_KINDS.filter(mDemoOk).map(function (t) { return { t: t, r: mHave(t) / Math.max(1, mGoal(t)) }; }).filter(function (x) { return x.r < 1; });
+  list.sort(function (a, b) { return a.r - b.r; });
+  return list[0] ? list[0].t : '';
+}
+function mIdea(t) {
+  var p = E() && E().focus[0], N = p ? p.name : 'die Hauptperson', Ns = p ? possessive(p.name) : 'ihr';
+  return { worte: 'Ein Wort, wie ' + N + ' ist, und eins, wofür ' + N + ' brennt.', schaetzen: 'Zum Beispiel: Wie viele Länder hat ' + N + ' schon bereist?', auswahl: 'Zum Beispiel: Was war ' + Ns + ' erster Berufswunsch?', bereich: 'Zum Beispiel: Wie viele Stunden schläft ' + N + ' am Wochenende?', aufgabe: 'Zum Beispiel: drei Zungenbrecher am Stück, ohne Fehler.' }[t] || '';
+}
+function mWhat(t) { return { worte: 'Daraus werden Sätze, Sprüche und Fragen', schaetzen: 'Wer näher dran ist, gewinnt', auswahl: 'Eine von bis zu vier Antworten stimmt', bereich: 'Mit dem Schieberegler raten', aufgabe: 'Etwas tun, mit eigener Regel' }[t] || ''; }
+function mHudInner() {
+  var n = mSaved(), add = mReady(), lv = mLevel(n), nx = lv.next;
+  var span = nx ? nx[0] - lv.l[0] : 1, pct = nx ? Math.round((n - lv.l[0]) / span * 100) : 100, pct2 = nx ? Math.min(100, Math.round((n + add - lv.l[0]) / span * 100)) : 100;
+  return '<span class="glvl-e" aria-hidden="true">' + emb(lv.l[2], 28) + '</span>' +
+    '<span class="stack grow" style="gap:5px;min-width:0"><span class="lvl">' + esc(lv.l[1]) + '</span>' +
+    '<span class="gbar mbar" role="progressbar" aria-label="Spielleiter-Level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct2 + '%"></i><b style="width:' + pct + '%"></b></span>' +
+    '<span class="ghint">' + (nx ? (add ? '+' + add + ' beim Speichern · ' : '') + 'Noch ' + Math.max(0, nx[0] - n) + ' bis ' + esc(nx[1]) : 'Höchstes Level erreicht!') + '</span></span>' +
+    '<span class="stack" style="align-items:flex-end;gap:1px"><span class="pts num">' + n + '</span><small class="mhud-s">eingetragen</small></span>';
+}
+function mHudPatch() { var el = document.getElementById('mpass'); if (el && !el.querySelector('.ghfx')) el.innerHTML = mHudInner(); }
+function mCtaLabel() {
+  var G = gForm(), n = G.items.length, d = G.items.filter(gDone).length;
+  if (!n) return 'Speichern';
+  if (d === n) return (n === 1 ? '1 Eintrag' : n + ' Einträge') + ' speichern';
+  return (n === 1 ? '1 Eintrag' : n + ' Einträge') + ' · ' + d + ' von ' + n + ' fertig';
+}
+function mPlanRow(t) {
+  var st = qStyle(t), have = mHave(t), goal = mGoal(t), ok = mDemoOk(t), pct = Math.min(100, Math.round(have / Math.max(1, goal) * 100)), n = gCount(t);
+  if (!ok) return '<button type="button" class="m-goal lock" data-act="demoLocked" style="--tc:' + st.c + '"><span class="m-goal-e">' + emb(st.e, 26) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>' + esc(qTypeLabel(t)) + '</b><small>Mit dem Game Pass</small></span>' + icon('i-lock', 16) + '</button>';
+  return '<button type="button" class="m-goal' + (have >= goal ? ' full' : '') + '" data-act="gAdd" data-v="' + t + '" style="--tc:' + st.c + '"><span class="m-goal-e">' + emb(st.e, 26) + '</span>' +
+    '<span class="stack grow" style="gap:4px;min-width:0"><span class="row" style="gap:8px;justify-content:space-between"><b>' + esc(qTypeLabel(t)) + '</b><span class="m-goal-n">' + have + ' von ' + goal + '</span></span>' +
+    '<span class="m-goal-bar"><i style="width:' + pct + '%"></i></span><small>' + esc(mWhat(t)) + (n ? ' · ' + n + ' in Arbeit' : '') + '</small></span><span class="m-goal-add" aria-hidden="true">' + icon('i-plus', 18) + '</span></button>';
+}
+function masterStudio() {
+  var G = gForm(), e = E(), nx = mNext(), names = e && e.focus.length ? focusNames() : 'die Hauptperson';
+  var head = topbar('questions', 'Selbst eintragen') + '<div class="ghud mhud" id="mpass">' + mHudInner() + '</div>';
+  var saved = UI.mSaved ? '<div class="m-saved mt10">' + icon('i-check', 18) + '<span class="grow">' + (UI.mSaved.n === 1 ? 'Ein Eintrag ist' : UI.mSaved.n + ' Einträge sind') + ' gespeichert und freigegeben' + (UI.mSaved.up ? '. Neues Level: ' + esc(UI.mSaved.up) + '!' : '.') + '</span><button type="button" class="linkbtn" data-act="go" data-to="questions">Ansehen</button></div>' : '';
+  var coach = nx ? '<div class="m-next mt14" style="--tc:' + qStyle(nx).c + '"><span class="m-next-k">' + icon('i-sparkle', 14) + 'Als Nächstes</span><div class="row gap10 mt8"><span class="m-next-e">' + emb(qStyle(nx).e, 34) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>' + esc(qTypeLabel(nx)) + '</b><span>' + esc(mIdea(nx)) + '</span></span></div>' +
+    '<button type="button" class="m-next-go" data-act="gAdd" data-v="' + nx + '">' + icon('i-plus', 16) + 'Jetzt eintragen</button></div>'
+    : '<div class="m-next done mt14"><span class="m-next-k">' + icon('i-check', 14) + 'Alles drin</span><b class="block mt8">Stark! Der Abend hat alles, was er braucht.</b><span class="block small mt6">Mehr geht immer: Jede weitere Frage macht die Runden bunter.</span></div>';
+  var plan = '<span class="eyebrow mt22 block">Dein Plan für den Abend</span><div class="m-plan mt10">' + M_KINDS.map(mPlanRow).join('') + '</div>';
+  var order = M_KINDS, numBy = {};
+  var list = G.items.map(function (it, i) { return { it: it, i: i }; }).sort(function (a, b) { return order.indexOf(a.it.type) - order.indexOf(b.it.type) || a.i - b.i; });
+  var cards = list.map(function (x) { numBy[x.it.type] = (numBy[x.it.type] || 0) + 1; return gCard(x.it, x.i, qTypeLabel(x.it.type) + (gCount(x.it.type) > 1 ? ' ' + numBy[x.it.type] : '')); }).join('');
+  var work = '<span class="eyebrow mt22 block">In Arbeit' + (G.items.length ? ' · ' + G.items.length : '') + '</span>' +
+    (cards || '<div class="empty mt10">Tipp links im Plan eine Art an oder nimm den Vorschlag. Die Karte erscheint hier, du füllst sie aus und speicherst alles auf einmal.</div>') +
+    (UI.qErr ? '<p class="err mt14">' + esc(UI.qErr) + '</p>' : '');
+  var intro = saved + '<h1 class="h1 mt10">Deine Fragen für den Abend</h1><p class="lead mt8">Du kennst ' + esc(names) + ' am besten. Was du hier einträgst, ist sofort freigegeben und landet in den Runden.</p>';
+  var body = intro + dk(coach + plan, work, 'dk-master');
+  var all = G.items.length > 0 && G.items.every(gDone);
+  return scr(head, body, '<button type="button" class="cta' + (all ? ' mint gready' : '') + '" id="gcta" data-act="mSave">' + esc(mCtaLabel()) + '</button>', 'gscr mscr dw');
+}
+A.mSave = function () {
+  var G = gForm(), out = [], first = -1;
+  UI.qErr = '';
+  if (!G.items.length) { UI.qErr = 'Tipp im Plan an, was du eintragen willst.'; gRender(); return; }
+  G.items.forEach(function (it, i) { var r = draftToQ(it, 'Spielleiter', true), miss = gMissing(it); it.err = miss.length ? 'Fehlt noch: ' + miss.join(', ') : r.err; if (it.err) { if (first < 0) first = i; } else out.push(r.q); });
+  if (first >= 0) {
+    var bad = G.items.filter(function (x) { return x.err; }).length;
+    UI.qErr = bad === 1 ? 'Bei einem Eintrag fehlt noch etwas, er ist rot markiert.' : 'Bei ' + bad + ' Einträgen fehlt noch etwas, sie sind rot markiert.';
+    UI.gShake = true; gVibe([40, 30, 40]); gRender(); scrollToEl('gi' + first); return;
+  }
+  var lv0 = mLevel(mSaved()).i;
+  out.forEach(function (q, i) { q.id = q.id + 'm' + i; q.t = q.t + i; q.author = 'Spielleiter'; q.status = 'ok'; });
+  S.questions = S.questions.concat(out); save();
+  G.items = []; UI.gRare = null;
+  var lv = mLevel(mSaved()), up = lv.i > lv0;
+  UI.mSaved = { n: out.length, up: up ? lv.l[1] : '' };
+  gRender(); var b = app.querySelector('.body'); if (b) b.scrollTop = 0;
+  gVibe(up ? [30, 60, 30, 60, 120] : [20, 40, 20]);
+  setToast(out.length === 1 ? 'Gespeichert und freigegeben' : out.length + ' Einträge gespeichert und freigegeben');
+  if (up) gHudFx('lv', '<span class="ghfx-rays" aria-hidden="true"></span><span class="ghfx-e">' + emb(lv.l[2], 34) + '</span><span class="stack" style="gap:1px;min-width:0"><small>Level-Up!</small><b>' + esc(lv.l[1]) + '</b></span>', 2600);
+};
 /* =========================================================
    The invitation. A guest who opens the link for the first time gets
    a letter: it drops in, the sock seal pops, the flap opens and the
@@ -9398,7 +9591,7 @@ function resultView(P) {
     var ic = l.ok === true ? '<span class="tile-ic" style="width:26px;height:26px;border-radius:9px;background:var(--mint)">' + icon('i-check', 14) + '</span>' : l.ok === false ? '<span class="tile-ic" style="width:26px;height:26px;border-radius:9px;background:var(--orange)">' + icon('i-close', 14) + '</span>' : '';
     return '<div class="res" style="min-height:44px">' + ic + '<span class="grow" style="font-size:14px;font-weight:700;line-height:1.35">' + esc(l.t) + '</span></div>';
   }).join('');
-  return '<div style="position:relative">' + fx + card + '</div>' +
+  return '<div style="position:relative">' + fx + card + '</div>' + accResultHtml(P) +
     (rows ? '<div class="card padrows mt14">' + rows + '</div>' + jokerAskHtml(P) + ((res.rows || []).some(function (r) { return !r.group && !r.water && r.pid && r.n > 0; }) ? '<p class="res-hint"><span class="checkbox is-sel" aria-hidden="true">' + icon('i-check', 11) + '</span>Haken = getrunken, das landet im Zähler. Gäste zählen nicht.</p>' : '') : '') + move +
     revancheHtml(P) + hcReleaseHtml(P) +
     (lines ? '<span class="eyebrow mt18 block">Auflösung</span><div class="card padrows mt10">' + lines + '</div>' : '');
@@ -9801,8 +9994,8 @@ function prepHint(P) {
 }
 V.step = function () {
   var r = R(); if (budDue(r)) return V.buddy();
-  ruleSweep();
-  var h = renderStepScreen(r && r.pending, false), st = ruleStrip();
+  ruleSweep(); if (r && r.pending && r.pending.result) accSettle(r.pending);
+  var h = renderStepScreen(r && r.pending, false), st = ruleStrip() + accTaskHtml(r && r.pending);
   return st ? h.replace('<div class="body">', '<div class="body">' + st) : h;
 };
 V.free = function () { return renderStepScreen(S.free && S.free.step, true); };
@@ -10736,6 +10929,69 @@ function spTick() {
   }
 }
 /* =========================================================
+   Fegen and putzen: the accessories. The master only says how many.
+   They go from the hardest to the easiest (toothbrush ... broom).
+   Every four minutes the next task carries a chance: whoever makes it
+   may swap to the next accessory, otherwise it is the drink as always.
+   No screen of its own: a hint on the task, a field in the result.
+   ========================================================= */
+var A = A || {};
+var ACC_MIN = 4;
+var ACC_LADDER = { fegen: ['Zahnbürste', 'Pinsel', 'Spülbürste', 'Staubwedel', 'Handfeger', 'Besen'], putzen: ['Wattestäbchen', 'Zahnbürste', 'Taschentuch', 'Socke', 'Schwamm', 'Lappen'] };
+var ACC_KINDS = ['spiel', 'schaetzen', 'quiz', 'frage', 'gast', 'menge'];
+function accJob() { var f = E() ? E().focus[0] : null; return f && faOf(f).job === 'putzen' ? 'putzen' : 'fegen'; }
+/* n parts, spread over the ladder: always from the hardest to the easiest */
+function accItems(job, n) {
+  var L = ACC_LADDER[job] || ACC_LADDER.fegen, out = []; n = clamp(n || 4, 2, L.length);
+  for (var k = 0; k < n; k++) out.push(L[Math.round(k * (L.length - 1) / (n - 1))]);
+  return out;
+}
+function accN(c) { return clamp(c.accN || 4, 2, 6); }
+function accCountBlock(c) {
+  var items = accItems(accJob(), accN(c));
+  return '<span class="eyebrow mt22 block">Zubehör</span><div class="card pad mt10"><div class="row"><span class="stack grow"><span class="name">Wie viele Teile?</span><span class="sub">Vom schwersten zum leichtesten</span></span>' + stepper('cfgAccN', accN(c), '', 'Zubehörteile') + '</div>' +
+    '<div class="acc-ladder mt10">' + items.map(function (it, i) { return (i ? '<span class="acc-arr" aria-hidden="true">' + icon('i-next', 13) + '</span>' : '') + '<span class="acc-step' + (i ? '' : ' first') + (i === items.length - 1 ? ' last' : '') + '">' + esc(it) + '</span>'; }).join('') + '</div></div>' +
+    '<p class="small mt8">Alle ' + ACC_MIN + ' Minuten wird eine Aufgabe zur Zubehör-Chance: Wer sie schafft, darf zum nächsten Teil greifen. Sonst gibt es das ' + esc(E().unit) + '.</p>';
+}
+A.cfgAccN = function (d) { var c = cfgDefaults(); c.accN = clamp(accN(c) + (+d.d), 2, 6); commit(); };
+/* when the next task is drawn: after four minutes it carries the chance */
+function accOffer(r) {
+  var P = r && r.pending; if (!P || r.fam !== 'zeit' || P.accWin || P.result || ACC_KINDS.indexOf(P.kind) < 0) return;
+  var tr = trackById(P.track) || currentTrack(); if (!tr || tr.done) return;
+  var items = (r.acc && r.acc.items) || []; if (items.length < 2 || tr.accIdx >= items.length - 1) return;
+  /* a duel between the people of the same track always has a loser: no chance there */
+  if (P.format === 'duell' && P.opp && tr.ids.indexOf(P.opp) >= 0) return;
+  if (now() - (r.accAt || r.t0) < ACC_MIN * 60000) return;
+  P.accWin = { track: tr.id, from: items[tr.accIdx], to: items[tr.accIdx + 1], ids: tr.ids.slice() };
+}
+/* once the result is there: won means nobody of the track has to drink */
+function accSettle(P) {
+  var r = R(), a = P && P.accWin; if (!r || !a || a.done || !P.result) return;
+  var tr = trackById(a.track); if (!tr) return;
+  var lost = (P.result.rows || []).some(function (x) { return x.pid && a.ids.indexOf(x.pid) >= 0 && x.n > 0 && !x.freed; });
+  a.done = true; a.won = !lost; r.accAt = now();
+  if (a.won) { tr.accIdx = Math.min(r.acc.items.length - 1, tr.accIdx + 1); logRun('acc', focusNames(tr.ids) + ': Wechsel gewonnen, jetzt mit ' + a.to); }
+  else logRun('info', focusNames(tr.ids) + ': kein Zubehör-Wechsel, weiter mit ' + a.from);
+  save();
+}
+function accTaskHtml(P) {
+  var a = P && P.accWin; if (!a || P.result) return '';
+  return '<div class="acc-chance"><span class="acc-e">' + icon('i-broom', 20) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>Zubehör-Chance!</b><span>Schafft ' + esc(focusNames(a.ids)) + ' das, geht es mit ' + esc(a.to) + ' statt ' + esc(a.from) + ' weiter. Sonst gibt es das ' + esc(U()) + '.</span></span></div>';
+}
+function accResultHtml(P) {
+  var a = P && P.accWin; if (!a || !a.done) return '';
+  return a.won ? '<div class="acc-res won mt14"><span class="acc-e">' + icon('i-broom', 22) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>Zubehör-Wechsel gewonnen!</b><span>Ab jetzt mit ' + esc(a.to) + ' statt ' + esc(a.from) + '. Einmal laut feiern!</span></span></div>'
+    : '<div class="acc-res mt14"><span class="acc-e">' + icon('i-broom', 22) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>Kein Wechsel diesmal</b><span>Es bleibt bei ' + esc(a.from) + ', dafür gibt es das ' + esc(U()) + '. In ' + ACC_MIN + ' Minuten kommt die nächste Chance.</span></span></div>';
+}
+/* in the cockpit: what is in the hand, when the next chance comes */
+function accRunHtml(r) {
+  if (!r || r.fam !== 'zeit' || !r.acc || (r.acc.items || []).length < 2) return '';
+  return r.tracks.map(function (tr) {
+    var items = r.acc.items, i = Math.min(tr.accIdx, items.length - 1), last = i >= items.length - 1;
+    return '<div class="zc-row"><span class="zc-e acc-ic">' + icon('i-broom', 22) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(items[i]) + (r.tracks.length > 1 ? ' · ' + esc(focusNames(tr.ids)) : '') + '</b><span>' + (last ? 'Das leichteste Teil ist erreicht' : 'Nächste Chance auf ' + esc(items[i + 1]) + ' nach') + '</span></span>' + (last ? '' : '<span class="zc-t">' + zt((r.accAt || r.t0) + ACC_MIN * 60000, 'fällig') + '</span>') + '</div>';
+  }).join('');
+}
+/* =========================================================
    The intro: a short show about the party that is coming.
    It starts with the name of the person who is celebrated and
    builds every scene around it. Ends at the Game Pass.
@@ -11187,7 +11443,7 @@ function lpOcc(t) {
     '<span class="stack" style="gap:2px;min-width:0"><b>' + esc(t.label) + '</b><span>' + esc(t.sub) + '</span></span></button>';
 }
 V.landing = function () {
-  var top = '<header class="lp-top"><span class="lp-brand">' + lpLogo(32) + '<b>zparkling</b></span><nav class="lp-nav" aria-label="Start">' +
+  var top = '<header class="lp-top" data-tint="#0C0A1A"><span class="lp-brand">' + lpLogo(32) + '<b>zparkling</b></span><nav class="lp-nav" aria-label="Start">' +
     '<button type="button" class="lp-link" data-act="loadDemo">Beispiel-Abend</button>' + lpBtn('lpIntro', 'Intro starten', 'sm', 'i-play') + '</nav></header>';
   var hero = '<section class="lp-hero">' + lpGarland() +
     '<h1 class="lp-h1">Euer Abend, gespielt statt geplant.</h1>' +
@@ -11225,7 +11481,7 @@ V.landing = function () {
   var end = '<section class="lp-end"><h2 class="lp-h2">Bereit für eure Party?</h2><p class="lp-p">Das Intro zeigt in einer Minute, was zparkling aus eurem Abend macht.</p>' +
     '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('newEvent', 'Gleich eure Party anlegen', 'ghost') + '</div></section>' +
     '<footer class="lp-foot"><span class="lp-brand">' + lpLogo(24) + '<b>zparkling</b></span><span>Das Partyspiel für euren Abend</span></footer>';
-  return scr('', top + hero + steps + guests + occ + fair + pass + end, '', 'lp');
+  return scr('', top + lpSlot() + hero + steps + guests + occ + fair + pass + end, '', 'lp');
 };
 A.lpIntro = function () { A.openTour(); };
 /* an occasion on the landing page: the example evening, switched to it */
@@ -11446,6 +11702,90 @@ function demoHomeHtml() {
     '<span class="eyebrow mt22 block">Jeden Anlass ausprobieren</span><p class="small mt6">Tipp an, was gefeiert wird. Der Beispiel-Abend stellt sich sofort um.</p><div class="dm-types mt10">' + types + '</div>';
 }
 /* =========================================================
+   The website around the app.
+   - The browser bar (Safari on the iPhone, Chrome on Android, Safari on
+     the Mac) takes the colour of the top of the screen. The Game Pass is
+     always gold.
+   - The slot machine on the landing page: reels with every occasion,
+     they spin and stop one after the other, like stairs, again and again.
+   ========================================================= */
+var TINT_BASE = '#0C0A1A', TINT_GOLD = '#F2B33D';
+function tintNow() {
+  if (typeof document === 'undefined' || !document.elementFromPoint || typeof window === 'undefined') return TINT_BASE;
+  if (UI.screen === 'pass' || document.getElementById('pvov')) return TINT_GOLD;
+  var W = window.innerWidth || 375, ys = [2, 26, 60], el, d, k;
+  /* something at the top says which colour it is (the gold banner, a header) */
+  for (k = 0; k < ys.length; k++) {
+    el = document.elementFromPoint(W / 2, ys[k]);
+    for (d = 0; el && d < 16; d++, el = el.parentElement) { var t = el.getAttribute && el.getAttribute('data-tint'); if (t) return t; }
+  }
+  /* otherwise the first solid background at the very top */
+  el = document.elementFromPoint(W / 2, 2);
+  for (d = 0; el && d < 16; d++, el = el.parentElement) {
+    var m = /rgba?\(([^)]+)\)/.exec(getComputedStyle(el).backgroundColor || '');
+    if (m) { var p = m[1].split(',').map(parseFloat); if (p.length < 4 || p[3] > 0.6) return 'rgb(' + Math.round(p[0]) + ',' + Math.round(p[1]) + ',' + Math.round(p[2]) + ')'; }
+  }
+  return TINT_BASE;
+}
+function tintApply() {
+  try {
+    var c = tintNow(); if (c === UI.tint) return; UI.tint = c;
+    var m = document.querySelector('meta[name="theme-color"]');
+    if (!m) { m = document.createElement('meta'); m.setAttribute('name', 'theme-color'); document.head.appendChild(m); }
+    m.setAttribute('content', c);
+    document.documentElement.style.backgroundColor = c; document.body.style.backgroundColor = c;
+  } catch (e) {}
+}
+function tintSoon() { clearTimeout(UI.tintT); UI.tintT = setTimeout(tintApply, 40); }
+if (typeof window !== 'undefined' && window.requestAnimationFrame && typeof setInterval === 'function') {
+  setInterval(tintApply, 900);
+  try { window.addEventListener('resize', tintSoon); } catch (e) {}
+}
+
+/* ---------- the slot machine ---------- */
+var SLOT_SHORT = { socken: 'Sockenkranz', schachtel: 'Schachtelkranz', treppe: 'Treppe fegen', klinke: 'Klinken putzen', geburtstag: 'Geburtstag', hochzeit: 'Polterabend', jga: 'JGA', party: 'Spielabend' };
+var SLOT_REELS = 5, SLOT_COPIES = 4;
+function slotSym(t) {
+  return '<button type="button" class="lp-sym" data-act="lpTry" data-v="' + t.id + '" tabindex="-1"><span class="lp-sym-ic" style="background:' + t.bg + '">' + (t.ic === 'sock' ? sockIc('#15122B', 15) : icon(t.ic, 19)) + '</span>' +
+    '<span class="lp-sym-t"><b class="lp-long">' + esc(t.label) + '</b><b class="lp-short">' + esc(SLOT_SHORT[t.id] || t.label) + '</b><small>' + esc(t.sub) + '</small></span></button>';
+}
+function lpSlot() {
+  var strip = ''; for (var c = 0; c < SLOT_COPIES; c++) strip += EVENT_TYPES.map(slotSym).join('');
+  var reels = '';
+  for (var i = 0; i < SLOT_REELS; i++) reels += '<div class="lp-reel" data-r="' + i + '"><div class="lp-strip" style="transform:translateY(calc(var(--sh) * -' + (i % EVENT_TYPES.length) + '))">' + strip + '</div></div>';
+  var bulbs = ''; for (var b = 0; b < 14; b++) bulbs += '<i></i>';
+  return '<section class="lp-slot" id="lpslot" aria-label="Für jeden Anlass: ' + esc(EVENT_TYPES.map(function (t) { return t.label; }).join(', ')) + '">' +
+    '<span class="lp-bulbs top" aria-hidden="true">' + bulbs + '</span><span class="lp-bulbs bot" aria-hidden="true">' + bulbs + '</span>' +
+    '<span class="lp-slot-k"><b>Für jeden Anlass</b><small>Tippt einen an</small></span><div class="lp-reels">' + reels + '</div></section>';
+}
+/* one spin: every reel travels a little longer than the one before, so they stop like stairs */
+function slotSpin() {
+  var box = document.getElementById('lpslot'); if (!box) return false;
+  var reels = box.querySelectorAll('.lp-reel'), n = EVENT_TYPES.length; if (!reels.length) return false;
+  var h = reels[0].querySelector('.lp-sym'); h = h ? h.offsetHeight : 0; if (!h) return true;
+  var vis = 0; for (var v = 0; v < reels.length; v++) if (reels[v].offsetWidth) vis++;
+  UI.slotK = ((UI.slotK == null ? -vis : UI.slotK) + Math.max(1, vis)) % n;
+  for (var i = 0; i < reels.length; i++) {
+    var r = reels[i], st = r.querySelector('.lp-strip'), from = +(r.getAttribute('data-pos') || i % n), to = (UI.slotK + i) % n;
+    var laps = 1 + Math.min(SLOT_COPIES - 2, Math.floor(i / 2)), end = laps * n + to, dur = 1.05 + i * 0.28;
+    st.style.transition = 'none'; st.style.transform = 'translateY(' + (-from * h) + 'px)';
+    void st.offsetHeight;
+    st.style.transition = 'transform ' + dur.toFixed(2) + 's cubic-bezier(.16,.72,.26,1.04)';
+    st.style.transform = 'translateY(' + (-end * h) + 'px)';
+    r.setAttribute('data-pos', to); r.classList.add('spin');
+    (function (r2, ms) { setTimeout(function () { r2.classList.remove('spin'); r2.classList.add('stop'); setTimeout(function () { r2.classList.remove('stop'); }, 420); }, ms); })(r, Math.round(dur * 1000) - 260);
+  }
+  return true;
+}
+/* the machine runs while the landing page is open; it rests when nothing moves on the screen */
+function slotRun() {
+  clearInterval(UI.slotT);
+  if (typeof window === 'undefined' || !window.requestAnimationFrame) return;
+  try { if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
+  setTimeout(slotSpin, 350);
+  UI.slotT = setInterval(function () { if (document.hidden) return; if (!slotSpin()) clearInterval(UI.slotT); }, 4600);
+}
+/* =========================================================
    Rendering core
    ========================================================= */
 var app = document.getElementById('app');
@@ -11465,6 +11805,8 @@ function render() {
   if (nb) nb.scrollTop = keep;
   if (UI.gk && UI.screen === 'guestForm') gkRestore();
   KB = null;
+  tintSoon();
+  if (UI.screen === 'landing' && UI.slotOn !== app.querySelector('#lpslot')) { UI.slotOn = app.querySelector('#lpslot'); slotRun(); }
 }
 function go(screen) { UI.confirm = null; UI.qrBig = null; UI.screen = screen; if (S && S.event) save(); render(); var b = app.querySelector('.body'); if (b) b.scrollTop = 0; }
 function commit() { save(); render(); }
@@ -11575,7 +11917,7 @@ A.resetAll = function () { S = fresh(); lsDel(LIVE_KEY); lsDel(INBOX_Q); save();
 /* questions */
 function gReset() { UI.gForm = null; UI.gPassData = null; UI.gBubble = null; UI.gPts = null; UI.gHudFx = null; UI.gRare = null; UI.gFinal = null; UI.gLast = {}; UI.gGreeted = ''; gkClose(); UI.gk = null; UI.gDrawSeen = false; UI.gkBusy = false; UI.gkClosing = false; UI.gkFresh = false; UI.gkWaitBlur = false; clearTimeout(UI.gkRevealT); }
 A.openGuestForm = function () { UI.guestMode = 'test'; UI.guestFrom = UI.screen; UI.qDraft = qDraftNew(''); gReset(); UI.qSent = ''; UI.qErr = ''; go('guestForm'); gAfter(); };
-A.openMasterForm = function () { UI.guestMode = 'master'; UI.qDraft = qDraftNew('Spielleiter'); UI.qSent = ''; UI.qErr = ''; go('guestForm'); };
+A.openMasterForm = function () { UI.guestMode = 'master'; UI.qDraft = qDraftNew('Spielleiter'); UI.qSent = ''; UI.qErr = ''; UI.mSaved = null; UI.gHudFx = null; go('guestForm'); gAfter(); };
 A.qType = function (d) { UI.qDraft.type = d.v; UI.qErr = ''; if (d.v === 'luege' && UI.qDraft.correct > 2) UI.qDraft.correct = 0; render(); };
 A.qFor = function (d) { UI.qDraft.forId = d.v; render(); };
 A.qCorrect = function (d) { UI.qDraft.correct = +d.i; render(); };
@@ -11639,8 +11981,9 @@ A.qSubmit = function () {
 /* guests: several contributions at once */
 function scrollToEl(id) { var el = document.getElementById(id), b = app.querySelector('.body'); if (el && b && el.getBoundingClientRect) b.scrollTop += el.getBoundingClientRect().top - b.getBoundingClientRect().top - 12; }
 A.gAdd = function (d) {
-  if (!demoTypeOk(d.v)) { A.demoInfo(); return; }
+  if (!(UI.guestMode === 'master' ? mDemoOk(d.v) : demoTypeOk(d.v))) { A.demoInfo(); return; }
   var G = gForm(), t = d.v, n = gCount(t), mx = gMax(t);
+  if (UI.guestMode === 'master') UI.mSaved = null;
   if (n >= mx) { setToast(t === 'tipp' ? 'Ein Tipp pro Person reicht' : t === 'steckbrief' ? (mx === 1 ? 'Ein Steckbrief reicht' : 'Ein Steckbrief pro Person im Fokus') : t === 'worte' ? (mx === 1 ? 'Zwei Worte reichen' : 'Zwei Worte pro Person im Fokus') : 'Mehr als ' + mx + ' auf einmal geht nicht'); return; }
   var it = qDraftNew(G.author); it.type = t; it.key = 'k' + Date.now().toString(36) + Math.floor(Math.random() * 1000);
   if (t === 'luege' || t === 'auswahl') it.correct = -1;
@@ -11881,7 +12224,7 @@ A.runNext = function () {
   r.pending = nextStep();
   r.hist[r.hist.length - 1].meta.next = pendingLabel(r.pending);
   UI.checkVals = {};
-  budCheck(r); ruleSweep();
+  budCheck(r); ruleSweep(); accOffer(r);
   commit(); go('step');
 };
 A.rollPick = function (d) {
@@ -11916,7 +12259,7 @@ A.runOther = function () {
   step.track = P.track; step.unitNo = P.unitNo; step.roll = P.roll;
   if (P.last) { step.last = true; step.reader = P.reader; }
   if (P.host && step.kind === 'frage') step.host = P.host;
-  r.pending = step; UI.checkVals = {}; UI.timer = null; commit(); setToast('Andere Aufgabe gezogen');
+  r.pending = step; accOffer(r); UI.checkVals = {}; UI.timer = null; commit(); setToast('Andere Aufgabe gezogen');
 };
 /* the Schweizer Taschenmesser may swap one task, once */
 A.roleSwap = function () {
@@ -12407,8 +12750,8 @@ function setBind(b, v) {
   if (b === 'rule.text') { if (UI.ruleDraft) { UI.ruleDraft.text = String(v).slice(0, 80); var rg = document.getElementById('ruleGo'); if (rg) rg.disabled = UI.ruleDraft.text.trim().length < 2; } return; }
   if (b === 'bud.txt') { UI.budTxt = String(v).slice(0, 24); return; }
   if (b === 'tour.name') { UI.tourName = v; tourPatch(); return; }
-  if (b === 'pass.date') { UI.passDate = v; render(); return; }
-  if (b === 'pass.move') { UI.passMoveDate = v; render(); return; }
+  if (b === 'pass.date') { UI.passDate = v; dateTyped('passDate'); return; }
+  if (b === 'pass.move') { UI.passMoveDate = v; dateTyped('passMove'); return; }
   var parts = b.split('.');
   if (b === 'event.name') { E().name = v; save(); return; }
   if (b === 'event.target') { E().target = Number(v); save(); showText('targetShow', v + ' % · etwa ' + Math.round(E().max * Number(v) / 100)); return; }
@@ -12456,6 +12799,21 @@ function setBind(b, v) {
   if (['ch', 'hc', 'gl', 'kc', 'lip'].indexOf(parts[0]) >= 0) { var Pn = curStep(); if (Pn && Pn[parts[0]]) { Pn[parts[0]][parts[1]] = String(v).slice(0, 24); Pn[parts[0]].typed = !!String(v).trim(); save(); } return; }
   if (parts[0] === 'partner') { var P2 = curStep(); if (P2) { P2.teams[+parts[1]][parts[2]] = v; save(); } return; }
 }
+/* a date picked: the buy button follows at once, the rest of the page when the field is left */
+function dateTyped(id) {
+  UI.dateDirty = id;
+  var bb = id === 'passDate' && app.querySelector ? app.querySelector('.p-buy') : null;
+  if (bb) {
+    var date = UI.passDate, plan = UI.passPlan || (date && dayStart(date) - dayStart(isoDay(Date.now())) > 14 * DAY ? 30 : 14);
+    var pl = PASS_PLANS.filter(function (x) { return x.days === plan; })[0] || PASS_PLANS[0];
+    bb.disabled = !date;
+    bb.innerHTML = icon('i-star', 18) + (date ? esc(pl.label) + ' holen · ' + esc(pl.price) : 'Erst das Datum wählen') + '<i class="p-buy-shine" aria-hidden="true"></i>';
+  }
+}
+app.addEventListener('focusout', function (e) {
+  var t = e.target; if (!t || t.type !== 'date' || UI.dateDirty !== t.id) return;
+  setTimeout(function () { var el = document.getElementById(UI.dateDirty || ''); if (UI.dateDirty && document.activeElement !== el) { UI.dateDirty = null; render(); } }, 320);
+});
 app.addEventListener('input', function (e) {
   var el = e.target, b = el.getAttribute && el.getAttribute('data-bind');
   if (b) setBind(b, el.value);
@@ -12467,7 +12825,7 @@ app.addEventListener('change', function (e) {
 app.addEventListener('keydown', function (e) {
   if (e.key !== 'Enter') return;
   if (UI.gk && e.target && e.target.getAttribute && e.target.getAttribute('data-bind') === 'gk.text') { e.preventDefault(); if (gkValid(UI.gk)) A.gkDone(); else gShakeEl(e.target); return; }
-  if (UI.screen === 'guestForm' && UI.guestMode !== 'master' && e.target && e.target.getAttribute && /^g\./.test(e.target.getAttribute('data-bind') || '')) { gEnter(e.target, e); return; }
+  if (UI.screen === 'guestForm' && e.target && e.target.getAttribute && /^g\./.test(e.target.getAttribute('data-bind') || '')) { gEnter(e.target, e); return; }
   if (e.target.id === 'tName') { e.preventDefault(); e.target.blur(); A.tourNext(); return; }
   if (e.target.id === 'cName') { e.preventDefault(); A.addCounterPerson(); }
   if (e.target.id === 'accName') { e.preventDefault(); A.cfgAccAdd(); }

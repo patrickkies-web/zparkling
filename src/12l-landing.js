@@ -30,7 +30,7 @@ function lpOcc(t) {
     '<span class="stack" style="gap:2px;min-width:0"><b>' + esc(t.label) + '</b><span>' + esc(t.sub) + '</span></span></button>';
 }
 V.landing = function () {
-  var top = '<header class="lp-top"><span class="lp-brand">' + lpLogo(32) + '<b>zparkling</b></span><nav class="lp-nav" aria-label="Start">' +
+  var top = '<header class="lp-top" data-tint="#0C0A1A"><span class="lp-brand">' + lpLogo(32) + '<b>zparkling</b></span><nav class="lp-nav" aria-label="Start">' +
     '<button type="button" class="lp-link" data-act="loadDemo">Beispiel-Abend</button>' + lpBtn('lpIntro', 'Intro starten', 'sm', 'i-play') + '</nav></header>';
   var hero = '<section class="lp-hero">' + lpGarland() +
     '<h1 class="lp-h1">Euer Abend, gespielt statt geplant.</h1>' +
@@ -68,7 +68,7 @@ V.landing = function () {
   var end = '<section class="lp-end"><h2 class="lp-h2">Bereit für eure Party?</h2><p class="lp-p">Das Intro zeigt in einer Minute, was zparkling aus eurem Abend macht.</p>' +
     '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('newEvent', 'Gleich eure Party anlegen', 'ghost') + '</div></section>' +
     '<footer class="lp-foot"><span class="lp-brand">' + lpLogo(24) + '<b>zparkling</b></span><span>Das Partyspiel für euren Abend</span></footer>';
-  return scr('', top + hero + steps + guests + occ + fair + pass + end, '', 'lp');
+  return scr('', top + lpSlot() + hero + steps + guests + occ + fair + pass + end, '', 'lp');
 };
 A.lpIntro = function () { A.openTour(); };
 /* an occasion on the landing page: the example evening, switched to it */
