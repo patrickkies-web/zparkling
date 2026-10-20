@@ -14,6 +14,28 @@ WIKI_POLTER = ('Wikipedia: Polterabend', 'https://de.wikipedia.org/wiki/Polterab
 WIKI_JGA = ('Wikipedia: Junggesellenabschied', 'https://de.wikipedia.org/wiki/Junggesellenabschied', 'Geschichte, typische Elemente, Kritik')
 APP = ('zparkling: die App', SITE + '/', 'Spielregeln der App: ein Pinnchen pro Spiel, Gäste-Link, Zubehör-Chance, Bonuskarten')
 
+# Screenshots aus der App (ratgeber/shots.js -> public/ratgeber/img/*.webp): Datei -> (Alt-Text, Bildunterschrift)
+SH = {
+ 'home': ('Startseite der App: Hero-Karte „Jonas & Mia“ mit Avataren, Schritt „Erst den Abend einstellen“ und Hinweis auf 44 eingegangene Gäste-Beiträge', '<b>Heute Abend.</b> Die Übersicht des Spielleiters: Hauptpersonen, nächster Schritt, Beiträge der Gäste.'),
+ 'picker': ('Anlass-Auswahl in der App: Tickets für Sockenkranz, Schachtelkranz, Treppe fegen, Klinken putzen, Geburtstag und Hochzeit', '<b>Welcher Anlass?</b> Jeder Brauch hat sein eigenes Ticket, der Beispiel-Abend ist sofort spielbar.'),
+ 'pilot': ('Pinnchen-Pilot in der App: höchstens 10 pro Person, Ziel 7, Einheit Pinnchen, Schluck oder Shot', '<b>Pinnchen-Pilot.</b> Vor dem Abend stellt ihr ein, wie viel höchstens fallen darf und wo der Abend landen soll.'),
+ 'cockpit-kranz': ('Spielleiter-Ansicht beim Sockenkranz: Kranz-Zähler 0 von 25 Stationen, Jonas ist dran, nächstes Minispiel verdeckt, Knopf „Station 1 aufdecken“', '<b>Stück für Stück.</b> Der Kranz als Zähler, das nächste Minispiel bleibt verdeckt, bis die Station aufgedeckt wird.'),
+ 'cockpit-treppe': ('Spielleiter-Ansicht beim Treppe fegen: Zähler 0 von ca. 60 Minuten, Event läuft, nächste Einlage verdeckt', '<b>Nach Zeit.</b> Beim Fegen und Putzen zählt die App Minuten statt Socken und bringt zwischendurch Einlagen.'),
+ 'einladung': ('Gästeseite der App: Einladung „Mach mit beim Abend von Jonas & Mia“ mit Namensfeld, 6 Gäste sind schon dabei', '<b>Der Gäste-Link.</b> Jeder Gast tippt seinen Namen ein und schickt ein paar Dinge über die Hauptpersonen.'),
+ 'gast-luege': ('Gästeformular der App: Beitrag „Zwei Wahrheiten, eine Lüge“ mit drei Sätzen, einer ist als Lüge markiert', '<b>Zwei Wahrheiten, eine Lüge.</b> Drei Sätze über die Hauptperson, einer ist erfunden, der Gast markiert ihn.'),
+ 'karten': ('Kartenbereich der App: Zubehör-Timer, Trinkbuddys, Regel-Karte, Weiterleiten und Joker im Umlauf', '<b>Karten und Timer.</b> Regel-Karte, Weiterleiten, Joker: Die Gäste halten Karten, die am Abend eingelöst werden.'),
+ 'spiel': ('Minispiel-Karte der App: „Kühlschrank-Rede“, 30 Sekunden Rede ohne Äh, Timer und Knöpfe „Nicht geschafft“ und „Geschafft“', '<b>Ein Minispiel.</b> Aufgabe, Regel, Timer, und am Ende ein Tipp auf Geschafft oder Nicht geschafft.'),
+ 'wwe': ('Wer-würde-eher-Runde in der App: Frage „… die Schachteln vom Kranz als Deko behalten?“, Stimmen pro Person, Gruppe per Link fragen', '<b>Wer würde eher?</b> Alle zeigen gleichzeitig auf eine Person, die App zählt die Stimmen.'),
+ 'schaetzen': ('Schätzfrage in der App: „Wie viele Minuten hat eine Woche?“, Tipp von Jonas gegen Tipp der Gruppe, Knopf Auflösen', '<b>Schätzen gegen die Gruppe.</b> Hauptperson gegen alle, wer näher dran ist, gewinnt.'),
+ 'duell': ('Duell in der App: „Schere, Stein, Papier“, Mia gegen Jonas, wer zuerst drei Runden holt, Knöpfe für die Gewinnerin', '<b>Duell.</b> Zwei Hauptpersonen gegeneinander, die App merkt sich, wer gewonnen hat.'),
+ 'gast-runde': ('Gäste-Runde in der App: „Geburtstags-Kalender“, die Gäste nach Geburtstag sortieren, gebaut aus den Beiträgen von Max, Nina, Tom und Sara', '<b>Gäste-Runde.</b> Gebaut aus dem, was die Gäste vorab geschickt haben, deshalb gibt es sie nur bei euch.'),
+ 'rolle': ('Rollen-Karte der App: Lea bekommt die Rolle „Der Frischling“, weil sie Jonas am kürzesten kennt', '<b>Eine Rolle für einen Gast.</b> Die App verleiht Rollen aus den Beiträgen, mit einem Augenzwinkern.'),
+ 'zubehoer': ('Zubehör-Wechsel in der App beim Treppe fegen: Jonas wechselt vom Besen zum Handfeger, Wechsel 1 von 6', '<b>Zubehör-Wechsel.</b> Die App sagt, wann das nächste Werkzeug dran ist, vom Besen bis zur Zahnbürste.'),
+ 'trinkbuddys': ('Trinkbuddy-Karte der App: „Zeit für Trinkbuddys!“, Jonas und Mia wählen je einen Gast, der mittrinkt', '<b>Trinkbuddys.</b> Jede Hauptperson sucht sich jemanden, der ein paar Spiele lang mittrinkt. Freiwillig, versteht sich.'),
+ 'mission': ('JGA-Mission in der App: „Geheimtipp“, Stufe Harmlos, Jonas fragt eine Bedienung nach dem Lieblingsort in dieser Stadt, Knöpfe Nicht geschafft und Geschafft', '<b>Eine Mission.</b> Stufe Harmlos, Auftrag, Regel, und wer verweigert, trinkt höchstens ein Pinnchen.'),
+}
+def shots(*keys): return ('shots', [(k, SH[k][0], SH[k][1]) for k in keys])
+
 PAGES = [
 # ------------------------------------------------------------------ 1
 {
@@ -44,6 +66,7 @@ PAGES = [
   ('h2', 'Welche Aufgaben passen zum Sockenkranz?'),
   ('p', 'Gute Sockenkranz-Aufgaben sind kurz, brauchen wenig Material und bringen alle zum Lachen, ohne jemanden bloßzustellen. Drei Arten haben sich bewährt: Geschicklichkeit mit dem, was im Haus ist, Fragen über das Geburtstagskind, die die Gäste vorher beigesteuert haben, und kleine Auftritte vor der Gruppe. Die folgenden Beispiele stammen aus zparkling, so wie die App sie am Abend stellt:'),
   ('games', ['blindabhaengen', 'sockenball', 'klammern', 'blindpaare', 'sockenturbo', 'waescheleine']),
+  shots('spiel', 'cockpit-kranz'),
   ('h3', 'Fragen und Aufgaben, die nur bei euch funktionieren'),
   ('ul', [
    '<strong>Zwei Wahrheiten, eine Lüge:</strong> Ein Gast erzählt drei Geschichten über das Geburtstagskind, eine ist erfunden. Die alte Socke muss die Lüge finden.',
@@ -54,6 +77,7 @@ PAGES = [
    '<strong>Gegen die Menge:</strong> Fünf Fragen, bei denen alle Gäste abstimmen. Danach rät das Geburtstagskind, was die Mehrheit gewählt hat.',
   ]),
   ('app', 'Die Aufgaben kommen von euren Gästen', 'In zparkling schickt jeder Gast vorab per Link ein paar Kleinigkeiten über das Geburtstagskind: Erinnerungen, Lügen, Schätzfragen, zwei Worte. Die App baut daraus Runden, die es nur auf eurer Party gibt, und mischt sie mit über 140 Minispielen. Welches Spiel an welcher Socke kommt, bleibt bis zum Abend geheim. Beim Beispiel-Abend könnt ihr den Sockenkranz sofort durchspielen.', 'socken', 'Sockenkranz'),
+  shots('einladung', 'gast-runde', 'pilot'),
   ('h2', 'Wie bleibt der Abend fair?'),
   ('p', 'Die ehrliche Antwort: durch eine Obergrenze und einen Spielleiter, der sie durchsetzt. Ein Sockenkranz mit 25 Socken und einem Pinnchen pro verlorener Aufgabe sind im schlechtesten Fall 25 Pinnchen für eine Person. Das übersteht niemand gut. Setzt deshalb vorher ein Maximum für den ganzen Abend, zum Beispiel zehn, und ein Ziel, bei dem der Abend gut gelaufen ist.'),
   ('p', 'Zwei Regeln helfen zusätzlich. Erstens: Pro Spiel fällt höchstens ein Pinnchen, nie zwei, auch wenn die Aufgabe doppelt verloren geht. Zweitens: Wer viel gewinnt, trinkt weniger, und wer oft verliert, nähert sich dem Maximum, aber überschreitet es nie. Für die Stunden danach gilt dasselbe wie bei jeder Feier: Wasser, Essen, und niemand fährt.'),
@@ -127,6 +151,7 @@ PAGES = [
   ('h2', 'Aufgaben und Spiele, die zum Schachtelkranz passen'),
   ('p', 'Die Schachteln selbst sind das beste Material. Diese Beispiele kommen aus zparkling, so wie die App sie am Abend stellt:'),
   ('games', ['schachtelturm', 'schachtelraten', 'schachtelblind', 'schachtelkegeln', 'zungenbrecher', 'starren']),
+  shots('wwe', 'spiel'),
   ('h3', 'Fragen aus dem Freundeskreis'),
   ('ul', [
    '<strong>Steckbrief-Jahre:</strong> Die Gäste haben vorher verraten, seit wann sie die Jubilarin kennen. Sie sortiert die Gäste nach Jahren.',
@@ -135,6 +160,7 @@ PAGES = [
    '<strong>Porträt in 45 Sekunden:</strong> Ein Gast hat sie vorher gemalt. Sie muss erkennen, von wem das Bild ist.',
   ]),
   ('app', 'Die Schachteln füllen sich von selbst', 'In zparkling schickt jeder Gast vorab per Link seine Beiträge: Steckbrief, Lügen, Erinnerungen, Fragen. Die App baut daraus Gäste-Runden und mischt sie mit über 140 Minispielen, pro Schachtel ein Spiel. Welches wann kommt, bleibt bis zum Abend geheim. Im Beispiel-Abend könnt ihr den Schachtelkranz sofort ausprobieren.', 'schachtel', 'Schachtelkranz'),
+  shots('einladung', 'gast-luege', 'karten'),
   ('h2', 'Wie bleibt der Abend für die Jubilarin schön?'),
   ('p', 'Beim Schachtelkranz wird traditionell angestoßen, pro verlorener Aufgabe fällt ein Pinnchen oder ein Schluck. Bei 30 Schachteln ist das ohne Obergrenze zu viel. Legt vorher fest, wie viele Pinnchen für den ganzen Abend höchstens fallen, und ersetzt jede zweite Niederlage durch Wasser. Pro Spiel fällt höchstens eins, nie zwei.'),
   ('p', 'Die zweite Regel betrifft die Gäste: Sie machen freiwillig mit. Wer eine Aufgabe für die Jubilarin beisteuert, muss selbst nichts trinken. Trinkbuddys, also ein Gast, der bei einer Niederlage mittrinkt, sind eine schöne Geste, aber nur, wenn der Gast sich meldet.'),
@@ -195,12 +221,14 @@ PAGES = [
   ('p', 'Gefegt werden vor allem Kronkorken. Je nach Größe der Treppe braucht ihr 2 bis 8 Kilogramm, die die Freunde über die Stufen streuen und immer wieder nachlegen. Sägespäne oder Papierstreifen gehen auch, bei Regen werden sie allerdings zu Brei. Das Geburtstagskind fegt verkleidet, in Bremen traditionell mit Zylinder, oft im Frack.'),
   ('p', 'Das Zubehör ist der Witz des Brauchs. Angefangen wird mit etwas Kleinem, einem Wattestäbchen, einer Zahnbürste oder einem Pinsel. Ein besseres Werkzeug muss sich das Geburtstagskind verdienen: mit richtigen Antworten auf Fragen oder mit gelösten Aufgaben. Erst ganz am Ende gibt es den Besen. Manche Freunde präparieren ihn zusätzlich, damit auch damit kaum zu fegen ist.'),
   ('note', '<b>Wie viele Teile?</b> Vier bis sechs Stufen haben sich bewährt: vom schwersten zum leichtesten Werkzeug. Welche Gegenstände das sind, wisst ihr selbst am besten, es muss nur jede Stufe leichter fegen als die davor. In zparkling gebt ihr nur die Anzahl an; die App sagt dann alle vier Minuten, wann die nächste Chance auf das nächste Teil kommt.'),
+  shots('zubehoer', 'karten'),
   ('h2', 'Wie endet das Fegen?'),
   ('p', 'Gefegt wird, bis eine Jungfrau vorbeikommt und das Geburtstagskind freiküsst. Die Bedingung wurde über die Jahre gelockert: Auch eine Frau mit dem Sternzeichen Jungfrau oder eine unverheiratete Frau im heiratsfähigen Alter zählt, rund um Celle sogar verheiratete Frauen. Nach dem Kuss räumen alle gemeinsam die Treppe auf, dann geht es in die nächste Kneipe. Rechnet mit ein bis zwei Stunden auf der Treppe, bei Kälte eher weniger.'),
   ('h2', 'Aufgaben für die Einlagen zwischen dem Fegen'),
   ('p', 'Zwei Stunden nur fegen wird langweilig, für das Geburtstagskind und für die Zuschauer. Deshalb gibt es Einlagen: alle paar Minuten eine Aufgabe, die eine Chance auf das nächste Werkzeug bringt. Wer sie schafft, greift zum besseren Teil. Wer scheitert, trinkt oder fegt weiter. Diese Beispiele stammen aus zparkling, so wie die App sie stellt:'),
   ('games', ['besenbalance', 'fegeslalom', 'kehrwurf', 'besenhockey', 'zahnbuerstensprint', 'stufenbecher', 'kehrblechlauf', 'stufenschaetzen']),
   ('app', 'Treppe fegen mit Spielleiter', 'In zparkling läuft Treppe fegen nach Zeit: Ihr stellt ein, wie lange gefegt wird und wie viele Zubehörteile es gibt. Die App sorgt für Einlagen, Gäste-Runden aus den Beiträgen der Freunde und alle vier Minuten für eine Zubehör-Chance. Pro Einlage fällt höchstens ein Pinnchen. Im Beispiel-Abend könnt ihr es sofort ausprobieren.', 'treppe', 'Treppe fegen'),
+  shots('cockpit-treppe', 'pilot', 'einladung'),
   ('h2', 'Wie bleibt der Abend fair?'),
   ('p', 'Treppe fegen findet draußen statt, oft bei Kälte, und dauert. Drei Dinge helfen: eine Obergrenze an Pinnchen für den ganzen Abend, Wasser und etwas zu essen auf der Treppe, und ein Spielleiter, der die Einlagen taktet. Pro Einlage fällt höchstens ein Pinnchen, nie zwei. Gäste trinken nur, wenn sie wollen; wer als Trinkbuddy mitmachen will, meldet sich.'),
   ('h2', 'Checkliste für das Treppe fegen'),
@@ -279,6 +307,7 @@ PAGES = [
   ('h3', 'Aufgaben zwischen den Klinken'),
   ('games', ['klinkenpolitur', 'lappenwurf', 'spiegelputzen', 'klinkenzaehlen', 'janein', 'jahrgang']),
   ('app', 'Klinken putzen mit Spielleiter', 'In zparkling läuft Klinken putzen nach Zeit: Ihr stellt ein, wie lange geputzt wird und wie viele Utensilien es gibt. Die App taktet Einlagen und Gäste-Runden aus den Beiträgen der Freunde und bringt alle vier Minuten eine Chance auf das nächste Utensil. Pro Einlage fällt höchstens ein Pinnchen, Gäste werden nie gezwungen. Im Beispiel-Abend könnt ihr es sofort ausprobieren.', 'klinke', 'Klinken putzen'),
+  shots('cockpit-treppe', 'zubehoer', 'gast-runde'),
   ('h2', 'Wie bleibt der Nachmittag fair?'),
   ('p', 'Klinken putzen dauert so lange, bis geküsst wird, und das kann sich ziehen. Setzt vorher ein Maximum an Pinnchen für den ganzen Tag, nehmt Wasser und etwas zu essen mit und taktet die Einlagen: alle paar Minuten eine Aufgabe, dazwischen Putzen, Fotos, ein Lied. Pro Aufgabe fällt höchstens ein Pinnchen, nie zwei. Wer nicht trinken will, bekommt eine Strafaufgabe statt eines Pinnchens.'),
   ('h2', 'Checkliste für das Klinken putzen'),
@@ -356,6 +385,7 @@ PAGES = [
   ('p', 'Egal ob Socken oder Schachteln: Der Abend lebt von den Aufgaben und Fragen, nicht vom Kranz. Die besten stammen aus dem Freundeskreis, Erinnerungen, Lügen, Schätzfragen, der Spruch, den das Geburtstagskind immer sagt. Dazu kleine Geschicklichkeitsspiele mit dem, was im Haus ist. Zwei Beispiele aus zparkling, eins mit Socken, eins mit Schachteln:'),
   ('games', ['sockenball', 'schachtelraten']),
   ('app', 'Ein Abend, zwei Kränze, eine App', 'zparkling kennt beide Bräuche. Ihr wählt Sockenkranz oder Schachtelkranz, die Gäste schicken vorab per Link ihre Beiträge, und die App baut daraus Runden und Minispiele, Socke für Socke oder Schachtel für Schachtel. Pro Spiel fällt höchstens ein Pinnchen. Im Beispiel-Abend könnt ihr beide Kränze ausprobieren.', 'socken', 'Sockenkranz'),
+  shots('picker', 'cockpit-kranz', 'home'),
  ],
  'faq': [
   ('Wann Sockenkranz, wann Schachtelkranz?', '<p>Sockenkranz für unverheiratete Männer zum 25., Schachtelkranz für unverheiratete Frauen zum 25. Im Schaltjahr tauschen manche Regionen die Kränze.</p>'),
@@ -395,6 +425,7 @@ PAGES = [
   ('h2', 'Zwanzig JGA-Missionen für unterwegs'),
   ('p', 'Die folgenden Missionen stammen aus zparkling, so wie die App sie der Truppe stellt. Alle funktionieren in jeder Stadt, brauchen höchstens einen Stift und bringen etwas mit nach Hause: Sätze, Fotos, Geschichten für die Hochzeit.'),
   ('games', ['jga_j1', 'jga_j2', 'jga_j7', 'jga_j11', 'jga_j18', 'jga_j20', 'jga_j28', 'jga_j31', 'jga_j36', 'jga_j26']),
+  shots('mission', 'trinkbuddys'),
   ('ul', [
    '<strong>Dialekt-Lektion:</strong> Sich von jemandem aus der Gegend ein Wort im Dialekt beibringen lassen und es bis zur nächsten Mission in jeden zweiten Satz einbauen.',
    '<strong>Geheimtipp:</strong> Eine Bedienung nach dem Lieblingsort in der Stadt fragen. Wer hingeht, bekommt Applaus.',
@@ -411,6 +442,7 @@ PAGES = [
   ('p', 'Wenn die Truppe lieber drinnen feiert, tragen die Gäste den Abend: Vorab schickt jeder eine Erinnerung an die Braut oder den Bräutigam, eine Schätzfrage und zwei Wahrheiten mit einer Lüge. Daraus werden Runden, die es nur bei euch gibt. Dazu ein paar Spiele ohne Material:'),
   ('games', ['kennstdu', 'liebesgedicht', 'jaichwill', 'imitieren', 'rede', 'starren']),
   ('app', 'Missionen mit Spielleiter, in drei Mut-Stufen', 'In zparkling wählt ihr für den Junggesellenabschied, ob es in die Stadt geht oder drinnen bleibt, und wie mutig die Hauptperson ist: eher schüchtern, ausgeglichen, offen für alles. Die App stellt Missionen und Truppen-Aufträge, mischt Gäste-Runden aus den Beiträgen der Freunde dazu und hält das Tempo. Pro Mission fällt höchstens ein Pinnchen. Im Beispiel-Abend könnt ihr den JGA sofort durchspielen.', 'jga', 'JGA'),
+  shots('pilot', 'rolle', 'karten'),
   ('h2', 'Regeln, damit die Truppe mitspielt'),
   ('ul', [
    '<strong>Die Truppe spielt mit.</strong> Nicht nur die Hauptperson bekommt Aufträge; jede Mission hat eine Rolle für die Gruppe: Zeit nehmen, Foto machen, Zeuge sein.',
@@ -482,6 +514,7 @@ PAGES = [
    '<strong>Gegen die Menge:</strong> Fünf Fragen, bei denen alle Gäste abstimmen. Das Paar rät, was die Mehrheit gewählt hat.',
   ]),
   ('app', 'Ein Abend für zwei Hauptpersonen', 'In zparkling legt ihr beide Hauptpersonen an, und die App spielt mit ihnen: gemeinsam im Wechsel oder gegeneinander mit Duellen. Die Gäste schicken vorab per Link ihre Geschichten über das Paar, daraus werden Runden, die es nur bei euch gibt, gemischt mit über 140 Minispielen. Pro Spiel fällt höchstens ein Pinnchen. Im Beispiel-Abend könnt ihr es ausprobieren.', 'hochzeit', 'Polterabend'),
+  shots('duell', 'gast-runde', 'home'),
   ('h2', 'Was beim Polterabend schiefgeht'),
   ('ul', [
    '<strong>Glas und Spiegel.</strong> Beides gehört nicht auf den Haufen, sagt der Brauch, und beides schneidet.',
@@ -529,6 +562,7 @@ PAGES = [
   ('h2', 'Spiele ohne Material'),
   ('p', 'Für den Anfang des Abends oder wenn nichts vorbereitet ist. Alle Beispiele stammen aus zparkling, so wie die App sie stellt:'),
   ('games', ['zungenbrecher', 'rede', 'starren', 'janein', 'imitieren', 'jahrgang']),
+  shots('spiel', 'schaetzen'),
   ('h2', 'Spiele mit Material aus dem Haus'),
   ('p', 'Kronkorken, Becher, Löffel, Kekse: Was in jeder Küche liegt, reicht für einen ganzen Abend.'),
   ('games', ['kk-schnipp', 'pyramide', 'loeffelnase', 'keks', 'becherflip', 'mumie']),
@@ -543,6 +577,7 @@ PAGES = [
    '<strong>Wer würde eher?</strong> Alle zeigen auf drei gleichzeitig auf eine Person. Die meisten Stimmen trinken.',
   ]),
   ('app', 'Geburtstag ohne Kranz: Runde für Runde', 'In zparkling läuft der Geburtstag ohne Kranz und Besen Runde für Runde, auf Wunsch mit Würfel. Die Gäste schicken vorab per Link ihre Beiträge, die App baut daraus Gäste-Runden und mischt sie mit über 140 Minispielen, passend zu eurem Material. Pro Runde fällt höchstens ein Pinnchen, und der Pinnchen-Pilot bremst, wenn es zu schnell wird. Im Beispiel-Abend könnt ihr es sofort ausprobieren.', 'geburtstag', 'Geburtstag'),
+  shots('einladung', 'gast-runde', 'rolle'),
   ('h2', 'Der Plan für den Abend'),
   ('table', ['Phase', 'Dauer', 'Was passiert'], [
    ['Ankommen', '30 Minuten', 'Essen, Getränke, keine Spiele. Die Gäste schicken ihre letzten Beiträge.'],
@@ -599,6 +634,7 @@ PAGES = [
    '<strong>Gefühlte Minute:</strong> Alle schließen die Augen, der Spielleiter startet die Uhr. Wer nach Gefühl am nächsten an einer Minute „Stopp“ sagt, gewinnt.',
   ]),
   ('app', 'Die Spiele sucht die App aus', 'In zparkling sagt ihr nur, was im Haus ist, auch wenn es nichts ist. Die App wählt aus über 140 Minispielen die passenden, stellt sie mit Regel, Timer und Geschafft-Bedingung, und mischt Gäste-Runden aus dem dazu, was die Gäste vorab per Link geschickt haben. Wer würde eher und Gegen die Menge laufen mit Abstimmung per Handy. Im Beispiel-Abend könnt ihr den Spielabend sofort ausprobieren.', 'party', 'Spielabend'),
+  shots('wwe', 'schaetzen', 'duell'),
   ('h2', 'Mit oder ohne Alkohol'),
   ('p', 'Jedes Spiel hier funktioniert ohne Alkohol: Verlieren kostet dann eine Zusatzaufgabe, einen Punkt oder ein Pinnchen Wasser. Wer mit Alkohol spielt, braucht zwei Regeln: Pro Spiel fällt höchstens ein Pinnchen, und für den Abend gilt ein Maximum pro Person. Wer viel gewinnt, trinkt weniger; wer oft verliert, nähert sich dem Maximum, aber überschreitet es nicht.'),
   ('h2', 'Ablauf für einen Spielabend'),
@@ -687,6 +723,7 @@ PAGES = [
    '<strong>Nichts Verletzendes:</strong> Der Spruch wird von Nachbarn, Kollegen und Eltern gelesen. Lustig heißt: Das Geburtstagskind lacht mit.',
   ]),
   ('app', 'Der Spruch kommt aus der App', 'In zparkling schickt jeder Gast vorab zwei Worte über das Geburtstagskind und seinen Lieblingsspruch. Daraus baut die App Sätze fürs Lippenlesen, Konter-Sprüche und die Runde „Lieblingsspruch“: Wer hat den Satz eingereicht, den die alte Socke angeblich ständig sagt? Beim Beispiel-Abend könnt ihr es ausprobieren.', 'socken', 'Sockenkranz'),
+  shots('einladung', 'gast-luege'),
  ],
  'faq': [
   ('Was bedeutet alte Socke zum 25. Geburtstag?', '<p>Ein Mann, der mit 25 noch unverheiratet ist. Seine Freunde hängen ihm einen Sockenkranz über die Tür. Frauen werden zur alten Schachtel und bekommen einen Schachtelkranz.</p>'),

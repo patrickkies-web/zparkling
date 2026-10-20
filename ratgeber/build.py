@@ -6,6 +6,8 @@ import json, os, re, html, shutil, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'ratgeber'))
 from pages import PAGES, SITE, AUTHOR, DATE
+from pages_b import PAGES_B
+PAGES = PAGES + PAGES_B
 OUT = os.path.join(ROOT, 'public', 'ratgeber')
 GAMES = json.load(open(os.path.join(ROOT, 'ratgeber', 'games.json')))
 
@@ -50,6 +52,10 @@ def render_blocks(blocks, unit, units):
         elif t == 'app':
             title, text, anlass = b[1], b[2], b[3]
             out.append('<aside class="rg-app"><div class="rg-app-in"><span class="rg-app-k">In der App</span><b>%s</b><p>%s</p><a class="rg-cta" href="%s/#beispiel-%s">%sBeispiel-Abend %s ansehen</a></div></aside>' % (esc(title), text, SITE, anlass, PLAY, esc(b[4])))
+        elif t == 'shots':
+            # Screenshots aus der App: (datei, alt, bildunterschrift), 390x844 Punkte, Datei 780x1688 WebP
+            out.append('<div class="rg-shots" role="group" aria-label="Screenshots aus der App">' + ''.join(
+                '<figure class="rg-shot"><div class="rg-phone"><img src="/ratgeber/img/%s.webp" width="390" height="844" alt="%s" loading="lazy" decoding="async"></div><figcaption>%s</figcaption></figure>' % (f, esc(alt), cap) for f, alt, cap in b[1]) + '</div>')
         elif t == 'note': out.append('<div class="rg-note">%s</div>' % b[1])
         elif t == 'quote': out.append('<blockquote class="rg-quote"><p>%s</p><footer>%s</footer></blockquote>' % (b[1], b[2]))
     return '\n'.join(out)
@@ -67,7 +73,7 @@ def page_html(pg, all_pages):
     faq_ld = {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": strip_tags(a)}} for q, a in pg['faq']]}
     art_ld = {"@type": "Article", "headline": pg['h1'], "description": pg['description'], "inLanguage": "de", "datePublished": DATE, "dateModified": DATE,
               "author": {"@type": "Organization", "name": AUTHOR, "url": SITE + '/'}, "publisher": {"@type": "Organization", "name": "zparkling", "url": SITE + '/', "logo": {"@type": "ImageObject", "url": SITE + '/icon-512.png'}},
-              "image": og, "mainEntityOfPage": url, "about": pg['about']}
+              "image": [og] + [SITE + '/ratgeber/img/%s.webp' % f for b in pg['blocks'] if b[0] == 'shots' for f, _, _ in b[1]], "mainEntityOfPage": url, "about": pg['about']}
     bc_ld = {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "zparkling", "item": SITE + '/'}, {"@type": "ListItem", "position": 2, "name": "Ratgeber", "item": SITE + '/ratgeber/'}, {"@type": "ListItem", "position": 3, "name": pg['short'], "item": url}]}
     ld = json.dumps({"@context": "https://schema.org", "@graph": [art_ld, faq_ld, bc_ld]}, ensure_ascii=False).replace('</', '<\\/')
     toc = ''.join('<a href="#%s">%s</a>' % (slugify(b[1]), esc(b[1])) for b in pg['blocks'] if b[0] == 'h2') + '<a href="#haeufige-fragen">Häufige Fragen</a>'
@@ -120,16 +126,16 @@ def page_html(pg, all_pages):
 def index_html(all_pages):
     url = SITE + '/ratgeber/'
     cards = ''.join('<a class="rg-tile" href="/ratgeber/%s/" style="--c:%s"><span class="rg-tile-k">%s</span><b>%s</b><p>%s</p><span class="rg-tile-go">Lesen %s</span></a>' % (p['slug'], p['color'], esc(p['kicker']), esc(p['short']), esc(p['teaser']), CHEV) for p in all_pages)
-    ld = json.dumps({"@context": "https://schema.org", "@type": "CollectionPage", "name": "Ratgeber: Bräuche zum 25. und 30. Geburtstag", "url": url, "inLanguage": "de", "publisher": {"@type": "Organization", "name": "zparkling", "url": SITE + '/'}}, ensure_ascii=False)
+    ld = json.dumps({"@context": "https://schema.org", "@type": "CollectionPage", "name": "Ratgeber: Bräuche, Partyspiele und Aufgaben", "url": url, "inLanguage": "de", "publisher": {"@type": "Organization", "name": "zparkling", "url": SITE + '/'}}, ensure_ascii=False)
     return f'''<!doctype html>
 <html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ratgeber: Sockenkranz, Schachtelkranz, Treppe fegen, Klinken putzen | zparkling</title>
-<meta name="description" content="Die Bräuche zum 25. und 30. Geburtstag erklärt: Sockenkranz, Schachtelkranz, Treppe fegen und Klinken putzen, mit Aufgaben, Fragen, Regeln und Spielen.">
+<title>Ratgeber: Bräuche, Partyspiele und Aufgaben | zparkling</title>
+<meta name="description" content="Sockenkranz, Schachtelkranz, Treppe fegen, Klinken putzen, JGA und Polterabend erklärt, dazu Partyspiele, Schätzfragen und Wer-würde-eher-Fragen mit Regeln.">
 <link rel="canonical" href="{url}">
-<meta property="og:type" content="website"><meta property="og:title" content="Ratgeber: Bräuche zum 25. und 30. Geburtstag"><meta property="og:description" content="Sockenkranz, Schachtelkranz, Treppe fegen und Klinken putzen: Aufgaben, Fragen, Regeln und Spiele."><meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/ratgeber/og.png"><meta property="og:locale" content="de_DE">
+<meta property="og:type" content="website"><meta property="og:title" content="Ratgeber: Bräuche, Partyspiele und Aufgaben"><meta property="og:description" content="Sockenkranz, Schachtelkranz, Treppe fegen und Klinken putzen: Aufgaben, Fragen, Regeln und Spiele."><meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/ratgeber/og.png"><meta property="og:locale" content="de_DE">
 <meta name="theme-color" content="#0C0A1A">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -140,7 +146,7 @@ def index_html(all_pages):
 <body>
 <header class="rg-top"><a class="rg-brand" href="/">{LOGO}<b>zparkling</b></a><nav class="rg-nav" aria-label="Ratgeber"><a class="rg-btn sm" href="/">{PLAY}Zur App</a></nav></header>
 <main class="rg-main">
-<section class="rg-hero" style="--c:#FF7A45">{garland(['#15122B','#FFFFFF','#48D9A6','#9886FF','#FFC940','#FF8FC4','#15122B'])}<span class="rg-kicker">Ratgeber</span><h1>Bräuche zum 25. und 30. Geburtstag, erklärt von zparkling</h1><p class="rg-lead">Sockenkranz, Schachtelkranz, Treppe fegen und Klinken putzen: Was dahintersteckt, wie der Abend abläuft, welche Aufgaben und Fragen sich bewährt haben und wie ihr daraus eine Party macht, die niemanden bloßstellt.</p></section>
+<section class="rg-hero" style="--c:#FF7A45">{garland(['#15122B','#FFFFFF','#48D9A6','#9886FF','#FFC940','#FF8FC4','#15122B'])}<span class="rg-kicker">Ratgeber</span><h1>Bräuche, Aufgaben und Spiele für euren Abend</h1><p class="rg-lead">Sockenkranz, Schachtelkranz, Treppe fegen, Klinken putzen, JGA und Polterabend: Was dahintersteckt, wie der Abend abläuft, welche Aufgaben und Fragen sich bewährt haben. Dazu Partyspiele, Schätzfragen und Wer-würde-eher-Fragen, die niemanden bloßstellen.</p></section>
 <div class="rg-tiles">{cards}</div>
 <section class="rg-cta-box" style="--c:#FFC940"><div><span class="rg-app-k">zparkling</span><b>Die App, die den Abend spielt</b><p>Eure Gäste schicken vorab per Link, was sie über das Geburtstagskind wissen. Daraus baut zparkling über 140 Minispiele und Gäste-Runden, die es nur auf eurer Party gibt. Pro Spiel fällt höchstens ein Pinnchen, Gäste werden nie gezwungen.</p></div><a class="rg-cta" href="/">{PLAY}App ansehen</a></section>
 </main>
