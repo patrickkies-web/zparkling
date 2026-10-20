@@ -5,7 +5,7 @@
    quick games and five stations of a run. The rest says: Game Pass.
    ========================================================= */
 var DEMO_LIMITS = !(typeof window !== 'undefined' && window.DEMO_OFF);
-var DEMO_GTYPES = ['worte', 'luege', 'wer'];
+var DEMO_GTYPES = ['worte', 'entweder', 'luege', 'wer'];
 var DEMO_CARDS = ['wenn', 'portrait'];
 var DEMO_FREE = ['spiel', 'wwe', 'schaetzen'];
 var DEMO_STEPS = 5;

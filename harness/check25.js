@@ -156,7 +156,7 @@ const holes = s => /\{[A-Za-z]+\}|undefined|NaN|null/.test(s);
   ok(c.S.questions.filter(q => c.isCardType(q.type)).every(q => c.questionSlots(q) === 0), 'Cards hold no single-question slots');
   for (let k = 0; k < 30; k++) { const st = c.buildFree('frage'); if (st && c.isCardType((c.S.questions.filter(q => q.id === st.qid)[0] || {}).type)) { ok(false, 'a card came as a single question'); break; } }
   ok(c.rareTypes(c.typeCounts()).every(t => !c.isCardType(t)), 'The rare-kinds nudge only names kinds a guest can pick');
-  ok(c.formTypes().length === 9 && c.QTYPES.length === 16, 'Nine kinds in the form, seven more from the cards');
+  ok(c.formTypes().length === 12 && c.QTYPES.length === 19, 'Twelve kinds in the form, seven more from the cards');
 }
 /* 8. the rounds */
 function forceRound(c, id, main) {

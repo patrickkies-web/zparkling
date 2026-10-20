@@ -497,6 +497,7 @@ function qDetails(q) {
   if (q.type === 'joker') return 'Joker' + (q.text ? ', Bedingung: ' + esc(q.text) : '');
   if (q.type === 'weiter') return 'Weiterleiten-Karte';
   if (q.type === 'regel') return 'Regel-Karte';
+  if (GQ_MORE[q.type]) return qDetailsMore(q);
   return '';
 }
 function qAboutName(q) { return q.forId && isFocus(q.forId) ? person(q.forId).name : E() && E().focus.length ? focusNames() : 'das Geburtstagskind'; }
@@ -719,7 +720,7 @@ var GQ_VERB = { worte: ['Du schickst', 'In zwei Worten'], steckbrief: ['Du füll
 /* the master keeps his own form, so a test as guest and his own entries never mix */
 function gForm() { if (UI.guestMode === 'master') return UI.mForm || (UI.mForm = { author: 'Spielleiter', items: [], cards: [] }); return UI.gForm || (UI.gForm = { author: '', items: [] }); }
 function gCount(t) { return gForm().items.filter(function (x) { return x.type === t; }).length; }
-function gMax(t) { if (UI.guestMode === 'master') return t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) * 3 : 20; return t === 'tipp' ? 1 : t === 'steckbrief' || t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) : 5; }
+function gMax(t) { if (UI.guestMode === 'master') return t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) * 3 : 20; return t === 'tipp' || t === 'zahl' ? 1 : t === 'steckbrief' || t === 'worte' || t === 'entweder' ? Math.max(1, E() ? E().focus.length : 1) : t === 'geheim' ? 2 : 5; }
 
 /* =========================================================
    Games catalog

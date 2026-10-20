@@ -472,7 +472,7 @@ function singleOk(q, r) {
   if (q.type === 'aufgabe') return true;
   if (!r || (r.planSteps || 0) < 35) return false;
   if (q.type === 'steckbrief') return true;
-  var fam = q.type === 'luege' ? 'luege' : q.type === 'wer' ? 'wer' : Q_LADDER.indexOf(q.type) >= 0 ? 'frage' : '';
+  var fam = q.type === 'luege' ? 'luege' : q.type === 'wer' ? 'wer' : q.type === 'geheim' ? 'geheim' : Q_LADDER.indexOf(q.type) >= 0 ? 'frage' : '';
   return !!fam && GG_POOL[fam](q.forId || '').length < 3;
 }
 function availableQuestions(main) {
@@ -488,7 +488,7 @@ function partnerReady(main) {
    The personal part (rounds built from what the guests sent) carries the evening: how big it is
    depends on how much the guests sent compared to the number of tasks, 20 to 60 percent.
    It gets denser towards the end. App questions are seasoning, the rest are minigames. */
-function shareFor(D, n) { return D ? Math.max(0.2, Math.min(0.6, 0.2 + 0.4 * Math.min(1, D / (3 * Math.max(1, n))))) : 0; }
+function shareFor(D, n) { return D ? Math.max(0.2, Math.min(0.65, 0.2 + 0.45 * Math.min(1, D / (3 * Math.max(1, n))))) : 0; }
 /* what is left of the guests' material: items for rounds, how many rounds that makes, single Aufgaben */
 function personalStock(r) {
   var inv = roundInventory('', r.who), items = 0, roundsCap = 0;
@@ -565,7 +565,7 @@ function buildPlan(r, n) {
   mengeN -= queued.filter(function (x) { return x === 'menge'; }).length + (r.mengePlanned || 0);
   for (k = 0; k < mengeN; k++) { var mq = free(Math.floor(horizon * (k ? 0.62 + Math.random() * 0.22 : 0.3 + Math.random() * 0.28)), 'menge'); if (mq >= 0) { slots[mq] = 'menge'; r.mengePlanned = (r.mengePlanned || 0) + 1; } }
   /* seasoning: app questions, more when the guests sent little */
-  var spice = Math.round((0.10 + 0.15 * (1 - Math.min(1, pp.share / 0.6))) * horizon), rest = [];
+  var spice = Math.round((0.07 + 0.14 * (1 - Math.min(1, pp.share / 0.6))) * horizon), rest = [];
   for (k = 0; k < spice; k++) rest.push(['schaetzen', 'schaetzen', 'quiz', focusN >= 2 ? 'wwe' : 'quiz', focusN >= 2 ? 'wwe' : 'schaetzen', 'glueck'][k % 6]);
   rest = shuffle(rest);
   rest.forEach(function (t, i) {
@@ -640,7 +640,7 @@ function deckOf(cat, list) {
   return d;
 }
 /* safety first: these games pause once a player is halfway to the maximum */
-var RISKY_GAMES = ['treppenhuepfen', 'stufenbecher', 'hahnenkampf', 'sackhuepfen', 'limbo', 'ballonkampf', 'kerzenblind', 'nagel', 'laserparcours', 'klinkenblitz', 'schuhsalat'];
+var RISKY_GAMES = ['treppenhuepfen', 'stufenbecher', 'hahnenkampf', 'sackhuepfen', 'limbo', 'ballonkampf', 'kerzenblind', 'nagel', 'laserparcours', 'klinkenblitz', 'schuhsalat', 'kerzenzwei', 'sockenrutscher', 'eimerhelm', 'blindfuehren'];
 function isRisky(g) { return !!g && RISKY_GAMES.indexOf(g.id) >= 0; }
 function tooTipsy(ids) { var e = E(); if (!e) return false; return (ids || []).some(function (id) { return isFocus(id) && drinksOf(id) >= e.max * 0.5; }); }
 function safeFor(g, ids) { return !isRisky(g) || !tooTipsy(ids); }
@@ -771,7 +771,9 @@ function makeQuestionStep(main, kind, th) {
   if (kind === 'frage') {
     var qs = availableQuestions(main);
     if (qs.length) {
-      var q = pick(qs);
+      /* not the same kind as the last personal steps, if there is a choice */
+      var hist = persHist(2), fresh = qs.filter(function (x) { return x.type === 'steckbrief' ? singleSubs(x).some(function (sb) { return hist.indexOf(subFam(sb)) < 0; }) : hist.indexOf(qFamOf(x)) < 0; });
+      var q = pick(fresh.length ? fresh : qs);
       return prepGuestStep({ kind: 'frage', qid: q.id, main: main, type: q.type, answerFocus: '', group: '' }, q);
     }
     kind = 'schaetzen';
@@ -852,8 +854,8 @@ function nextStep(forcedRoll) {
   else step = makeQuestionStep(main, kind, ctx.themes);
   if (!step) step = makeGameStep(main, ctx);
   attachRoles(r, step);
-  if (step.kind === 'gast') r.persUsed = (r.persUsed || 0) + (step.marks || []).length;
-  if (step.kind === 'frage') r.persUsed = (r.persUsed || 0) + 1;
+  if (step.kind === 'gast') { r.persUsed = (r.persUsed || 0) + (step.marks || []).length; var gg = ggById(step.gg); persNote(r, gg ? gg.fam : ''); }
+  if (step.kind === 'frage') { r.persUsed = (r.persUsed || 0) + 1; var fq = S.questions.filter(function (x) { return x.id === step.qid; })[0]; if (fq) persNote(r, qFamOf(fq, step.sub)); }
   step.track = tr.id; step.unitNo = isTimed(r) ? null : target; step.roll = roll;
   r.lastAction = step.kind;
   r.kinds = (r.kinds || []).concat([step.kind]);
@@ -957,7 +959,23 @@ function demoEvent() {
     { author: 'Lea', type: 'weiter', forId: '', text: '', rar: 'wei' },
     { author: 'Tom', type: 'regel', forId: '', text: '', rar: 'reg' },
     { author: 'Nina', type: 'portrait', forId: Mi, text: 'Porträt', draw: demoDoodle(19, 3), rar: 'epi', st: 'offen' },
-    { author: 'Tim', type: 'spruch', forId: Mi, text: 'Wer hat Hunger?', rar: 'epi', st: 'offen' }
+    { author: 'Tim', type: 'spruch', forId: Mi, text: 'Wer hat Hunger?', rar: 'epi', st: 'offen' },
+    /* Entweder oder, a number each, and what Jonas did not know yet */
+    { author: 'Lea', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 1 }, { k: 'kaffee', v: 0 }, { k: 'strand', v: 1 }] },
+    { author: 'Max', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 1 }, { k: 'kaffee', v: 0 }, { k: 'strand', v: 0 }] },
+    { author: 'Tom', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 1 }, { k: 'kaffee', v: 1 }, { k: 'strand', v: 1 }] },
+    { author: 'Sara', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 0 }, { k: 'kaffee', v: 0 }, { k: 'strand', v: 1 }] },
+    { author: 'Nina', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 1 }, { k: 'kaffee', v: 0 }, { k: 'strand', v: 1 }] },
+    { author: 'Tim', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 0 }, { k: 'kaffee', v: 1 }, { k: 'strand', v: 0 }] },
+    { author: 'Lea', type: 'zahl', forId: '', qk: 'laender', text: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', answer: 14 },
+    { author: 'Max', type: 'zahl', forId: '', qk: 'laender', text: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', answer: 9 },
+    { author: 'Tom', type: 'zahl', forId: '', qk: 'laender', text: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', answer: 23 },
+    { author: 'Sara', type: 'zahl', forId: '', qk: 'laender', text: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', answer: 31 },
+    { author: 'Nina', type: 'zahl', forId: '', qk: 'laender', text: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', answer: 6 },
+    { author: 'Lea', type: 'geheim', forId: J, text: 'Ich habe deine Playlist heimlich komplett in meine kopiert.' },
+    { author: 'Tom', type: 'geheim', forId: J, text: 'Ich habe beim Umzug deine Lieblingstasse zerbrochen und still eine neue gekauft.' },
+    { author: 'Max', type: 'geheim', forId: J, text: 'Ich war es, der 2019 dein Fahrrad hinter der Garage versteckt hat.' },
+    { author: 'Nina', type: 'geheim', forId: Mi, text: 'Ich habe dein Yoga-Video dreimal geübt, um mitzuhalten.' }
   ]);
   S.questions = demoQ.map(function (q, i) {
     q.id = uid('q'); q.t = Date.now() - (60 - i) * 3600000; q.status = q.st || (i < 3 || i >= 5 ? 'ok' : 'offen'); delete q.st; q.used = false;

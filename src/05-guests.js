@@ -29,23 +29,36 @@ function nextGuestName(not) {
 }
 function steckSubs(q) { var s = []; if (q.year) s.push('jahr'); if (q.bday) s.push('bday'); if (q.meet) s.push('kennen'); return s; }
 function openSubs(q) { var u = q.usedSubs || []; return steckSubs(q).filter(function (x) { return u.indexOf(x) < 0; }); }
+/* the round family a Steckbrief field belongs to */
+function subFam(sub) { return sub === 'kennen' ? 'meet' : sub; }
+/* fields that may come up as a single question: only when their round is played already or cannot come anymore,
+   so the years and birthdays are not revealed twice and the rounds keep their material */
+function singleSubs(q) {
+  return openSubs(q).filter(function (sub) { var f = subFam(sub); return ggFamUsed(f) || GG_POOL[f](q.forId || '').length < famNeed(f); });
+}
+/* the families of the last personal steps (rounds and single questions), so nothing of one kind comes twice in a row */
+function persHist(n) { var r = R(); return r && r.persHist ? r.persHist.slice(-(n || 2)) : []; }
+function persNote(r, fam) { if (!r || !fam) return; r.persHist = (r.persHist || []).concat([fam]).slice(-6); }
+function qFamOf(q, sub) { return q.type === 'steckbrief' ? subFam(sub || 'jahr') : q.type === 'luege' ? 'luege' : q.type === 'wer' ? 'wer' : q.type === 'geheim' ? 'geheim' : Q_LADDER.indexOf(q.type) >= 0 ? 'frage' : q.type; }
 /* how many question slots an approved contribution still holds */
 function questionSlots(q) {
-  if (q.status !== 'ok' || q.type === 'tipp' || q.type === 'worte' || isCardType(q.type)) return 0;
-  if (q.type === 'steckbrief') return openSubs(q).length;
+  if (q.status !== 'ok' || q.type === 'tipp' || q.type === 'worte' || q.type === 'entweder' || q.type === 'zahl' || isCardType(q.type)) return 0;
+  if (q.type === 'steckbrief') return singleSubs(q).length;
   if (q.used) return 0;
-  if (q.type === 'wer') return knownGuests().filter(function (n) { return n.toLowerCase() !== String(q.author).toLowerCase(); }).length >= 2 ? 1 : 0;
+  if (q.type === 'wer' || q.type === 'geheim') return knownGuests().filter(function (n) { return n.toLowerCase() !== String(q.author).toLowerCase(); }).length >= 2 ? 1 : 0;
   return 1;
 }
 function questionPlayable(q) { return questionSlots(q) > 0; }
 /* prepare a drawn guest contribution: fixed answer options so they do not change on every render */
 function prepGuestStep(P, q) {
-  if (q.type === 'wer') {
+  if (q.type === 'wer' || q.type === 'geheim') {
     var others = shuffle(knownGuests().filter(function (n) { return n.toLowerCase() !== String(q.author).toLowerCase(); })).slice(0, 3);
     P.opts = shuffle(others.concat([q.author])); P.correct = P.opts.indexOf(q.author);
   }
   if (q.type === 'steckbrief') {
-    P.sub = pick(openSubs(q));
+    /* a single question from the Steckbrief: a field whose round is played or cannot come anymore, and not the same kind as just before */
+    var subs = singleSubs(q), hist = persHist(), fresh = subs.filter(function (x) { return hist.indexOf(subFam(x)) < 0; });
+    P.sub = pick(fresh.length ? fresh : subs.length ? subs : openSubs(q));
     if (P.sub === 'bday') {
       var right = fmtBday(q.bday), opts = [right], guard = 0;
       while (opts.length < 4 && guard++ < 50) {
@@ -66,6 +79,7 @@ function playableOf(P, q) {
   var who = q.forId && isFocus(q.forId) ? person(q.forId).name : focusNames();
   if (q.type === 'luege') return { type: 'auswahl', text: q.author + ' erzählt drei Dinge über sich. Was davon ist gelogen?', options: q.options, correct: q.correct, author: q.author, tag: 'Zwei Wahrheiten, eine Lüge' };
   if (q.type === 'wer') return { type: 'auswahl', text: 'Wer hat das über ' + who + ' geschrieben? „' + q.text + '“', options: P.opts || [q.author], correct: P.opts ? P.correct : 0, author: '', tag: 'Wer hat’s geschrieben?' };
+  if (q.type === 'geheim') return { type: 'auswahl', text: 'Ein Geständnis an ' + who + ': „' + q.text + '“ Wer hat das gebeichtet?', options: P.opts || [q.author], correct: P.opts ? P.correct : 0, author: '', tag: 'Geständnis' };
   if (q.type === 'steckbrief') {
     if (!(q.forId && isFocus(q.forId)) && P.main && isFocus(P.main)) who = person(P.main).name;
     if (P.sub === 'jahr') return { type: 'schaetzen', text: 'Seit welchem Jahr kennt ' + q.author + ' ' + who + '?', answer: q.year, unit: '', tol: 1, author: q.author, tag: 'Steckbrief' };
@@ -278,6 +292,9 @@ function ggChoose(cand, prog) {
 function makeGuestGameStep(main, not, prog) {
   var cand = ggReadyFor(main, not);
   if (!cand.length) return null;
+  /* not the same kind of round as just before, if there is a choice */
+  var hist = persHist(2), fresh = cand.filter(function (g) { return hist.indexOf(g.fam) < 0; });
+  if (fresh.length) cand = fresh;
   var g = ggChoose(cand, prog), mn = person(main).name, pool = GG_POOL[g.fam](main), Y = thisYear();
   var P = { kind: 'gast', gg: g.id, name: g.name, main: main, marks: [], credit: [], lines: [], choice: null, answerFocus: '', group: '' };
   var take = function (list, sub) { list.forEach(function (q) { P.marks.push({ qid: q.id, sub: sub || '' }); if (isGuestAuthor(q.author) && P.credit.indexOf(q.author) < 0) P.credit.push(q.author); }); };
@@ -413,6 +430,8 @@ function makeGuestGameStep(main, not, prog) {
     P.items = board; P.strikes = 0;
     P.win = { names: authors(ans), note: 'stehen auf der Tafel' };
     take(ans, '');
+  } else if (typeof ggExtra === 'function') {
+    ggExtra(g, P, { pool: pool, k: k, main: main, mn: mn, take: take, authors: authors });
   }
   var items = P.items ? P.items.length : 0;
   if (P.mode === 'multi' || P.mode === 'leiter' || P.mode === 'judge' || P.mode === 'board') { P.need = needOf(items); P.big = items >= 5 && P.mode !== 'board'; }
@@ -440,6 +459,7 @@ function markGuestGame(P) {
   P.marks.forEach(function (m) {
     var q = S.questions.filter(function (x) { return x.id === m.qid; })[0];
     if (!q) return;
+    if (m.sub && m.sub.indexOf('ent:') === 0) { markEntUsed(q, m.sub); return; }
     if (m.sub) { if (!subUsed(q, m.sub)) q.usedSubs = (q.usedSubs || []).concat([m.sub]); if (!openSubs(q).length) q.used = true; }
     else q.used = true;
   });

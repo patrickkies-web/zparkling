@@ -1879,6 +1879,13 @@ body:not(.wide) .wz-s { position: relative; }
   .wl-intro, .wl-doors { display: none; }
   .wl-card, .wl-k, .wl-face, .wl-t, .wl-s, .wl-row, .wl-crowd, .wlscr .foot, .wl-go, .gscr.gin, .gscr.gin .ghud, .gscr.gin .foot { animation: none !important; }
 }
+/* Entweder oder: two buttons, one tap */
+.gent { display: flex; align-items: center; gap: 8px; }
+.gent-b { flex: 1 1 0; min-width: 0; min-height: 46px; padding: 8px 10px; border-radius: 16px; border: 2px solid var(--line-2); background: var(--surface-2); color: var(--white); font: 700 14px/1.2 var(--body); transition: transform .15s, border-color .2s, background .2s, opacity .2s; }
+.gent-b.on { background: var(--tc); border-color: var(--tc); color: var(--ink); transform: scale(1.03); }
+.gent-b.off { opacity: .55; }
+.gent-b:active { transform: scale(.97); }
+.gent-or { flex: 0 0 auto; font: 800 11px var(--display); color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
 /* Abschicken: the envelope that takes the contributions to the hosts */
 .gsend { position: absolute; inset: 0; z-index: 38; overflow: hidden; }
 .gs-dim { position: absolute; inset: 0; background: radial-gradient(circle at 50% 38%, rgba(255,122,69,.22), rgba(12,10,26,.84) 60%); animation: gsin .3s ease both; }
@@ -4079,6 +4086,420 @@ var JGA_ROLES = [
   };
   Object.keys(T).forEach(function (k) { GAME_TEXT[k] = T[k]; });
 })();
+/* =========================================================
+   Fifteen more tasks for every occasion, close to the custom and to
+   the person: things to tell, to guess about the guests, to do with
+   what lies around anyway. Same size as the rest: a minute, one
+   result. No fitness, nobody from the group has to join in, guests
+   only when the main person picks them or they want to.
+   s = alone [how, when it counts], d = against someone [how, who wins],
+   f = what people ask.
+   ========================================================= */
+(function () {
+  var list = [], T = {};
+  function G(id, name, cat, only, mat, needs, s, d, f) { list.push({ id: id, name: name, cat: cat, mat: mat || '', needs: needs || [], only: only, min: 1 }); T[id] = { s: s, d: d || undefined, f: f || [] }; }
+  var O = function (q, a) { return [q, a]; };
+
+  /* ---------- Sockenkranz ---------- */
+  G('sockenjahre', '25 Socken, 25 Jahre', 'Kopf', ['socken'], '', [],
+    ['Ein Gast nennt eine Zahl zwischen 1 und 25. Das ist ein Lebensjahr. Dazu in einem Satz erzählen, was damals los war. Fünf Zahlen, fünf Sätze.', 'Geschafft, wenn zu allen fünf Jahren ein Satz kommt, ohne länger als fünf Sekunden zu überlegen.'],
+    ['Beide bekommen abwechselnd Zahlen zwischen 1 und 25 und erzählen zu jedem Jahr einen Satz.', 'Gewonnen hat, wer nicht als Erster ins Stocken gerät.'],
+    [O('Das Jahr ist zu früh, um sich zu erinnern?', 'Dann darf es eine Geschichte sein, die die Eltern erzählt haben.')]);
+  G('sockenrede', 'Verteidigungsrede', 'Kopf', ['socken'], '', [],
+    ['30 Sekunden Rede: „Warum ich mit 25 keinen Ehering brauche, aber einen Sockenkranz.“ Ein Gast stoppt die Zeit.', 'Geschafft, wenn die 30 Sekunden voll sind und die Gäste am Ende klatschen.'],
+    null,
+    [O('Darf gelesen werden?', 'Nein, frei gesprochen. Stichworte im Kopf reichen.')]);
+  G('sockenkegeln', 'Socken-Bowling', 'Geschick', ['socken'], 'Ersatz-Socken, 6 Becher', ['socken', 'becher'],
+    ['Sechs Becher stehen als Kegel am Boden. Eine zusammengeknüllte Socke ist die Kugel, gerollt aus drei Metern. Drei Würfe.', 'Geschafft, wenn nach drei Würfen alle sechs Becher liegen.'],
+    ['Beide rollen aus drei Metern je drei Socken gegen sechs Becher.', 'Gewonnen hat, wer mehr Becher umwirft.']);
+  G('sockenjonglage', 'Socken jonglieren', 'Geschick', ['socken'], 'Ersatz-Socken', ['socken'],
+    ['Zwei zusammengeknüllte Socken werden jongliert: abwechselnd hochwerfen und fangen, ohne dass eine fällt.', 'Geschafft, wenn es zehn Sekunden lang klappt.'],
+    ['Beide jonglieren gleichzeitig zwei Socken.', 'Gewonnen hat, wer länger durchhält.'],
+    [O('Nur eine Socke in der Luft zählt?', 'Es müssen immer beide in Bewegung sein, sonst zählt die Zeit nicht.')]);
+  G('sockenfuehler', 'Was steckt in der Socke?', 'Kopf', ['socken'], 'Ersatz-Socken, Augenbinde', ['socken', 'augenbinde'],
+    ['Die Gäste stecken fünf Gegenstände aus dem Raum in fünf Socken. Mit verbundenen Augen jede Socke abtasten und sagen, was drin ist.', 'Geschafft, wenn drei von fünf stimmen.'],
+    ['Beide bekommen dieselben fünf Socken, nacheinander und blind.', 'Gewonnen hat, wer mehr Gegenstände erkennt.']);
+  G('sockenzaehlen', 'Kranz-Schätzer', 'Kopf', ['socken'], '', [],
+    ['Ohne zu zählen: Wie viele Socken hängen am ganzen Kranz? Eine Zahl sagen, dann zählen die Gäste nach.', 'Geschafft, wenn die Schätzung höchstens drei Socken daneben liegt.'],
+    ['Beide schätzen die Socken am Kranz.', 'Gewonnen hat, wer näher dran liegt.']);
+  G('sockenpost', 'Socken-Post', 'Kopf', ['socken'], 'Ersatz-Socken, Papier, Stifte', ['socken', 'papier', 'stifte'],
+    ['Gäste, die wollen, schreiben einen Wunsch für das nächste Jahr auf einen Zettel und stecken ihn in eine Socke. Drei Socken ziehen, vorlesen und raten, von wem der Wunsch ist.', 'Geschafft, wenn zwei von drei richtig zugeordnet sind.'],
+    null,
+    [O('Nur zwei Gäste machen mit?', 'Dann reichen zwei Zettel, und beide müssen stimmen.')]);
+  G('sockenstapel', 'Socken-Turm', 'Geschick', ['socken'], 'Ersatz-Socken', ['socken'],
+    ['Zehn zusammengeknüllte Socken in 30 Sekunden übereinander stapeln. Der Turm muss danach fünf Sekunden stehen.', 'Geschafft, wenn der Turm nach 30 Sekunden steht und fünf Sekunden hält.'],
+    ['Beide stapeln 30 Sekunden lang Socken.', 'Gewonnen hat der höhere Turm, der steht.']);
+  G('sockenrutscher', 'Socken-Rutscher', 'Geschick', ['socken'], 'Klebeband', ['klebeband'],
+    ['Eine Linie aus Klebeband auf dem glatten Boden. Mit drei Schritten Anlauf auf Socken rutschen und so nah wie möglich vor der Linie zum Stehen kommen. Drei Versuche.', 'Geschafft, wenn ein Fuß höchstens eine Handbreit vor der Linie steht und nichts über die Linie ragt.'],
+    ['Beide rutschen je dreimal auf die Linie zu.', 'Gewonnen hat, wer dichter an der Linie steht, ohne drüber zu sein.'],
+    [O('Kein glatter Boden?', 'Dann eine andere Aufgabe. Teppich rutscht nicht.')]);
+  G('sockenmatch', 'Welche Socke ist das?', 'Kopf', ['socken'], '', [],
+    ['Ein Gast sucht sich heimlich eine Socke am Kranz aus und beschreibt sie mit drei Wörtern, keine Farbe. In 60 Sekunden die Socke finden.', 'Geschafft, wenn die richtige Socke gefunden wird.'],
+    ['Beide bekommen von einem Gast je drei Wörter zu einer Socke.', 'Gewonnen hat, wer seine Socke zuerst findet.']);
+  G('sockengeschichte', 'Der Ursprung des Kranzes', 'Kopf', ['socken'], '', [],
+    ['In 45 Sekunden erklären, wie der Sockenkranz-Brauch entstanden ist. Erfinden ist ausdrücklich erlaubt, es muss nur überzeugend klingen.', 'Geschafft, wenn die Gäste am Ende klatschen.'],
+    ['Beide erzählen nacheinander ihre Version, je 45 Sekunden.', 'Gewonnen hat, wessen Geschichte lauteren Applaus bekommt.']);
+  G('sockeneinhand', 'Socke mit einer Hand', 'Geschick', ['socken'], 'Ersatz-Socken', ['socken'],
+    ['Eine Hand hinter den Rücken. Mit der anderen eine Socke anziehen, dann die zweite. 20 Sekunden.', 'Geschafft, wenn beide Socken nach 20 Sekunden ganz am Fuß sind.'],
+    ['Beide ziehen einhändig zwei Socken an.', 'Gewonnen hat, wer zuerst fertig ist.']);
+  G('sockenspender', 'Wessen Socke?', 'Kopf', ['socken'], '', [],
+    ['Drei Gäste zeigen auf eine Socke am Kranz, die sie gespendet haben. Danach raten: Welche Socke stammt von wem?', 'Geschafft, wenn alle drei richtig zugeordnet sind.'],
+    null,
+    [O('Niemand weiß mehr, welche Socke von wem ist?', 'Dann suchen die drei Gäste eine Socke aus, die zu ihnen passt, und das Raten läuft genauso.')]);
+  G('sockenkorken', 'Kronkorken in die Socke', 'Geschick', ['socken'], 'Ersatz-Socken, Kronkorken', ['socken', 'kronkorken'],
+    ['Eine Socke in der einen Hand, 20 Kronkorken auf dem Tisch. Mit der anderen Hand in 30 Sekunden so viele Kronkorken wie möglich einzeln in die Socke stecken.', 'Geschafft ab 15 Kronkorken.'],
+    ['Beide füllen 30 Sekunden lang je eine Socke mit Kronkorken, einzeln.', 'Gewonnen hat, wer mehr Kronkorken in der Socke hat.']);
+  G('sockenwunsch', 'Eine Socke für jeden', 'Kopf', ['socken'], '', [],
+    ['Für fünf Gäste je eine Socke vom Kranz aussuchen, die zu ihnen passt, und in einem Satz sagen, warum.', 'Geschafft, wenn fünf Gäste ihre Socke mit Nicken annehmen.'],
+    null);
+
+  /* ---------- Schachtelkranz ---------- */
+  G('schachteljahre', '25 Schachteln, 25 Jahre', 'Kopf', ['schachtel'], '', [],
+    ['Ein Gast nennt eine Zahl zwischen 1 und 25. Das ist ein Lebensjahr. Dazu in einem Satz erzählen, was damals los war. Fünf Zahlen, fünf Sätze.', 'Geschafft, wenn zu allen fünf Jahren ein Satz kommt, ohne länger als fünf Sekunden zu überlegen.'],
+    ['Beide bekommen abwechselnd Zahlen zwischen 1 und 25 und erzählen zu jedem Jahr einen Satz.', 'Gewonnen hat, wer nicht als Erste ins Stocken gerät.'],
+    [O('Das Jahr ist zu früh, um sich zu erinnern?', 'Dann darf es eine Geschichte sein, die die Eltern erzählt haben.')]);
+  G('schachtelrede', 'Verteidigungsrede', 'Kopf', ['schachtel'], '', [],
+    ['30 Sekunden Rede: „Warum alte Schachtel das schönste Kompliment ist, das man mit 25 bekommen kann.“ Ein Gast stoppt die Zeit.', 'Geschafft, wenn die 30 Sekunden voll sind und die Gäste am Ende klatschen.'],
+    null,
+    [O('Darf gelesen werden?', 'Nein, frei gesprochen. Stichworte im Kopf reichen.')]);
+  G('schachtelpost', 'Schachtel-Post', 'Kopf', ['schachtel'], 'Leere Schachteln, Papier, Stifte', ['schachteln', 'papier', 'stifte'],
+    ['Gäste, die wollen, schreiben eine Erinnerung an die alte Schachtel auf einen Zettel und legen ihn in eine Schachtel. Drei Schachteln öffnen, vorlesen und raten, von wem der Zettel ist.', 'Geschafft, wenn zwei von drei richtig zugeordnet sind.'],
+    null,
+    [O('Nur zwei Gäste machen mit?', 'Dann reichen zwei Zettel, und beide müssen stimmen.')]);
+  G('schachtelgewicht', 'Schwer oder leicht?', 'Kopf', ['schachtel'], 'Leere Schachteln, Kleinkram zum Füllen', ['schachteln'],
+    ['Die Gäste füllen heimlich zwei Schachteln, eine schwerer als die andere. Beide kurz anheben und sagen, welche schwerer ist. Drei Runden.', 'Geschafft, wenn zwei von drei Runden stimmen.'],
+    ['Beide heben dieselben Schachteln nacheinander an und tippen. Drei Runden.', 'Gewonnen hat, wer öfter richtig liegt.']);
+  G('schachtelstaffel', 'Schachtel-Transport', 'Geschick', ['schachtel'], 'Leere Schachteln', ['schachteln'],
+    ['Fünf Schachteln auf einmal vom Tisch zu einem Stuhl am anderen Ende des Raums tragen, ohne dass eine fällt. Drei Versuche.', 'Geschafft, wenn alle fünf heil auf dem Stuhl liegen.'],
+    ['Beide tragen je fünf Schachteln die gleiche Strecke.', 'Gewonnen hat, wer zuerst alle fünf abgelegt hat, ohne eine zu verlieren.']);
+  G('schachtelpyramide', 'Pyramide mit links', 'Geschick', ['schachtel'], 'Leere Schachteln', ['schachteln'],
+    ['Nur mit der schwächeren Hand sechs Schachteln in 30 Sekunden zu einer Pyramide bauen: drei, zwei, eins.', 'Geschafft, wenn die Pyramide nach 30 Sekunden steht.'],
+    ['Beide bauen einhändig je eine Pyramide.', 'Gewonnen hat, wer zuerst fertig ist und wessen Pyramide steht.']);
+  G('schachtelwurf', 'Schachtel-Frisbee', 'Geschick', ['schachtel'], 'Leere Schachteln, Wäschekorb', ['schachteln', 'waeschekorb'],
+    ['Eine flache Schachtel wie eine Frisbee aus drei Metern in den Wäschekorb werfen. Drei Versuche.', 'Geschafft, wenn eine im Korb landet.'],
+    ['Beide werfen aus drei Metern je drei Schachteln.', 'Gewonnen hat, wer öfter trifft.']);
+  G('schachtelkritzel', 'Schachtel-Porträt', 'Party', ['schachtel'], 'Leere Schachteln, Stifte', ['schachteln', 'stifte'],
+    ['In 30 Sekunden einen Gast auf eine Schachtel malen. Die Gäste raten, wer es ist.', 'Geschafft, wenn der Gast in 20 Sekunden erkannt wird.'],
+    ['Beide malen denselben Gast auf je eine Schachtel.', 'Gewonnen hat, wessen Bild zuerst erkannt wird.']);
+  G('schachtelzaehlen', 'Kranz-Schätzer', 'Kopf', ['schachtel'], '', [],
+    ['Ohne zu zählen: Wie viele Schachteln hängen am ganzen Kranz? Eine Zahl sagen, dann zählen die Gäste nach.', 'Geschafft, wenn die Schätzung höchstens drei Schachteln daneben liegt.'],
+    ['Beide schätzen die Schachteln am Kranz.', 'Gewonnen hat, wer näher dran liegt.']);
+  G('schachtelgeschichte', 'Der Ursprung des Kranzes', 'Kopf', ['schachtel'], '', [],
+    ['In 45 Sekunden erklären, wie der Schachtelkranz-Brauch entstanden ist. Erfinden ist ausdrücklich erlaubt, es muss nur überzeugend klingen.', 'Geschafft, wenn die Gäste am Ende klatschen.'],
+    ['Beide erzählen nacheinander ihre Version, je 45 Sekunden.', 'Gewonnen hat, wessen Geschichte lauteren Applaus bekommt.']);
+  G('schachtelspender', 'Wessen Schachtel?', 'Kopf', ['schachtel'], '', [],
+    ['Drei Gäste zeigen auf eine Schachtel am Kranz, die sie gebastelt haben. Danach raten: Welche Schachtel stammt von wem?', 'Geschafft, wenn alle drei richtig zugeordnet sind.'],
+    null,
+    [O('Niemand weiß mehr, welche Schachtel von wem ist?', 'Dann suchen die drei Gäste eine Schachtel aus, die zu ihnen passt, und das Raten läuft genauso.')]);
+  G('schachtelkopf', 'Schachtel auf dem Kopf', 'Geschick', ['schachtel'], 'Leere Schachteln', ['schachteln'],
+    ['Eine Schachtel auf den Kopf legen und einmal um den Tisch gehen, ohne sie festzuhalten.', 'Geschafft, wenn die Schachtel die ganze Runde oben bleibt.'],
+    ['Beide gehen gleichzeitig mit einer Schachtel auf dem Kopf um den Tisch.', 'Gewonnen hat, wer zuerst zurück ist, ohne dass die Schachtel fällt.']);
+  G('schachtelhut', 'Der Schachtel-Hut', 'Party', ['schachtel'], 'Leere Schachteln, Klebeband', ['schachteln', 'klebeband'],
+    ['In 60 Sekunden aus Schachteln und Klebeband einen Hut bauen und ihn aufsetzen. Er muss zehn Sekunden halten.', 'Geschafft, wenn der Hut nach 60 Sekunden sitzt und zehn Sekunden hält.'],
+    ['Beide bauen je einen Hut.', 'Gewonnen hat, wessen Hut mehr Applaus bekommt.']);
+  G('schachtelecho', 'Was klappert da?', 'Kopf', ['schachtel'], 'Leere Schachteln, Kleinkram', ['schachteln'],
+    ['Ein Gast legt etwas Kleines in eine geschlossene Schachtel: Münze, Schlüssel, Kronkorken, Gummibärchen. Nur schütteln und hören. Drei Schachteln.', 'Geschafft, wenn zwei von drei erkannt werden.'],
+    ['Beide hören nacheinander dieselben drei Schachteln ab.', 'Gewonnen hat, wer mehr erkennt.']);
+  G('schachtelwunsch', 'Eine Schachtel für jeden', 'Kopf', ['schachtel'], '', [],
+    ['Für fünf Gäste je eine Schachtel vom Kranz aussuchen, die zu ihnen passt, und in einem Satz sagen, warum.', 'Geschafft, wenn fünf Gäste ihre Schachtel mit Nicken annehmen.'],
+    null);
+
+  /* ---------- Treppe fegen ---------- */
+  G('stufenjahre', '30 Stufen, 30 Jahre', 'Kopf', ['fegen'], '', [],
+    ['Ein Gast nennt eine Zahl zwischen 1 und 30. Das ist ein Lebensjahr. Dazu in einem Satz erzählen, was damals los war. Fünf Zahlen, fünf Sätze.', 'Geschafft, wenn zu allen fünf Jahren ein Satz kommt, ohne länger als fünf Sekunden zu überlegen.'],
+    ['Beide bekommen abwechselnd Zahlen zwischen 1 und 30 und erzählen zu jedem Jahr einen Satz.', 'Gewonnen hat, wer nicht als Erster ins Stocken gerät.']);
+  G('stufenrede', 'Rede von der obersten Stufe', 'Kopf', ['fegen'], '', [],
+    ['Von der obersten Stufe 30 Sekunden Rede: „Warum ich mit 30 die Treppe fege und stolz darauf bin.“ Ein Gast stoppt die Zeit.', 'Geschafft, wenn die 30 Sekunden voll sind und die Gäste klatschen.'],
+    null,
+    [O('Darf gelesen werden?', 'Nein, frei gesprochen. Stichworte im Kopf reichen.')]);
+  G('korkenschaetzen', 'Kronkorken schätzen', 'Kopf', ['fegen'], 'Kronkorken', ['kronkorken'],
+    ['Ein Gast streut eine Handvoll Kronkorken auf eine Stufe. Drei Sekunden hinsehen, dann schätzen, wie viele es sind. Danach wird gezählt.', 'Geschafft, wenn die Schätzung höchstens fünf daneben liegt.'],
+    ['Beide schätzen dieselbe Stufe.', 'Gewonnen hat, wer näher dran liegt.']);
+  G('besenkaraoke', 'Besen-Karaoke', 'Party', ['fegen'], 'Besen', ['besen'],
+    ['Der Besen ist das Mikro. Ein Gast nennt ein Lied, davon den Refrain singen.', 'Geschafft, wenn mindestens drei Gäste mitsingen.'],
+    ['Beide singen nacheinander den Refrain eines Liedes, das ein Gast nennt.', 'Gewonnen hat, wer mehr Gäste zum Mitsingen bringt.']);
+  G('kehrblechgolf', 'Kehrblech-Golf', 'Geschick', ['fegen'], 'Kehrblech & Handfeger, Kronkorken', ['kehrblech', 'kronkorken'],
+    ['Das Kehrblech liegt zwei Meter entfernt auf dem Boden. Mit dem Handfeger einen Kronkorken so anschieben, dass er auf dem Kehrblech liegen bleibt. Drei Versuche.', 'Geschafft, wenn einer auf dem Kehrblech bleibt.'],
+    ['Beide schieben aus zwei Metern je drei Kronkorken Richtung Kehrblech.', 'Gewonnen hat, wer öfter trifft.']);
+  G('stufenmemory', 'Stufen-Memory', 'Kopf', ['fegen'], '', [],
+    ['Die Gäste legen auf fünf Stufen je einen Gegenstand. Zehn Sekunden hinsehen, dann umdrehen. Die Gäste tauschen zwei Gegenstände. Welche?', 'Geschafft, wenn beide getauschten Gegenstände genannt werden.'],
+    ['Beide schauen zehn Sekunden, dann wird getauscht. Beide tippen gleichzeitig.', 'Gewonnen hat, wer beide Tauschstellen nennt. Beide richtig: Unentschieden, nochmal.']);
+  G('korkenpyramide', 'Kronkorken-Pyramide', 'Geschick', ['fegen'], 'Kronkorken', ['kronkorken'],
+    ['Zehn Kronkorken auf einer Stufe zu einer Pyramide legen: vier, drei, zwei, eins, jede Reihe auf der darunter. 30 Sekunden.', 'Geschafft, wenn die Pyramide nach 30 Sekunden steht.'],
+    ['Beide bauen je eine Pyramide auf ihrer Stufe.', 'Gewonnen hat, wer zuerst fertig ist.']);
+  G('fegeorakel', 'Fege-Orakel', 'Geschick', ['fegen'], 'Besen, Kehrblech & Handfeger, Kronkorken', ['besen', 'kehrblech', 'kronkorken'],
+    ['Vorher ansagen, wie viele Kronkorken mit einem einzigen Schwung des Besens im Kehrblech landen. Dann fegen. Ein Gast hält das Kehrblech.', 'Geschafft, wenn die Zahl höchstens zwei daneben liegt.'],
+    ['Beide sagen eine Zahl an und fegen je einmal.', 'Gewonnen hat, wer näher an der eigenen Ansage liegt.']);
+  G('kehrblechcatch', 'Kehrblech-Catch', 'Geschick', ['fegen'], 'Kehrblech & Handfeger, Kronkorken', ['kehrblech', 'kronkorken'],
+    ['Einen Kronkorken vom Kehrblech hochwerfen und mit dem Kehrblech wieder auffangen. Fünf Versuche.', 'Geschafft, wenn drei von fünf gefangen werden.'],
+    ['Beide werfen und fangen je fünfmal.', 'Gewonnen hat, wer öfter fängt.']);
+  G('stufengeschichte', 'Fünf Stufen, ein Leben', 'Kopf', ['fegen'], '', [],
+    ['Auf jeder der untersten fünf Stufen stehen bleiben und einen Lebensabschnitt erzählen: Kindheit, Schule, erste Liebe, erster Job, heute. Ein Satz pro Stufe.', 'Geschafft, wenn alle fünf Stufen einen Satz bekommen.'],
+    null);
+  G('kussgruende', 'Fünf Gründe', 'Kopf', ['fegen'], '', [],
+    ['Gefegt wird, bis jemand küsst. Fünf Gründe nennen, warum heute jemand kommen und genau dich küssen sollte, ohne selbst zu lachen.', 'Geschafft, wenn fünf Gründe gesagt sind und die Gäste klatschen.'],
+    ['Beide nennen abwechselnd Gründe.', 'Gewonnen hat, wer nicht als Erster lacht oder stockt.']);
+  G('korkenflip', 'Kronkorken-Flip', 'Geschick', ['fegen'], 'Kronkorken', ['kronkorken'],
+    ['Drei Kronkorken auf den Handrücken legen, hochwerfen und mit derselben Hand fangen. Drei Versuche.', 'Geschafft, wenn einmal alle drei gefangen werden.'],
+    ['Beide werfen je dreimal drei Kronkorken.', 'Gewonnen hat, wer insgesamt mehr fängt.']);
+  G('zahnbuerstenbalance', 'Zahnbürste auf dem Finger', 'Geschick', ['fegen'], 'Alte Zahnbürste', ['zahnbuerste'],
+    ['Die Zahnbürste senkrecht auf dem Zeigefinger balancieren.', 'Geschafft, wenn sie 15 Sekunden oben bleibt.'],
+    ['Beide balancieren gleichzeitig.', 'Gewonnen hat, wer länger durchhält.']);
+  G('korkenkette', 'Kronkorken-Kette', 'Geschick', ['fegen'], 'Besen, Kronkorken', ['besen', 'kronkorken'],
+    ['15 Kronkorken liegen durcheinander. Nur mit dem Besenstiel in 30 Sekunden eine gerade Linie daraus schieben.', 'Geschafft, wenn nach 30 Sekunden alle 15 in einer Linie liegen, höchstens eine Handbreit Abstand.'],
+    ['Beide schieben je 15 Kronkorken in eine Linie.', 'Gewonnen hat, wer zuerst fertig ist.']);
+  G('kehrblechkipp', 'Kehrblech in den Eimer', 'Geschick', ['fegen'], 'Kehrblech & Handfeger, Eimer, Kronkorken', ['kehrblech', 'eimer', 'kronkorken'],
+    ['Zehn Kronkorken auf dem Kehrblech, der Eimer steht einen Meter entfernt. Die Kronkorken mit einem Schwung in den Eimer kippen.', 'Geschafft, wenn mindestens fünf im Eimer landen.'],
+    ['Beide kippen je zehn Kronkorken aus einem Meter.', 'Gewonnen hat, wer mehr im Eimer hat.']);
+
+  /* ---------- Klinken putzen ---------- */
+  G('klinkenjahre', '30 Klinken, 30 Jahre', 'Kopf', ['putzen'], '', [],
+    ['Ein Gast nennt eine Zahl zwischen 1 und 30. Das ist ein Lebensjahr. Dazu in einem Satz erzählen, was damals los war. Fünf Zahlen, fünf Sätze.', 'Geschafft, wenn zu allen fünf Jahren ein Satz kommt, ohne länger als fünf Sekunden zu überlegen.'],
+    ['Beide bekommen abwechselnd Zahlen zwischen 1 und 30 und erzählen zu jedem Jahr einen Satz.', 'Gewonnen hat, wer nicht als Erste ins Stocken gerät.']);
+  G('klinkenrede', 'Rede an die Klinke', 'Kopf', ['putzen'], '', [],
+    ['30 Sekunden Rede: „Warum ich mit 30 Klinken putze und es die beste Entscheidung meines Lebens ist.“ Ein Gast stoppt die Zeit.', 'Geschafft, wenn die 30 Sekunden voll sind und die Gäste klatschen.'],
+    null,
+    [O('Darf gelesen werden?', 'Nein, frei gesprochen. Stichworte im Kopf reichen.')]);
+  G('klinkenmemory', 'Klinken-Memory', 'Kopf', ['putzen'], 'Klebezettel, Stifte', ['klebezettel', 'stifte'],
+    ['Die Gäste kleben an fünf Klinken je einen Zettel mit einer Zahl. Zehn Sekunden zum Einprägen, dann vom Flur aus aufsagen: Welche Zahl hängt an welcher Tür?', 'Geschafft, wenn vier von fünf stimmen.'],
+    ['Beide prägen sich dieselben fünf Klinken ein und sagen sie nacheinander auf.', 'Gewonnen hat, wer mehr richtig hat.']);
+  G('lappenbalance', 'Lappen auf dem Kopf', 'Geschick', ['putzen'], 'Lappen oder Schwamm', ['lappen'],
+    ['Den Lappen auf den Kopf legen und durch drei Türen gehen, jede Tür selbst öffnen und schließen, ohne den Lappen festzuhalten.', 'Geschafft, wenn der Lappen bis zur dritten Tür oben bleibt.'],
+    ['Beide gehen mit dem Lappen auf dem Kopf dieselbe Strecke.', 'Gewonnen hat, wer zuerst durch die dritte Tür ist, ohne den Lappen zu verlieren.']);
+  G('klinkenglanz', 'Welche Klinke glänzt?', 'Kopf', ['putzen'], 'Lappen oder Schwamm', ['lappen'],
+    ['Zwei Klinken nebeneinander, eine wird 20 Sekunden lang poliert, die andere nicht. Drei Gäste, die wollen, tippen, welche geputzt wurde.', 'Geschafft, wenn mindestens zwei der drei richtig liegen.'],
+    ['Beide polieren je eine Klinke, eine dritte bleibt unberührt. Die Gäste tippen, welche die unberührte ist.', 'Gewonnen hat, wessen Klinke als sauberer eingeschätzt wird.']);
+  G('lappenkick', 'Lappen-Kick', 'Geschick', ['putzen'], 'Lappen oder Schwamm', ['lappen'],
+    ['Den Lappen vom Fuß hochkicken und mit den Händen fangen. Fünf Versuche.', 'Geschafft, wenn drei von fünf gefangen werden.'],
+    ['Beide kicken und fangen je fünfmal.', 'Gewonnen hat, wer öfter fängt.']);
+  G('tuerenquiz', 'Türen-Quiz', 'Kopf', ['putzen'], 'Augenbinde oder Schal', ['augenbinde'],
+    ['Mit verbundenen Augen wird man zu drei Türen im Haus geführt. Nur am Griff fühlen und sagen, welche Tür es ist: Küche, Bad, Flur, Schlafzimmer.', 'Geschafft, wenn zwei von drei stimmen.'],
+    ['Beide werden blind zu denselben drei Türen geführt.', 'Gewonnen hat, wer mehr Türen erkennt.']);
+  G('putzlied', 'Putz-Hit', 'Party', ['putzen'], 'Lappen oder Schwamm', ['lappen'],
+    ['Der Lappen ist das Mikro. Den Refrain eines bekannten Liedes so umdichten, dass es ums Putzen geht, mindestens zwei Zeilen, und vorsingen.', 'Geschafft, wenn die Gäste das Original erkennen und klatschen.'],
+    ['Beide dichten denselben Refrain um.', 'Gewonnen hat, wer lauteren Applaus bekommt.']);
+  G('klinkenknigge', 'Klinken-Knigge', 'Kopf', ['putzen'], '', [],
+    ['Fünf Türen nacheinander öffnen und beim Öffnen jedes Mal in einer anderen Sprache grüßen.', 'Geschafft, wenn fünf verschiedene Sprachen zusammenkommen.'],
+    ['Beide öffnen abwechselnd Türen und grüßen in einer neuen Sprache.', 'Gewonnen hat, wem nicht als Erstem die Sprachen ausgehen.']);
+  G('eimerhelm', 'Eimer-Helm', 'Geschick', ['putzen'], 'Eimer', ['eimer'],
+    ['Den leeren Eimer umgedreht auf den Kopf setzen, Hände hinter den Rücken, und zehn Schritte gehen.', 'Geschafft, wenn der Eimer nach zehn Schritten noch sitzt.'],
+    ['Beide gehen mit dem Eimer auf dem Kopf los.', 'Gewonnen hat, wer mehr Schritte schafft, bevor der Eimer fällt.']);
+  G('lappentanz', 'Lappen-Choreo', 'Party', ['putzen'], 'Lappen oder Schwamm', ['lappen'],
+    ['20 Sekunden Tanz mit dem Lappen in der Hand, die Gäste klatschen den Takt. Der Lappen muss die ganze Zeit in Bewegung bleiben.', 'Geschafft, wenn der Takt 20 Sekunden lang gehalten wird.'],
+    ['Beide tanzen nacheinander 20 Sekunden.', 'Gewonnen hat, wer lauteren Applaus bekommt.']);
+  G('klinkentipp', 'Klinken auf Zeit', 'Kopf', ['putzen'], 'Lappen oder Schwamm', ['lappen'],
+    ['Vorher ansagen, wie viele Sekunden das Putzen von drei Klinken dauert. Dann putzen, ein Gast stoppt.', 'Geschafft, wenn die Ansage höchstens fünf Sekunden daneben liegt.'],
+    ['Beide sagen ihre Zeit an und putzen je drei Klinken.', 'Gewonnen hat, wer näher an der eigenen Ansage liegt.']);
+  G('kussliste', 'Fünf Gründe', 'Kopf', ['putzen'], '', [],
+    ['Geputzt wird, bis jemand küsst. Fünf Gründe nennen, warum heute jemand kommen und genau dich küssen sollte, ohne selbst zu lachen.', 'Geschafft, wenn fünf Gründe gesagt sind und die Gäste klatschen.'],
+    ['Beide nennen abwechselnd Gründe.', 'Gewonnen hat, wer nicht als Erste lacht oder stockt.']);
+  G('lappenorigami', 'Lappen-Origami', 'Party', ['putzen'], 'Lappen oder Schwamm', ['lappen'],
+    ['In 30 Sekunden aus dem Lappen ein Tier formen. Die Gäste raten, welches.', 'Geschafft, wenn das Tier in 20 Sekunden erkannt wird.'],
+    ['Beide formen je ein Tier.', 'Gewonnen hat, wessen Tier zuerst erkannt wird.']);
+  G('tuerenleben', 'Drei Türen', 'Kopf', ['putzen'], '', [],
+    ['Drei Türen nennen, die im Leben wichtig waren, und zu jeder einen Satz: die erste eigene Wohnung, das Klassenzimmer, die Tür, hinter der jemand wartete.', 'Geschafft, wenn drei Türen einen Satz bekommen.'],
+    null);
+
+  /* ---------- Geburtstag ---------- */
+  G('jahresrueckblick', 'Jahresrückblick', 'Kopf', ['geburtstag'], '', [],
+    ['Das vergangene Lebensjahr in drei Sätzen: der Höhepunkt, der Tiefpunkt, die Lehre daraus.', 'Geschafft, wenn alle drei Sätze gesagt sind.'],
+    ['Beide erzählen ihr Jahr in drei Sätzen.', 'Gewonnen hat, wer lauteren Applaus bekommt.']);
+  G('dankesrede', 'Dankesrede ohne Danke', 'Kopf', ['geburtstag'], '', [],
+    ['30 Sekunden Dankesrede an die Gäste, ohne die Wörter „danke“, „schön“ und „toll“. Die Gäste passen auf.', 'Geschafft, wenn keins der drei Wörter fällt.'],
+    ['Beide halten nacheinander ihre Rede.', 'Gewonnen hat, wer länger ohne die drei Wörter auskommt.']);
+  G('wunschzettel', 'Drei Wünsche', 'Kopf', ['geburtstag'], '', [],
+    ['Drei Wünsche für das neue Lebensjahr laut aussprechen. Einer davon muss die Gäste betreffen, keiner darf Geld sein.', 'Geschafft, wenn drei Wünsche gesagt sind.'],
+    null);
+  G('geburtsjahr', 'Dein Geburtsjahr', 'Kopf', ['geburtstag'], '', [],
+    ['Drei Dinge nennen, die im eigenen Geburtsjahr passiert sind: ein Ereignis, ein Lied, ein Film oder ein Sportsieg. Ein Gast prüft mit dem Handy.', 'Geschafft, wenn zwei von drei stimmen.'],
+    ['Beide nennen je drei Dinge aus ihrem Geburtsjahr.', 'Gewonnen hat, wer mehr Treffer hat.']);
+  G('kerzenzwei', 'Genau zwei', 'Geschick', ['geburtstag'], 'Teelichter, Feuerzeug', ['teelichter', 'feuerzeug'],
+    ['Fünf Teelichter brennen in einer Reihe. Mit einem einzigen Pusten genau zwei auslöschen, nicht mehr, nicht weniger. Drei Versuche.', 'Geschafft, wenn es einmal genau zwei sind.'],
+    ['Beide pusten je dreimal auf eine eigene Reihe.', 'Gewonnen hat, wer öfter genau zwei trifft.']);
+  G('altersraten', 'Wie alt?', 'Kopf', ['geburtstag'], '', [],
+    ['Drei Gäste, die wollen, melden sich. Das Alter jedes Gastes auf das Jahr genau schätzen.', 'Geschafft, wenn zwei von drei höchstens zwei Jahre daneben liegen.'],
+    ['Beide schätzen dieselben drei Gäste.', 'Gewonnen hat, wer insgesamt näher dran liegt.']);
+  G('tortenkunst', 'Die Wunschtorte', 'Party', ['geburtstag'], 'Servietten, Stifte', ['servietten', 'stifte'],
+    ['In 30 Sekunden auf eine Serviette die Torte malen, die man sich heute gewünscht hätte, und sie in einem Satz vorstellen.', 'Geschafft, wenn die Gäste klatschen.'],
+    ['Beide malen je eine Torte.', 'Gewonnen hat, wessen Torte mehr Applaus bekommt.']);
+  G('liedfremd', 'Happy Birthday auf Fantasisch', 'Party', ['geburtstag'], '', [],
+    ['Happy Birthday in einer erfundenen Sprache singen, die ganze Strophe, mit Gefühl.', 'Geschafft, wenn zwei Gäste bestätigen, dass die Melodie stimmt.'],
+    ['Beide singen nacheinander in ihrer Fantasiesprache.', 'Gewonnen hat, wer lauteren Applaus bekommt.']);
+  G('tageszahl', 'Dein Alter in Tagen', 'Kopf', ['geburtstag'], '', [],
+    ['In 20 Sekunden schätzen, wie viele Tage man heute alt ist. Ein Gast rechnet nach: Jahre mal 365.', 'Geschafft, wenn die Schätzung höchstens 200 Tage daneben liegt.'],
+    ['Beide schätzen ihr Alter in Tagen.', 'Gewonnen hat, wer näher dran liegt.']);
+  G('jahrgangshit', 'Der Hit deines Jahrgangs', 'Kopf', ['geburtstag'], '', [],
+    ['Ein Lied summen, das im eigenen Geburtsjahr ein Hit war. Die Gäste raten den Titel.', 'Geschafft, wenn ein Gast den Titel in 30 Sekunden nennt.'],
+    ['Beide summen je einen Hit aus ihrem Geburtsjahr.', 'Gewonnen hat, wessen Lied zuerst erkannt wird.'],
+    [O('Kein Hit bekannt?', 'Dann ein Lied aus dem Jahr des Schulabschlusses.')]);
+  G('erstemale', 'Drei erste Male', 'Kopf', ['geburtstag'], '', [],
+    ['Drei erste Male in je einem Satz: das erste Konzert, die erste Reise ohne Eltern, das erste Haustier.', 'Geschafft, wenn drei Sätze gesagt sind.'],
+    null,
+    [O('Eins davon gab es nie?', 'Dann ein anderes erstes Mal, zum Beispiel die erste eigene Wohnung.')]);
+  G('monatsrechnen', 'Alter in Monaten', 'Kopf', ['geburtstag'], '', [],
+    ['Das eigene Alter in Monaten ausrechnen, im Kopf, in zehn Sekunden. Ein Gast zählt die Sekunden.', 'Geschafft, wenn die Zahl nach zehn Sekunden stimmt.'],
+    ['Beide rechnen gleichzeitig ihr Alter in Monaten.', 'Gewonnen hat, wer zuerst die richtige Zahl sagt.']);
+  G('dankjahrzehnt', 'Ein Dank pro Jahrzehnt', 'Kopf', ['geburtstag'], '', [],
+    ['Für jedes angefangene Lebensjahrzehnt einem Gast im Raum für etwas Konkretes danken. Jedes Mal ein anderer Gast.', 'Geschafft, wenn jedes Jahrzehnt seinen Dank bekommen hat.'],
+    null);
+  G('geschenkorakel', 'Geschenk-Orakel', 'Kopf', ['geburtstag'], '', [],
+    ['Ein Gast, der will, beschreibt sein Geschenk in drei Hinweisen, ohne es zu nennen. Raten, was es ist.', 'Geschafft, wenn das Geschenk nach den drei Hinweisen erraten wird.'],
+    null,
+    [O('Kein Geschenk dabei?', 'Dann beschreibt der Gast etwas, das er gern geschenkt hätte.')]);
+  G('vorsatzballon', 'Vorsatz im Ballon', 'Party', ['geburtstag'], 'Luftballons, Papier, Stifte', ['luftballons', 'papier', 'stifte'],
+    ['Einen Vorsatz fürs neue Lebensjahr auf einen kleinen Zettel schreiben, in den Ballon stecken, aufblasen und zuknoten. Dann den Ballon durch Draufsetzen platzen lassen und den Vorsatz vorlesen.', 'Geschafft, wenn der Ballon platzt und der Vorsatz vorgelesen ist.'],
+    ['Beide schreiben, blasen auf und setzen sich drauf.', 'Gewonnen hat, wessen Ballon zuerst platzt.']);
+
+  /* ---------- Hochzeit & Polterabend ---------- */
+  G('ringsuche', 'Der Ring unter den Bechern', 'Kopf', ['hochzeit'], 'Plastikbecher, Kronkorken', ['becher', 'kronkorken'],
+    ['Unter einem von zehn umgedrehten Bechern liegt ein Kronkorken, der Ring. Die Gäste mischen. Zwei Becher dürfen aufgedeckt werden; der Partner darf nur mit Ja und Nein helfen.', 'Geschafft, wenn der Ring in zwei Versuchen gefunden wird.'],
+    ['Beide suchen nacheinander unter je zehn Bechern.', 'Gewonnen hat, wer den Ring mit weniger Versuchen findet.']);
+  G('geluebde', 'Gelübde aus drei Wörtern', 'Kopf', ['hochzeit'], '', [],
+    ['Drei Gäste nennen je ein Wort. In 60 Sekunden daraus ein Ehegelübde formulieren, mindestens drei Sätze, alle drei Wörter müssen vorkommen.', 'Geschafft, wenn das Gelübde steht und der Partner nickt.'],
+    ['Beide bekommen dieselben drei Wörter und formulieren je ein Gelübde.', 'Gewonnen hat, wessen Gelübde mehr Applaus bekommt.']);
+  G('blindfuehren', 'Blind geführt', 'Geschick', ['hochzeit'], 'Augenbinde oder Schal', ['augenbinde'],
+    ['Eine Person trägt die Augenbinde, die andere führt nur mit Worten einmal um den Tisch und zurück zum Stuhl, ohne Berühren.', 'Geschafft, wenn die blinde Person ohne Anstoßen auf dem Stuhl sitzt.'],
+    ['Beide werden nacheinander von einem Gast geführt.', 'Gewonnen hat, wer schneller und ohne Anstoßen ankommt.']);
+  G('korkenkehren', 'Scherben kehren', 'Geschick', ['hochzeit'], 'Besen, Kehrblech & Handfeger, Kronkorken', ['besen', 'kehrblech', 'kronkorken'],
+    ['Die Gäste streuen 20 Kronkorken, das sind die Scherben. Eine Person fegt, die andere hält das Kehrblech, 30 Sekunden.', 'Geschafft, wenn nach 30 Sekunden mindestens 15 Kronkorken im Kehrblech liegen.'],
+    ['Beide fegen nacheinander je 20 Kronkorken, ein Gast hält das Kehrblech.', 'Gewonnen hat, wer in 30 Sekunden mehr im Kehrblech hat.']);
+  G('ersterdate', 'Das erste Date', 'Kopf', ['hochzeit'], 'Papier, Stifte', ['papier', 'stifte'],
+    ['Beide schreiben getrennt auf: Ort des ersten Dates, Jahr, erstes gemeinsames Getränk. Dann vergleichen.', 'Geschafft, wenn zwei von drei Angaben übereinstimmen.'],
+    null,
+    [O('Nur eine Person im Mittelpunkt?', 'Dann schreibt sie, und der Partner antwortet aus dem Publikum.')]);
+  G('zukunftsbrief', 'Brief an euch in zehn Jahren', 'Kopf', ['hochzeit'], '', [],
+    ['Jeder sagt einen Satz an das Paar in zehn Jahren, laut und vor allen.', 'Geschafft, wenn beide Sätze gesagt sind und die Gäste klatschen.'],
+    null);
+  G('kriserede', 'Krise mit Happy End', 'Kopf', ['hochzeit'], '', [],
+    ['30 Sekunden über die größte gemeinsame Panne erzählen: verpasster Flug, verbranntes Essen, verlaufener Städtetrip, und wie es gut ausging.', 'Geschafft, wenn die Geschichte ein Happy End hat und die Gäste klatschen.'],
+    ['Beide erzählen dieselbe Panne aus ihrer Sicht, je 30 Sekunden.', 'Gewonnen hat, wessen Version mehr Applaus bekommt.']);
+  G('schwiegerquiz', 'Schwieger-Quiz', 'Kopf', ['hochzeit'], '', [],
+    ['Vornamen und Geburtsmonat der Schwiegereltern nennen, dazu den Beruf oder das Hobby von einem der beiden.', 'Geschafft, wenn der Partner alles bestätigt.'],
+    ['Beide beantworten die Fragen zu ihren Schwiegereltern.', 'Gewonnen hat, wer mehr Treffer hat.']);
+  G('ringfingermuenze', 'Münze auf dem Ringfinger', 'Geschick', ['hochzeit'], 'Münzen', ['muenzen'],
+    ['Eine Münze auf den ausgestreckten Ringfinger legen und einmal um den Tisch gehen.', 'Geschafft, wenn die Münze die ganze Runde liegen bleibt.'],
+    ['Beide gehen gleichzeitig los.', 'Gewonnen hat, wer zuerst zurück ist, ohne die Münze zu verlieren.']);
+  G('ballonstrauss', 'Der Ballon-Strauß', 'Party', ['hochzeit'], 'Luftballons, Schnur oder Wolle', ['luftballons', 'schnur'],
+    ['In 60 Sekunden drei Ballons aufblasen, zuknoten und mit Schnur zu einem Strauß binden. Dann den Strauß über die Schulter werfen.', 'Geschafft, wenn der Strauß nach 60 Sekunden hält und ein Gast ihn fängt.'],
+    ['Beide binden je einen Strauß.', 'Gewonnen hat, wessen Strauß zuerst fertig ist und hält.']);
+  G('redeabc', 'Rede von A bis G', 'Kopf', ['hochzeit'], '', [],
+    ['Abwechselnd einen Satz über den anderen sagen. Der erste beginnt mit A, der nächste mit B, bis G.', 'Geschafft, wenn alle sieben Sätze stehen, ohne länger als fünf Sekunden Pause.'],
+    ['Beide sagen abwechselnd Sätze über den jeweils anderen, von A an.', 'Gewonnen hat, wer nicht als Erster stockt.']);
+  G('haenderaten', 'Welche Hand?', 'Kopf', ['hochzeit'], 'Augenbinde oder Schal', ['augenbinde'],
+    ['Mit verbundenen Augen vier Hände nacheinander anfassen, drei von Gästen, die wollen, eine vom Partner. Welche ist es?', 'Geschafft, wenn die Hand des Partners erkannt wird.'],
+    ['Beide suchen nacheinander die Hand des anderen unter vier Händen.', 'Gewonnen hat, wer sie erkennt; beide richtig: Unentschieden.']);
+  G('gaestenamen', 'Alle Gäste', 'Kopf', ['hochzeit'], '', [],
+    ['Gemeinsam in 30 Sekunden die Vornamen von 15 Gästen im Raum nennen, abwechselnd, keiner doppelt.', 'Geschafft, wenn 15 Namen zusammenkommen.'],
+    ['Beide nennen abwechselnd Gästenamen, keiner doppelt.', 'Gewonnen hat, wem nicht als Erstem die Namen ausgehen.'],
+    [O('Weniger als 15 Gäste da?', 'Dann alle Anwesenden, und jeder bekommt noch den Nachnamen dazu.')]);
+  G('fuenfjahre', 'In fünf Jahren', 'Kopf', ['hochzeit'], 'Papier, Stifte', ['papier', 'stifte'],
+    ['Beide schreiben getrennt drei Tipps auf: Wohnort in fünf Jahren, Zahl der Haustiere, Urlaubsziel. Dann vergleichen.', 'Geschafft, wenn zwei von drei übereinstimmen.'],
+    null,
+    [O('Nur eine Person im Mittelpunkt?', 'Dann schreibt sie, und der Partner antwortet aus dem Publikum.')]);
+  G('stummeliebe', 'Stumme Liebeserklärung', 'Party', ['hochzeit'], '', [],
+    ['Ohne ein Wort drei Dinge vorspielen, die man am anderen liebt. Der andere rät.', 'Geschafft, wenn zwei von drei erraten werden.'],
+    ['Beide spielen nacheinander je drei Dinge vor, der andere rät.', 'Gewonnen hat, wessen Dinge öfter erraten werden.']);
+
+  /* ---------- Junggesellenabschied ---------- */
+  G('abschiedsrede', 'Abschied vom Single-Leben', 'Kopf', ['jga'], '', [],
+    ['30 Sekunden Abschiedsrede an das Single-Leben, mit drei Dingen, die man nicht vermissen wird.', 'Geschafft, wenn drei Dinge genannt sind und die Gäste klatschen.'],
+    null);
+  G('partnerstimme', 'Drei typische Sätze', 'Kopf', ['jga'], '', [],
+    ['Den Partner nachmachen: drei Sätze, die er oder sie ständig sagt, mit Stimme und Gesten.', 'Geschafft, wenn die Gäste bei mindestens zwei Sätzen lachen oder nicken.'],
+    null);
+  G('ehetipps', 'Rat der Gäste', 'Kopf', ['jga'], 'Klebezettel, Stifte', ['klebezettel', 'stifte'],
+    ['Drei Gäste, die wollen, schreiben je einen Ehe-Tipp auf einen Zettel. Die Zettel werden vorgelesen; raten, welcher Tipp von wem ist.', 'Geschafft, wenn zwei von drei richtig zugeordnet sind.'],
+    null);
+  G('becherblind', 'Becher blind', 'Geschick', ['jga'], 'Plastikbecher, Augenbinde oder Schal', ['becher', 'augenbinde'],
+    ['Mit verbundenen Augen in 20 Sekunden sechs Becher zu einer Pyramide stapeln.', 'Geschafft, wenn die Pyramide nach 20 Sekunden steht.'],
+    ['Beide stapeln blind je sechs Becher.', 'Gewonnen hat, wer zuerst fertig ist und wessen Pyramide steht.']);
+  G('antragspiel', 'Der Antrag, nachgespielt', 'Party', ['jga'], '', [],
+    ['Den Heiratsantrag nachspielen, so wie er wirklich war, in 30 Sekunden. Ein Gast, der will, spielt den Partner.', 'Geschafft, wenn die Gäste klatschen und der Satz vom Antrag fällt.'],
+    null,
+    [O('Der Antrag kam vom anderen?', 'Dann wird gespielt, wie man ihn angenommen hat.')]);
+  G('liebesabc', 'ABC der Liebe', 'Kopf', ['jga'], '', [],
+    ['Von A bis J je ein Wort, das den Partner beschreibt. 30 Sekunden.', 'Geschafft, wenn alle zehn Buchstaben ein Wort haben.'],
+    ['Beide bekommen abwechselnd Buchstaben und finden ein Wort für den Partner.', 'Gewonnen hat, wer nicht als Erster stockt.']);
+  G('besentanz', 'Hochzeitstanz mit Besen', 'Party', ['jga'], 'Besen', ['besen'],
+    ['Der Besen ist der Partner. 20 Sekunden den Hochzeitstanz üben, die Gäste summen die Musik.', 'Geschafft, wenn der Besen 20 Sekunden lang geführt wird und die Gäste klatschen.'],
+    ['Beide tanzen nacheinander mit dem Besen.', 'Gewonnen hat, wer lauteren Applaus bekommt.']);
+  G('serviettenlaufsteg', 'Laufsteg', 'Party', ['jga'], 'Servietten', ['servietten'],
+    ['Aus Servietten in 30 Sekunden einen Schleier, eine Fliege oder einen Schleier-Hut basteln, dann einmal über den Laufsteg durch den Raum.', 'Geschafft, wenn das Teil den Laufsteg übersteht und die Gäste klatschen.'],
+    ['Beide basteln und laufen nacheinander.', 'Gewonnen hat, wer mehr Applaus bekommt.']);
+  G('nachrichtenwette', 'Nachrichten-Wette', 'Kopf', ['jga'], '', [],
+    ['Schätzen, wie viele Nachrichten der Partner heute schon geschickt hat. Dann nachsehen.', 'Geschafft, wenn die Schätzung höchstens drei daneben liegt.'],
+    null,
+    [O('Kein Handy dabei?', 'Dann zählt die Schätzung eines Gastes, der mit dem Partner schreibt.')]);
+  G('hochzeitsdaten', 'Die Eckdaten', 'Kopf', ['jga'], '', [],
+    ['In zehn Sekunden aufsagen: Datum der Hochzeit, Ort der Trauung, Uhrzeit, Zahl der Gäste.', 'Geschafft, wenn alle vier stimmen. Ein Gast kennt die Antworten.'],
+    null);
+  G('tanzliedraten', 'Der Hochzeitstanz', 'Kopf', ['jga'], '', [],
+    ['Das Lied für den Hochzeitstanz summen. Die Gäste raten den Titel.', 'Geschafft, wenn ein Gast den Titel in 30 Sekunden nennt.'],
+    null,
+    [O('Noch kein Lied?', 'Dann das Lied, das es werden soll.')]);
+  G('erstestreffen', 'Das erste Treffen', 'Party', ['jga'], '', [],
+    ['In 45 Sekunden das erste Treffen mit dem Partner nachspielen. Ein Gast, der will, spielt mit.', 'Geschafft, wenn die Szene erkennbar ist und die Gäste klatschen.'],
+    null);
+  G('versprechen', 'Drei Versprechen', 'Kopf', ['jga'], '', [],
+    ['Drei Versprechen an die Freunde, die auch nach der Hochzeit gelten: der Stammtisch, der Jahresausflug, die eine Sache, die bleibt.', 'Geschafft, wenn die Gäste zu allen drei Ja sagen.'],
+    null);
+  G('filmhochzeit', 'Film mit Hochzeit', 'Party', ['jga'], '', [],
+    ['Einen Film oder eine Serie mit einer Hochzeitsszene pantomimisch darstellen, kein Wort. Die Gäste raten.', 'Geschafft, wenn der Titel in 60 Sekunden fällt.'],
+    ['Beide stellen nacheinander je einen Film dar.', 'Gewonnen hat, wessen Film schneller erraten wird.']);
+  G('suessgeschichte', 'Die süßeste Geschichte', 'Kopf', ['jga'], 'Münzen', ['muenzen'],
+    ['Münze werfen. Kopf: die süßeste Geschichte über den Partner erzählen. Zahl: die süßeste Geschichte über sich selbst. 30 Sekunden.', 'Geschafft, wenn die Geschichte erzählt ist und die Gäste klatschen.'],
+    null);
+
+  /* ---------- for every party ---------- */
+  G('dreiworte', 'Drei Wörter, eine Geschichte', 'Kopf', null, '', [],
+    ['Drei Gäste nennen je ein Wort. Daraus in 30 Sekunden eine Geschichte erzählen, in der alle drei Wörter vorkommen.', 'Geschafft, wenn alle drei Wörter drin sind und die Geschichte ein Ende hat.'],
+    ['Beide bekommen dieselben drei Wörter und erzählen je eine Geschichte.', 'Gewonnen hat, wessen Geschichte mehr Applaus bekommt.']);
+  G('komplimentblitz', 'Komplimente-Blitz', 'Kopf', null, '', [],
+    ['Fünf Gästen in 30 Sekunden je ein ehrliches Kompliment machen, jedes ein anderes.', 'Geschafft, wenn fünf verschiedene Komplimente in 30 Sekunden gesagt sind.'],
+    ['Beide machen abwechselnd Komplimente, keins doppelt.', 'Gewonnen hat, wem nicht als Erstem die Komplimente ausgehen.']);
+  G('lebensmotto', 'Dein Motto', 'Kopf', null, '', [],
+    ['Ein Lebensmotto aus höchstens fünf Wörtern erfinden und in einem Satz begründen.', 'Geschafft, wenn das Motto steht und die Gäste klatschen.'],
+    ['Beide stellen ihr Motto vor.', 'Gewonnen hat, wessen Motto lauteren Applaus bekommt.']);
+  G('gemeinsamkeit', 'Drei Gemeinsamkeiten', 'Kopf', null, '', [],
+    ['Mit dem Gast, den man am wenigsten kennt, in 60 Sekunden drei Gemeinsamkeiten finden. Der Gast muss wollen.', 'Geschafft, wenn drei Gemeinsamkeiten gefunden sind, die beide bestätigen.'],
+    null);
+  G('stimmenorakel', 'Stimmen-Orakel', 'Kopf', null, 'Augenbinde oder Schal', ['augenbinde'],
+    ['Augen verbinden. Drei Gäste, die wollen, sagen nacheinander „Prost“ mit verstellter Stimme. Wer war es?', 'Geschafft, wenn zwei von drei erkannt werden.'],
+    ['Beide hören blind dieselben drei Stimmen.', 'Gewonnen hat, wer mehr erkennt.']);
+  G('zehnjaehrig', 'Du mit zehn', 'Kopf', null, '', [],
+    ['In 30 Sekunden erzählen, was das eigene Zehn-Jahre-Ich zu diesem Abend sagen würde.', 'Geschafft, wenn die 30 Sekunden voll sind und ein Satz direkt vom Zehnjährigen dabei ist.'],
+    null);
+  G('schlagzeile', 'Schlagzeile des Abends', 'Kopf', null, '', [],
+    ['In 20 Sekunden eine Zeitungsschlagzeile über diesen Abend erfinden, höchstens acht Wörter.', 'Geschafft, wenn die Gäste klatschen.'],
+    ['Beide erfinden je eine Schlagzeile.', 'Gewonnen hat, wessen Schlagzeile mehr Applaus bekommt.']);
+  G('dankbar', 'Drei Dinge', 'Kopf', null, '', [],
+    ['Drei Dinge nennen, für die man diese Woche dankbar war. Keins davon darf Geld sein.', 'Geschafft, wenn drei Dinge in 20 Sekunden gesagt sind.'],
+    null);
+  G('letztesfoto', 'Das letzte Foto', 'Party', null, '', [],
+    ['Das letzte Foto auf dem Handy zeigen und in einem Satz erklären. Wer nicht will, nimmt ein Foto seiner Wahl.', 'Geschafft, wenn das Foto gezeigt und erklärt ist.'],
+    ['Beide zeigen ihr letztes Foto.', 'Gewonnen hat, wessen Foto mehr Lacher bekommt.']);
+  G('gegenstandsgeschichte', 'Die Geschichte des Gegenstands', 'Kopf', null, '', [],
+    ['Ein Gast reicht einen Gegenstand aus seiner Tasche. 30 Sekunden dessen Lebensgeschichte erzählen, frei erfunden, in der Ich-Form.', 'Geschafft, wenn die 30 Sekunden ohne Stocken voll sind.'],
+    ['Beide bekommen je einen Gegenstand und erzählen.', 'Gewonnen hat, wessen Geschichte mehr Applaus bekommt.']);
+  G('zukunftsfoto', 'Das Foto in 20 Jahren', 'Kopf', null, '', [],
+    ['Beschreiben, wie das Foto von einem selbst in 20 Jahren aussieht: wo, mit wem, was im Hintergrund.', 'Geschafft, wenn alle drei Dinge gesagt sind.'],
+    null);
+  G('werbespot', 'Werbespot', 'Party', null, '', [],
+    ['20 Sekunden Werbespot für sich selbst als Mitbewohner, Reisebegleitung oder Kollegen, mit Slogan am Ende.', 'Geschafft, wenn der Slogan kommt und die Gäste klatschen.'],
+    ['Beide drehen je einen Spot.', 'Gewonnen hat, wessen Spot mehr Applaus bekommt.']);
+  G('raumblind', 'Der Raum mit geschlossenen Augen', 'Kopf', null, '', [],
+    ['Augen zu. Fünf Dinge nennen, die gerade im Raum zu sehen sind, mit ihrer Farbe. Die Gäste prüfen.', 'Geschafft, wenn vier von fünf stimmen.'],
+    ['Beide nennen mit geschlossenen Augen je fünf Dinge.', 'Gewonnen hat, wer mehr Treffer hat.']);
+  G('fantasiesprache', 'Fantasiesprache', 'Party', null, '', [],
+    ['Ein Gast flüstert einen von drei Sätzen: „Ich habe Hunger“, „Mir ist kalt“, „Ich liebe diese Party“. Den Satz in einer erfundenen Sprache sagen, mit Gesten. Die Gäste raten, welcher es war.', 'Geschafft, wenn der Satz erraten wird.'],
+    ['Beide bekommen je einen Satz.', 'Gewonnen hat, wessen Satz schneller erraten wird.']);
+  G('kuerzestfreund', 'Rede auf den Neuesten', 'Kopf', null, '', [],
+    ['20 Sekunden Lobrede auf den Gast, den man am kürzesten kennt, mit mindestens einer Sache, die man an ihm bemerkt hat.', 'Geschafft, wenn der Gast am Ende lächelt oder klatscht.'],
+    null);
+
+  list.forEach(function (g) { if (!g.only) delete g.only; GAMES.push(g); });
+  Object.keys(T).forEach(function (k) { GAME_TEXT[k] = T[k]; });
+})();
 /* apply: drop what is out, use the clear texts, no group or relay formats anymore */
 (function () {
   for (var i = GAMES.length - 1; i >= 0; i--) {
@@ -4818,7 +5239,7 @@ function singleOk(q, r) {
   if (q.type === 'aufgabe') return true;
   if (!r || (r.planSteps || 0) < 35) return false;
   if (q.type === 'steckbrief') return true;
-  var fam = q.type === 'luege' ? 'luege' : q.type === 'wer' ? 'wer' : Q_LADDER.indexOf(q.type) >= 0 ? 'frage' : '';
+  var fam = q.type === 'luege' ? 'luege' : q.type === 'wer' ? 'wer' : q.type === 'geheim' ? 'geheim' : Q_LADDER.indexOf(q.type) >= 0 ? 'frage' : '';
   return !!fam && GG_POOL[fam](q.forId || '').length < 3;
 }
 function availableQuestions(main) {
@@ -4834,7 +5255,7 @@ function partnerReady(main) {
    The personal part (rounds built from what the guests sent) carries the evening: how big it is
    depends on how much the guests sent compared to the number of tasks, 20 to 60 percent.
    It gets denser towards the end. App questions are seasoning, the rest are minigames. */
-function shareFor(D, n) { return D ? Math.max(0.2, Math.min(0.6, 0.2 + 0.4 * Math.min(1, D / (3 * Math.max(1, n))))) : 0; }
+function shareFor(D, n) { return D ? Math.max(0.2, Math.min(0.65, 0.2 + 0.45 * Math.min(1, D / (3 * Math.max(1, n))))) : 0; }
 /* what is left of the guests' material: items for rounds, how many rounds that makes, single Aufgaben */
 function personalStock(r) {
   var inv = roundInventory('', r.who), items = 0, roundsCap = 0;
@@ -4911,7 +5332,7 @@ function buildPlan(r, n) {
   mengeN -= queued.filter(function (x) { return x === 'menge'; }).length + (r.mengePlanned || 0);
   for (k = 0; k < mengeN; k++) { var mq = free(Math.floor(horizon * (k ? 0.62 + Math.random() * 0.22 : 0.3 + Math.random() * 0.28)), 'menge'); if (mq >= 0) { slots[mq] = 'menge'; r.mengePlanned = (r.mengePlanned || 0) + 1; } }
   /* seasoning: app questions, more when the guests sent little */
-  var spice = Math.round((0.10 + 0.15 * (1 - Math.min(1, pp.share / 0.6))) * horizon), rest = [];
+  var spice = Math.round((0.07 + 0.14 * (1 - Math.min(1, pp.share / 0.6))) * horizon), rest = [];
   for (k = 0; k < spice; k++) rest.push(['schaetzen', 'schaetzen', 'quiz', focusN >= 2 ? 'wwe' : 'quiz', focusN >= 2 ? 'wwe' : 'schaetzen', 'glueck'][k % 6]);
   rest = shuffle(rest);
   rest.forEach(function (t, i) {
@@ -4986,7 +5407,7 @@ function deckOf(cat, list) {
   return d;
 }
 /* safety first: these games pause once a player is halfway to the maximum */
-var RISKY_GAMES = ['treppenhuepfen', 'stufenbecher', 'hahnenkampf', 'sackhuepfen', 'limbo', 'ballonkampf', 'kerzenblind', 'nagel', 'laserparcours', 'klinkenblitz', 'schuhsalat'];
+var RISKY_GAMES = ['treppenhuepfen', 'stufenbecher', 'hahnenkampf', 'sackhuepfen', 'limbo', 'ballonkampf', 'kerzenblind', 'nagel', 'laserparcours', 'klinkenblitz', 'schuhsalat', 'kerzenzwei', 'sockenrutscher', 'eimerhelm', 'blindfuehren'];
 function isRisky(g) { return !!g && RISKY_GAMES.indexOf(g.id) >= 0; }
 function tooTipsy(ids) { var e = E(); if (!e) return false; return (ids || []).some(function (id) { return isFocus(id) && drinksOf(id) >= e.max * 0.5; }); }
 function safeFor(g, ids) { return !isRisky(g) || !tooTipsy(ids); }
@@ -5117,7 +5538,9 @@ function makeQuestionStep(main, kind, th) {
   if (kind === 'frage') {
     var qs = availableQuestions(main);
     if (qs.length) {
-      var q = pick(qs);
+      /* not the same kind as the last personal steps, if there is a choice */
+      var hist = persHist(2), fresh = qs.filter(function (x) { return x.type === 'steckbrief' ? singleSubs(x).some(function (sb) { return hist.indexOf(subFam(sb)) < 0; }) : hist.indexOf(qFamOf(x)) < 0; });
+      var q = pick(fresh.length ? fresh : qs);
       return prepGuestStep({ kind: 'frage', qid: q.id, main: main, type: q.type, answerFocus: '', group: '' }, q);
     }
     kind = 'schaetzen';
@@ -5198,8 +5621,8 @@ function nextStep(forcedRoll) {
   else step = makeQuestionStep(main, kind, ctx.themes);
   if (!step) step = makeGameStep(main, ctx);
   attachRoles(r, step);
-  if (step.kind === 'gast') r.persUsed = (r.persUsed || 0) + (step.marks || []).length;
-  if (step.kind === 'frage') r.persUsed = (r.persUsed || 0) + 1;
+  if (step.kind === 'gast') { r.persUsed = (r.persUsed || 0) + (step.marks || []).length; var gg = ggById(step.gg); persNote(r, gg ? gg.fam : ''); }
+  if (step.kind === 'frage') { r.persUsed = (r.persUsed || 0) + 1; var fq = S.questions.filter(function (x) { return x.id === step.qid; })[0]; if (fq) persNote(r, qFamOf(fq, step.sub)); }
   step.track = tr.id; step.unitNo = isTimed(r) ? null : target; step.roll = roll;
   r.lastAction = step.kind;
   r.kinds = (r.kinds || []).concat([step.kind]);
@@ -5303,7 +5726,23 @@ function demoEvent() {
     { author: 'Lea', type: 'weiter', forId: '', text: '', rar: 'wei' },
     { author: 'Tom', type: 'regel', forId: '', text: '', rar: 'reg' },
     { author: 'Nina', type: 'portrait', forId: Mi, text: 'Porträt', draw: demoDoodle(19, 3), rar: 'epi', st: 'offen' },
-    { author: 'Tim', type: 'spruch', forId: Mi, text: 'Wer hat Hunger?', rar: 'epi', st: 'offen' }
+    { author: 'Tim', type: 'spruch', forId: Mi, text: 'Wer hat Hunger?', rar: 'epi', st: 'offen' },
+    /* Entweder oder, a number each, and what Jonas did not know yet */
+    { author: 'Lea', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 1 }, { k: 'kaffee', v: 0 }, { k: 'strand', v: 1 }] },
+    { author: 'Max', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 1 }, { k: 'kaffee', v: 0 }, { k: 'strand', v: 0 }] },
+    { author: 'Tom', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 1 }, { k: 'kaffee', v: 1 }, { k: 'strand', v: 1 }] },
+    { author: 'Sara', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 0 }, { k: 'kaffee', v: 0 }, { k: 'strand', v: 1 }] },
+    { author: 'Nina', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 1 }, { k: 'kaffee', v: 0 }, { k: 'strand', v: 1 }] },
+    { author: 'Tim', type: 'entweder', forId: J, text: 'Entweder oder', ans: [{ k: 'frueh', v: 0 }, { k: 'kaffee', v: 1 }, { k: 'strand', v: 0 }] },
+    { author: 'Lea', type: 'zahl', forId: '', qk: 'laender', text: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', answer: 14 },
+    { author: 'Max', type: 'zahl', forId: '', qk: 'laender', text: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', answer: 9 },
+    { author: 'Tom', type: 'zahl', forId: '', qk: 'laender', text: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', answer: 23 },
+    { author: 'Sara', type: 'zahl', forId: '', qk: 'laender', text: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', answer: 31 },
+    { author: 'Nina', type: 'zahl', forId: '', qk: 'laender', text: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', answer: 6 },
+    { author: 'Lea', type: 'geheim', forId: J, text: 'Ich habe deine Playlist heimlich komplett in meine kopiert.' },
+    { author: 'Tom', type: 'geheim', forId: J, text: 'Ich habe beim Umzug deine Lieblingstasse zerbrochen und still eine neue gekauft.' },
+    { author: 'Max', type: 'geheim', forId: J, text: 'Ich war es, der 2019 dein Fahrrad hinter der Garage versteckt hat.' },
+    { author: 'Nina', type: 'geheim', forId: Mi, text: 'Ich habe dein Yoga-Video dreimal geübt, um mitzuhalten.' }
   ]);
   S.questions = demoQ.map(function (q, i) {
     q.id = uid('q'); q.t = Date.now() - (60 - i) * 3600000; q.status = q.st || (i < 3 || i >= 5 ? 'ok' : 'offen'); delete q.st; q.used = false;
@@ -5343,23 +5782,36 @@ function nextGuestName(not) {
 }
 function steckSubs(q) { var s = []; if (q.year) s.push('jahr'); if (q.bday) s.push('bday'); if (q.meet) s.push('kennen'); return s; }
 function openSubs(q) { var u = q.usedSubs || []; return steckSubs(q).filter(function (x) { return u.indexOf(x) < 0; }); }
+/* the round family a Steckbrief field belongs to */
+function subFam(sub) { return sub === 'kennen' ? 'meet' : sub; }
+/* fields that may come up as a single question: only when their round is played already or cannot come anymore,
+   so the years and birthdays are not revealed twice and the rounds keep their material */
+function singleSubs(q) {
+  return openSubs(q).filter(function (sub) { var f = subFam(sub); return ggFamUsed(f) || GG_POOL[f](q.forId || '').length < famNeed(f); });
+}
+/* the families of the last personal steps (rounds and single questions), so nothing of one kind comes twice in a row */
+function persHist(n) { var r = R(); return r && r.persHist ? r.persHist.slice(-(n || 2)) : []; }
+function persNote(r, fam) { if (!r || !fam) return; r.persHist = (r.persHist || []).concat([fam]).slice(-6); }
+function qFamOf(q, sub) { return q.type === 'steckbrief' ? subFam(sub || 'jahr') : q.type === 'luege' ? 'luege' : q.type === 'wer' ? 'wer' : q.type === 'geheim' ? 'geheim' : Q_LADDER.indexOf(q.type) >= 0 ? 'frage' : q.type; }
 /* how many question slots an approved contribution still holds */
 function questionSlots(q) {
-  if (q.status !== 'ok' || q.type === 'tipp' || q.type === 'worte' || isCardType(q.type)) return 0;
-  if (q.type === 'steckbrief') return openSubs(q).length;
+  if (q.status !== 'ok' || q.type === 'tipp' || q.type === 'worte' || q.type === 'entweder' || q.type === 'zahl' || isCardType(q.type)) return 0;
+  if (q.type === 'steckbrief') return singleSubs(q).length;
   if (q.used) return 0;
-  if (q.type === 'wer') return knownGuests().filter(function (n) { return n.toLowerCase() !== String(q.author).toLowerCase(); }).length >= 2 ? 1 : 0;
+  if (q.type === 'wer' || q.type === 'geheim') return knownGuests().filter(function (n) { return n.toLowerCase() !== String(q.author).toLowerCase(); }).length >= 2 ? 1 : 0;
   return 1;
 }
 function questionPlayable(q) { return questionSlots(q) > 0; }
 /* prepare a drawn guest contribution: fixed answer options so they do not change on every render */
 function prepGuestStep(P, q) {
-  if (q.type === 'wer') {
+  if (q.type === 'wer' || q.type === 'geheim') {
     var others = shuffle(knownGuests().filter(function (n) { return n.toLowerCase() !== String(q.author).toLowerCase(); })).slice(0, 3);
     P.opts = shuffle(others.concat([q.author])); P.correct = P.opts.indexOf(q.author);
   }
   if (q.type === 'steckbrief') {
-    P.sub = pick(openSubs(q));
+    /* a single question from the Steckbrief: a field whose round is played or cannot come anymore, and not the same kind as just before */
+    var subs = singleSubs(q), hist = persHist(), fresh = subs.filter(function (x) { return hist.indexOf(subFam(x)) < 0; });
+    P.sub = pick(fresh.length ? fresh : subs.length ? subs : openSubs(q));
     if (P.sub === 'bday') {
       var right = fmtBday(q.bday), opts = [right], guard = 0;
       while (opts.length < 4 && guard++ < 50) {
@@ -5380,6 +5832,7 @@ function playableOf(P, q) {
   var who = q.forId && isFocus(q.forId) ? person(q.forId).name : focusNames();
   if (q.type === 'luege') return { type: 'auswahl', text: q.author + ' erzählt drei Dinge über sich. Was davon ist gelogen?', options: q.options, correct: q.correct, author: q.author, tag: 'Zwei Wahrheiten, eine Lüge' };
   if (q.type === 'wer') return { type: 'auswahl', text: 'Wer hat das über ' + who + ' geschrieben? „' + q.text + '“', options: P.opts || [q.author], correct: P.opts ? P.correct : 0, author: '', tag: 'Wer hat’s geschrieben?' };
+  if (q.type === 'geheim') return { type: 'auswahl', text: 'Ein Geständnis an ' + who + ': „' + q.text + '“ Wer hat das gebeichtet?', options: P.opts || [q.author], correct: P.opts ? P.correct : 0, author: '', tag: 'Geständnis' };
   if (q.type === 'steckbrief') {
     if (!(q.forId && isFocus(q.forId)) && P.main && isFocus(P.main)) who = person(P.main).name;
     if (P.sub === 'jahr') return { type: 'schaetzen', text: 'Seit welchem Jahr kennt ' + q.author + ' ' + who + '?', answer: q.year, unit: '', tol: 1, author: q.author, tag: 'Steckbrief' };
@@ -5592,6 +6045,9 @@ function ggChoose(cand, prog) {
 function makeGuestGameStep(main, not, prog) {
   var cand = ggReadyFor(main, not);
   if (!cand.length) return null;
+  /* not the same kind of round as just before, if there is a choice */
+  var hist = persHist(2), fresh = cand.filter(function (g) { return hist.indexOf(g.fam) < 0; });
+  if (fresh.length) cand = fresh;
   var g = ggChoose(cand, prog), mn = person(main).name, pool = GG_POOL[g.fam](main), Y = thisYear();
   var P = { kind: 'gast', gg: g.id, name: g.name, main: main, marks: [], credit: [], lines: [], choice: null, answerFocus: '', group: '' };
   var take = function (list, sub) { list.forEach(function (q) { P.marks.push({ qid: q.id, sub: sub || '' }); if (isGuestAuthor(q.author) && P.credit.indexOf(q.author) < 0) P.credit.push(q.author); }); };
@@ -5727,6 +6183,8 @@ function makeGuestGameStep(main, not, prog) {
     P.items = board; P.strikes = 0;
     P.win = { names: authors(ans), note: 'stehen auf der Tafel' };
     take(ans, '');
+  } else if (typeof ggExtra === 'function') {
+    ggExtra(g, P, { pool: pool, k: k, main: main, mn: mn, take: take, authors: authors });
   }
   var items = P.items ? P.items.length : 0;
   if (P.mode === 'multi' || P.mode === 'leiter' || P.mode === 'judge' || P.mode === 'board') { P.need = needOf(items); P.big = items >= 5 && P.mode !== 'board'; }
@@ -5754,6 +6212,7 @@ function markGuestGame(P) {
   P.marks.forEach(function (m) {
     var q = S.questions.filter(function (x) { return x.id === m.qid; })[0];
     if (!q) return;
+    if (m.sub && m.sub.indexOf('ent:') === 0) { markEntUsed(q, m.sub); return; }
     if (m.sub) { if (!subUsed(q, m.sub)) q.usedSubs = (q.usedSubs || []).concat([m.sub]); if (!openSubs(q).length) q.used = true; }
     else q.used = true;
   });
@@ -6612,6 +7071,7 @@ function qDetails(q) {
   if (q.type === 'joker') return 'Joker' + (q.text ? ', Bedingung: ' + esc(q.text) : '');
   if (q.type === 'weiter') return 'Weiterleiten-Karte';
   if (q.type === 'regel') return 'Regel-Karte';
+  if (GQ_MORE[q.type]) return qDetailsMore(q);
   return '';
 }
 function qAboutName(q) { return q.forId && isFocus(q.forId) ? person(q.forId).name : E() && E().focus.length ? focusNames() : 'das Geburtstagskind'; }
@@ -6834,7 +7294,7 @@ var GQ_VERB = { worte: ['Du schickst', 'In zwei Worten'], steckbrief: ['Du füll
 /* the master keeps his own form, so a test as guest and his own entries never mix */
 function gForm() { if (UI.guestMode === 'master') return UI.mForm || (UI.mForm = { author: 'Spielleiter', items: [], cards: [] }); return UI.gForm || (UI.gForm = { author: '', items: [] }); }
 function gCount(t) { return gForm().items.filter(function (x) { return x.type === t; }).length; }
-function gMax(t) { if (UI.guestMode === 'master') return t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) * 3 : 20; return t === 'tipp' ? 1 : t === 'steckbrief' || t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) : 5; }
+function gMax(t) { if (UI.guestMode === 'master') return t === 'worte' ? Math.max(1, E() ? E().focus.length : 1) * 3 : 20; return t === 'tipp' || t === 'zahl' ? 1 : t === 'steckbrief' || t === 'worte' || t === 'entweder' ? Math.max(1, E() ? E().focus.length : 1) : t === 'geheim' ? 2 : 5; }
 
 /* =========================================================
    Games catalog
@@ -7696,6 +8156,7 @@ function gMissing(it) {
       else if (!gNum(it.answer) || Number(it.answer) < Number(it.min) || Number(it.answer) > Number(it.max)) m.push('Lösung im Bereich');
       break;
     case 'aufgabe': if (!t) m.push('Aufgabe'); break;
+    default: if (typeof gMissingMore === 'function') gMissingMore(it, m); break;
     case 'worte':
       if (!String(it.trait || '').trim()) m.push('ein Wort, das die Person beschreibt');
       if (!String(it.interest || '').trim()) m.push('ein Interesse');
@@ -7917,6 +8378,7 @@ function gPreview(it) {
   else if (it.type === 'tipp') lines.push('Am Ende des Abends: Wer lag mit seinem Tipp am nächsten dran?');
   else if (it.type === 'worte') { var iw = String(it.interest || '').trim(); lines.push(iw ? 'Daraus werden eigene Fragen und Sprüche für ' + W + ', zum Beispiel rund um ' + iw + '.' : 'Aus allen Worten der Gäste werden Fragen und Sprüche, die es nur bei ' + W + ' gibt.'); }
   else if (it.type === 'aufgabe') lines.push(t ? 'Aufgabe für ' + W + ': ' + t : 'Hier erscheint deine Aufgabe für ' + W + '.');
+  else if (GQ_MORE[it.type]) lines = lines.concat(gPreviewMore(it, A, W, t));
   else lines.push(t || 'Hier erscheint deine Frage, so wie sie im Spiel aussieht.');
   var extra = '';
   if (it.type === 'auswahl') { var o = it.options.filter(function (x) { return String(x || '').trim(); }); if (o.length) extra = '<span class="gprev-o">' + o.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') + '</span>'; }
@@ -7927,6 +8389,7 @@ function gStat(it) {
   return '<span class="gst">Fehlt noch: ' + esc(gMissing(it).join(', ')) + '</span>';
 }
 function gLiveW(it) {
+  if (GQ_MORE[it.type]) return gLiveMore(it);
   if (it.type === 'steckbrief') {
     var pills = [], n = gYears(it), b = parseBday(it.bday);
     if (n != null) pills.push([emb('cheers', 20), n === 0 ? 'Frisch dabei, seit diesem Jahr' : '<b class="gcnt" data-to="' + n + '">' + n + '</b>' + (n === 1 ? ' Jahr' : ' Jahre') + ' Freundschaft' + (n >= 10 ? ', alter Hase!' : ''), 'pop']);
@@ -8031,7 +8494,7 @@ function gRender() { render(); gAfter(); }
 /* ---------- the cards ---------- */
 function gForBlock(it, i) {
   var who = E() ? E().focus : [];
-  if (it.type === 'tipp' || who.length < 2) return '';
+  if (it.type === 'tipp' || it.type === 'zahl' || who.length < 2) return '';
   return '<span class="eyebrow mt14 block">Über wen?</span><div class="chips mt10" role="group" aria-label="Über wen">' +
     (it.type === 'worte' ? '' : '<button type="button" class="chip-btn sm' + (!it.forId ? ' is-sel' : '') + '" data-act="gFor" data-k="' + i + '" data-v="" aria-pressed="' + !it.forId + '">Alle</button>') +
     who.map(function (p) { var s = it.forId === p.id; return '<button type="button" class="chip-btn sm' + (s ? ' is-sel' : '') + '" data-act="gFor" data-k="' + i + '" data-v="' + p.id + '" aria-pressed="' + s + '">' + face(p, 22) + esc(p.name) + '</button>'; }).join('') + '</div>';
@@ -8073,6 +8536,8 @@ function gFields(it, i) {
   } else if (it.type === 'aufgabe') {
     o += gField('Was muss ' + esc(W) + ' tun?', 'qText' + s, b + 'text', it.text, 'z. B. Den Trinkspruch vom Abiball aufsagen', 'area') +
       gField('So wird gewertet', 'qNote' + s, b + 'note', it.note, 'z. B. Geschafft, wenn zwei Gäste es bestätigen', 'area');
+  } else if (GQ_MORE[it.type]) {
+    o += gFieldsMore(it, i, b, s, W);
   } else {
     o += gField('Deine Frage', 'qText' + s, b + 'text', it.text, 'Was willst du über ' + W + ' wissen?', 'area');
     if (it.type === 'schaetzen') o += '<div class="grid2">' + gField('Lösung', 'qAns' + s, b + 'answer', it.answer, 'z. B. 31', 'num') + gField('Einheit', 'qUnit' + s, b + 'unit', it.unit, 'z. B. Paar', 'text') + '</div>';
@@ -8174,6 +8639,279 @@ function gFinale(head) {
   return scr(head, body, foot, 'gscr gfin' + (UI.guestMode === 'test' ? ' gtest' : ''));
 }
 
+/* =========================================================
+   Three more things a guest can send, each a few seconds, each good
+   for whole rounds that exist only at this party:
+   - Entweder oder: three taps about the main person. The app counts
+     what the guests think, and the main person guesses the majority.
+   - Eine Zahl über dich: one question, one number, the same question
+     for everyone. Who has the most, the order, the sum.
+   - Geständnis: something the main person does not know yet about the
+     guest. At the party: who confessed what?
+   The form, the master's list and the rounds all hook in here.
+   ========================================================= */
+var GQ_MORE = { entweder: 1, zahl: 1, geheim: 1 };
+QTYPES.splice(1, 0, ['entweder', 'Entweder oder', 'Drei schnelle Tipps über die Person, ein Fingertipp pro Frage. Daraus wird: Was denkt die Mehrheit?', 'kurz']);
+QTYPES.splice(QTYPES.map(function (t) { return t[0]; }).indexOf('steckbrief') + 1, 0, ['zahl', 'Eine Zahl über dich', 'Eine Frage, eine Zahl. Mit den Zahlen aller Gäste baut die App Spiele.', 'ich']);
+QTYPES.splice(QTYPES.map(function (t) { return t[0]; }).indexOf('wer') + 1, 0, ['geheim', 'Geständnis', 'Etwas, das die Person noch nicht über dich weiß. Im Spiel wird geraten, wer es gestanden hat.', 'ich']);
+GQ_VERB.entweder = ['Du tippst', 'Entweder oder']; GQ_VERB.zahl = ['Du nennst', 'eine Zahl']; GQ_VERB.geheim = ['Du legst', 'ein Geständnis ab'];
+QK_SHORT.entweder = 'Entweder oder'; QK_SHORT.zahl = 'Zahl'; QK_SHORT.geheim = 'Geständnis';
+GQ_STYLE.entweder = { c: '#B6F07C', e: 'vote', stamp: 'Abgestimmt' };
+GQ_STYLE.zahl = { c: '#5B8CFF', e: 'coin', stamp: 'Gezählt' };
+GQ_STYLE.geheim = { c: '#D9A6FF', e: 'lock', stamp: 'Gebeichtet' };
+GQ_REACT.add_entweder = ['Entweder oder? Das geht schnell. Und ich zähle mit!', 'Drei Fingertipps über mich. Sei ehrlich.'];
+GQ_REACT.done_entweder = ['Notiert. Mal sehen, ob ich mich selbst kenne!', 'Interessant, was du so denkst…'];
+GQ_REACT.add_zahl = ['Eine Zahl über dich? Jetzt wird gezählt.', 'Nur eine Zahl. Aber eine ehrliche!'];
+GQ_REACT.done_zahl = ['Gezählt! Daraus bauen wir heute Abend was.', 'Notiert. Ob das die meisten sind?'];
+GQ_REACT.add_geheim = ['Ein Geständnis?! Oh, jetzt wird’s spannend.', 'Du willst mir was beichten? Ich hör zu.'];
+GQ_REACT.done_geheim = ['Versiegelt. Ich platze vor Neugier!', 'Das wusste ich wirklich nicht. Danke dafür!'];
+GQ_MOOD.add_entweder = 'denken'; GQ_MOOD.done_entweder = 'cool'; GQ_MOOD.add_zahl = 'staunen'; GQ_MOOD.done_zahl = 'jubel'; GQ_MOOD.add_geheim = 'misstrauisch'; GQ_MOOD.done_geheim = 'staunen';
+G_STICKERS.push(['beichte', 'lock', 'Beichtkind', function (s) { return !!s.t.geheim; }], ['zaehler', 'coin', 'Erbsenzähler', function (s) { return !!s.t.zahl; }]);
+
+/* ---------- Entweder oder: the pairs, three per guest, the same three until each has enough answers ---------- */
+var ENT_PAIRS = [
+  ['frueh', 'Frühaufsteher', 'Nachteule'], ['kaffee', 'Kaffee', 'Tee'], ['strand', 'Strand', 'Berge'], ['hund', 'Hund', 'Katze'],
+  ['suess', 'Süß', 'Salzig'], ['plan', 'Alles geplant', 'Alles spontan'], ['tanz', 'Tanzfläche', 'Theke'], ['sommer', 'Sommer', 'Winter'],
+  ['kochen', 'Kocht selbst', 'Bestellt lieber'], ['karaoke', 'Greift zum Mikro', 'Hält das Mikro fern'], ['kino', 'Kino', 'Serie auf dem Sofa'], ['ordnung', 'Ordnungsfan', 'Kreatives Chaos'],
+  ['handy', 'Handy immer dabei', 'Handy oft vergessen'], ['sport', 'Sportskanone', 'Sofa-Profi'], ['pizza', 'Pizza', 'Pasta'], ['stadt', 'Stadt', 'Land'],
+  ['zeit', 'Immer pünktlich', 'Immer fünf Minuten zu spät'], ['reise', 'Hotel mit Pool', 'Rucksack und Zelt'], ['bier', 'Bier', 'Wein'], ['dusche', 'Singt unter der Dusche', 'Schweigt unter der Dusche'],
+  ['navi', 'Fragt nach dem Weg', 'Findet es allein'], ['feier', 'Große Party', 'Kleiner Kreis'], ['lotto', 'Lottogewinn: Weltreise', 'Lottogewinn: Haus'], ['fruehstueck', 'Frühstück ausgiebig', 'Frühstück im Gehen']
+];
+var ENT_NEED = 3;
+function entPair(id) { return ENT_PAIRS.filter(function (p) { return p[0] === id; })[0] || null; }
+/* how many guests answered which pair about this person (the form counts what is not sent yet too) */
+function entCounts(forId, pend) {
+  var c = {};
+  okGuest('entweder', pend).forEach(function (q) { if (!aboutMain(q, forId || '')) return; (q.ans || []).forEach(function (a) { c[a.k] = (c[a.k] || 0) + 1; }); });
+  (gForm().items || []).forEach(function (it) { if (it.type === 'entweder' && (!forId || !it.forId || it.forId === forId)) Object.keys(it.ans || {}).forEach(function (k) { c[k] = (c[k] || 0) + 1; }); });
+  return c;
+}
+/* the three pairs for a new card: the ones with the fewest answers so far, in a fixed order, so answers pile up on the same questions */
+function entPick(forId) {
+  var c = entCounts(forId, true), seed = strHash('ent:' + (S.collectCode || '') + ':' + (forId || ''));
+  var order = ENT_PAIRS.map(function (p, i) { return { id: p[0], n: c[p[0]] || 0, r: (i * 7919 + seed) % 97 }; });
+  order.sort(function (a, b) { return (a.n >= ENT_NEED) - (b.n >= ENT_NEED) || b.n - a.n || a.r - b.r; });
+  /* pairs still filling up first (most answers first, so they finish), then fresh ones */
+  var open = order.filter(function (x) { return x.n < ENT_NEED; }), full = order.filter(function (x) { return x.n >= ENT_NEED; });
+  var seq = open.concat(full).map(function (x) { return x.id; });
+  return seq.slice(0, 3);
+}
+
+/* ---------- Eine Zahl über dich: one question for everyone, the next when it has enough answers ---------- */
+var ZAHL_QS = [
+  { id: 'laender', all: 'Wie viele Länder haben die Gäste schon bereist?', q: 'Wie viele Länder hast du schon bereist?', unit: 'Länder', most: 'Wer von diesen Gästen hat die meisten Länder bereist?', sort: 'Zuerst, wer die meisten Länder bereist hat', sum: '{N} zusammen: Wie viele Länder haben sie bereist?', line: '{A}: {V} Länder' },
+  { id: 'umzuege', all: 'Wie oft sind die Gäste in ihrem Leben umgezogen?', q: 'Wie oft bist du in deinem Leben schon umgezogen?', unit: 'Umzüge', most: 'Wer von diesen Gästen ist am öftesten umgezogen?', sort: 'Zuerst, wer am öftesten umgezogen ist', sum: '{N} zusammen: Wie oft sind sie umgezogen?', line: '{A}: {V} Umzüge' },
+  { id: 'schuhe', all: 'Wie viele Paar Schuhe stehen bei den Gästen zu Hause?', q: 'Wie viele Paar Schuhe stehen bei dir zu Hause?', unit: 'Paar', most: 'Wer von diesen Gästen hat die meisten Paar Schuhe?', sort: 'Zuerst, wer die meisten Paar Schuhe hat', sum: '{N} zusammen: Wie viele Paar Schuhe sind das?', line: '{A}: {V} Paar' },
+  { id: 'pflanzen', all: 'Wie viele Pflanzen leben bei den Gästen zu Hause?', q: 'Wie viele Pflanzen leben in deiner Wohnung?', unit: 'Pflanzen', most: 'Wer von diesen Gästen hat die meisten Pflanzen zu Hause?', sort: 'Zuerst, wer die meisten Pflanzen hat', sum: '{N} zusammen: Wie viele Pflanzen haben sie zu Hause?', line: '{A}: {V} Pflanzen' },
+  { id: 'konzerte', all: 'Auf wie vielen Konzerten waren die Gäste schon?', q: 'Auf wie vielen Konzerten warst du schon?', unit: 'Konzerte', most: 'Wer von diesen Gästen war auf den meisten Konzerten?', sort: 'Zuerst, wer auf den meisten Konzerten war', sum: '{N} zusammen: Auf wie vielen Konzerten waren sie?', line: '{A}: {V} Konzerte' },
+  { id: 'kaffee', all: 'Wie viel Kaffee trinken die Gäste an einem normalen Tag?', q: 'Wie viele Tassen Kaffee trinkst du an einem normalen Tag?', unit: 'Tassen', most: 'Wer von diesen Gästen trinkt am meisten Kaffee am Tag?', sort: 'Zuerst, wer am meisten Kaffee trinkt', sum: '{N} zusammen: Wie viele Tassen Kaffee am Tag?', line: '{A}: {V} Tassen' },
+  { id: 'apps', all: 'Wie viele Apps haben die Gäste auf dem Handy?', q: 'Wie viele Apps sind auf deinem Handy?', unit: 'Apps', most: 'Wer von diesen Gästen hat die meisten Apps auf dem Handy?', sort: 'Zuerst, wer die meisten Apps hat', sum: '{N} zusammen: Wie viele Apps sind auf ihren Handys?', line: '{A}: {V} Apps' },
+  { id: 'schlaf', all: 'Wie lange haben die Gäste letzte Nacht geschlafen?', q: 'Wie viele Stunden hast du letzte Nacht geschlafen?', unit: 'Stunden', most: 'Wer von diesen Gästen hat letzte Nacht am längsten geschlafen?', sort: 'Zuerst, wer am längsten geschlafen hat', sum: '{N} zusammen: Wie viele Stunden Schlaf letzte Nacht?', line: '{A}: {V} Stunden' },
+  { id: 'cousins', all: 'Wie viele Cousins und Cousinen haben die Gäste?', q: 'Wie viele Cousins und Cousinen hast du?', unit: 'Cousins', most: 'Wer von diesen Gästen hat die meisten Cousins und Cousinen?', sort: 'Zuerst, wer die meisten Cousins und Cousinen hat', sum: '{N} zusammen: Wie viele Cousins und Cousinen sind das?', line: '{A}: {V} Cousins und Cousinen' },
+  { id: 'fotos', all: 'Wie viele Fotos haben die Gäste auf dem Handy?', q: 'Wie viele Fotos sind auf deinem Handy, grob?', unit: 'Fotos', most: 'Wer von diesen Gästen hat die meisten Fotos auf dem Handy?', sort: 'Zuerst, wer die meisten Fotos hat', sum: '{N} zusammen: Wie viele Fotos sind auf ihren Handys?', line: '{A}: {V} Fotos' }
+];
+var ZAHL_NEED = 3;
+function zahlQ(id) { return ZAHL_QS.filter(function (z) { return z.id === id; })[0] || null; }
+function zahlCounts(pend) {
+  var c = {};
+  okGuest('zahl', pend).forEach(function (q) { c[q.qk] = (c[q.qk] || 0) + 1; });
+  (gForm().items || []).forEach(function (it) { if (it.type === 'zahl' && it.qk) c[it.qk] = (c[it.qk] || 0) + 1; });
+  return c;
+}
+/* the question for a new card: the one everybody answers until it has four answers, then the next */
+function zahlPick() {
+  var c = zahlCounts(true), seed = strHash('zahl:' + (S.collectCode || '')), order = ZAHL_QS.map(function (z, i) { return { id: z.id, n: c[z.id] || 0, r: (i * 7919 + seed) % 97 }; });
+  var open = order.filter(function (x) { return x.n < ZAHL_NEED + 1; }).sort(function (a, b) { return b.n - a.n || a.r - b.r; });
+  if (open.length) return open[0].id;
+  order.sort(function (a, b) { return a.n - b.n || a.r - b.r; });
+  return order[0].id;
+}
+
+/* ---------- the form ---------- */
+function gAddMore(it, t) {
+  if (t === 'entweder') { it.pairs = entPick(it.forId || ''); it.ans = {}; }
+  if (t === 'zahl') { it.qk = zahlPick(); it.answer = ''; }
+}
+function gMissingMore(it, m) {
+  if (it.type === 'entweder') { var open = (it.pairs || []).filter(function (k) { return !(it.ans && (it.ans[k] === 0 || it.ans[k] === 1)); }).length; if (open) m.push(open === 1 ? 'noch ein Fingertipp' : 'noch ' + open + ' Fingertipps'); if (E() && E().focus.length > 1 && !it.forId) m.push('über wen'); }
+  if (it.type === 'zahl') { var v = Number(String(it.answer || '').replace(',', '.')); if (it.answer === '' || it.answer == null || isNaN(v) || v < 0 || v > 99999) m.push('eine Zahl'); }
+  if (it.type === 'geheim') { var t = String(it.text || '').trim(); if (t.length < 8) m.push(t ? 'noch ' + (8 - t.length) + ' Zeichen' : 'dein Geständnis'); }
+}
+function draftMore(d, q) {
+  if (d.type === 'entweder') {
+    var ans = (d.pairs || []).map(function (k) { return { k: k, v: d.ans && d.ans[k] === 1 ? 1 : 0, ok: !!(d.ans && (d.ans[k] === 0 || d.ans[k] === 1)) }; });
+    if (!ans.length || ans.some(function (a) { return !a.ok || !entPair(a.k); })) return 'Tipp bei allen drei Fragen eine Seite an.';
+    if (E() && E().focus.length > 1 && !d.forId) return 'Wähl aus, über wen die Tipps sind.';
+    q.ans = ans.map(function (a) { return { k: a.k, v: a.v }; }); q.text = 'Entweder oder'; return '';
+  }
+  if (d.type === 'zahl') {
+    var z = zahlQ(d.qk), v = Number(String(d.answer == null ? '' : d.answer).replace(',', '.'));
+    if (!z) return 'Die Frage fehlt, tipp die Zahl noch mal an.';
+    if (d.answer === '' || isNaN(v) || v < 0 || v > 99999) return 'Gib eine Zahl an.';
+    q.qk = z.id; q.answer = Math.round(v); q.unit = z.unit; q.text = z.q; q.forId = ''; return '';
+  }
+  if (d.type === 'geheim') {
+    var t = String(d.text || '').trim();
+    if (t.length < 8) return 'Erzähl ein bisschen mehr, damit man raten kann.';
+    q.text = t.slice(0, 160); return '';
+  }
+  return '';
+}
+function gFieldsMore(it, i, b, s, W) {
+  if (it.type === 'entweder') {
+    var pairs = (it.pairs || []).map(entPair).filter(Boolean);
+    if (!pairs.length) { it.pairs = entPick(it.forId || ''); pairs = it.pairs.map(entPair).filter(Boolean); }
+    return '<p class="small mt10">Drei Fragen über ' + esc(W) + '. Einfach tippen, was eher passt.</p><div class="stack gap8 mt10">' + pairs.map(function (p) {
+      var v = it.ans && (it.ans[p[0]] === 0 || it.ans[p[0]] === 1) ? it.ans[p[0]] : -1;
+      return '<div class="gent" role="group" aria-label="' + esc(p[1] + ' oder ' + p[2]) + '">' + [1, 2].map(function (j) {
+        var on = v === j - 1;
+        return '<button type="button" class="gent-b' + (on ? ' on' : v >= 0 ? ' off' : '') + '" data-act="gPair" data-k="' + i + '" data-p="' + p[0] + '" data-v="' + (j - 1) + '" aria-pressed="' + on + '">' + esc(p[j]) + '</button>';
+      }).join('<span class="gent-or" aria-hidden="true">oder</span>') + '</div>';
+    }).join('') + '</div>';
+  }
+  if (it.type === 'zahl') {
+    var z = zahlQ(it.qk) || ZAHL_QS[0]; if (!it.qk) it.qk = z.id;
+    return gField(esc(z.q), 'qZahl' + s, b + 'answer', it.answer == null ? '' : it.answer, z.unit, 'big') + '<p class="small mt8">Grob reicht. Alle Gäste bekommen dieselbe Frage, aus den Antworten wird ein Spiel.</p>';
+  }
+  if (it.type === 'geheim') {
+    return '<label class="field mt10 gveilbox" for="qGeh' + s + '">Etwas, das ' + esc(W) + ' noch nicht über dich weiß<textarea id="qGeh' + s + '" class="input area gletter" data-bind="' + b + 'text" enterkeyhint="done" placeholder="z. B. Ich habe heimlich alle Folgen deiner Lieblingsserie geschaut.">' + esc(it.text || '') + '</textarea><span class="gveil" aria-hidden="true">' + emb('lock', 20) + 'Versiegelt, antippen zum Lesen</span></label>' +
+      '<p class="small mt8">Nichts Schlimmes, nur Überraschendes. Im Spiel rät ' + esc(W) + ', von wem das Geständnis ist.</p>';
+  }
+  return '';
+}
+function gLiveMore(it) {
+  if (it.type === 'entweder') {
+    var picks = (it.pairs || []).map(function (k) { var p = entPair(k); return p && it.ans && (it.ans[k] === 0 || it.ans[k] === 1) ? p[it.ans[k] + 1] : ''; }).filter(Boolean);
+    return picks.length ? '<div class="gwords">' + picks.map(function (w) { return '<span class="gwd tr">' + esc(w) + '</span>'; }).join('') + '</div>' : '';
+  }
+  if (it.type === 'zahl') {
+    var z = zahlQ(it.qk), a = gNum(it.answer), str = a ? fmtNum(Math.round(Number(String(it.answer).replace(',', '.')))) : '?', prev = it._num || '';
+    var digits = str.split('').map(function (ch, k) { return '<span class="gd' + (ch !== prev[k] ? ' roll' : '') + '">' + esc(ch) + '</span>'; }).join('');
+    it._num = str;
+    return '<div class="gnum' + (a ? ' on' : '') + '"><b>' + digits + '</b>' + (z ? '<span>' + esc(z.unit) + '</span>' : '') + '</div><span class="sub">' + (a ? 'Deine Zahl steht. Ob sie die höchste ist?' : 'Hier erscheint deine Zahl') + '</span>';
+  }
+  if (it.type === 'geheim') {
+    var len = String(it.text || '').trim().length;
+    return len >= 8 ? '<span class="gseal"><span class="e" aria-hidden="true">' + emb('lock', 24) + '</span>Versiegelt: Dein Name bleibt bis zur Auflösung geheim</span>' : '<span class="gpill"><span class="e" aria-hidden="true">' + emb('pen', 18) + '</span>' + (len ? 'Noch ' + (8 - len) + ' Zeichen, dann wird versiegelt' : 'Schreib, dann wird versiegelt') + '</span>';
+  }
+  return '';
+}
+function gPreviewMore(it, A, W, t) {
+  if (it.type === 'entweder') return ['Was sagt die Mehrheit über ' + W + '? ' + W + ' rät, was die Gäste getippt haben.'];
+  if (it.type === 'zahl') { var z = zahlQ(it.qk); return [z ? z.most : 'Wer hat am meisten? Und alle zusammen?', 'Und: Wie viel ist es bei allen Gästen zusammen?']; }
+  if (it.type === 'geheim') return ['Wer hat das gestanden?' + (t ? ' „' + t + '“' : '')];
+  return [];
+}
+A.gPair = function (d) {
+  var it = gForm().items[+d.k]; if (!it || it.type !== 'entweder') return;
+  it.ans = it.ans || {}; it.ans[d.p] = +d.v;
+  gVibe(10); gAfterClick(+d.k); gRender();
+};
+function qDetailsMore(q) {
+  if (q.type === 'entweder') return (q.ans || []).map(function (a) { var p = entPair(a.k); return p ? esc(p[a.v === 1 ? 2 : 1]) : ''; }).filter(Boolean).join(' · ');
+  if (q.type === 'zahl') { var z = zahlQ(q.qk); return (z ? esc(z.q) + ' ' : '') + 'Antwort: ' + fmtNum(q.answer) + ' ' + esc(q.unit || ''); }
+  if (q.type === 'geheim') return 'Im Spiel wird geraten, wer das gestanden hat.';
+  return '';
+}
+
+/* ---------- the rounds ---------- */
+GG_POOL.entweder = function (main, pend) { return okGuest('entweder', pend).filter(function (q) { return aboutMain(q, main) && (q.ans || []).some(function (a) { return (q.usedPairs || []).indexOf(a.k) < 0; }); }); };
+GG_POOL.zahl = function (main, pend) { return okGuest('zahl', pend).filter(function (q) { return !q.used && zahlQ(q.qk) && gNum(q.answer); }); };
+GG_POOL.geheim = function (main, pend) { return okGuest('geheim', pend).filter(function (q) { return !q.used && aboutMain(q, main) && String(q.text || '').trim().length >= 8; }); };
+GG_NEED.entweder = ['Entweder-oder-Antwort', 'Entweder-oder-Antworten']; GG_NEED.zahl = ['Zahl über dich', 'Zahlen von Gästen']; GG_NEED.geheim = ['Geständnis', 'Geständnisse'];
+GG_FEM.push('entweder', 'zahl');
+/* the pairs with enough answers, counted over the unused answers of all guests */
+function entTally(pool) {
+  var t = {};
+  pool.forEach(function (q) { (q.ans || []).forEach(function (a) { if ((q.usedPairs || []).indexOf(a.k) >= 0 || !entPair(a.k)) return; var x = t[a.k] = t[a.k] || { k: a.k, n: 0, v: [0, 0], by: [[], []] }; x.n++; x.v[a.v === 1 ? 1 : 0]++; x.by[a.v === 1 ? 1 : 0].push(q.author); }); });
+  return Object.keys(t).map(function (k) { return t[k]; }).filter(function (x) { return x.n >= ENT_NEED && x.v[0] !== x.v[1]; });
+}
+var byQkZ = function (q) { return q.qk; };
+function zahlBest(pool, val) {
+  var g = groupsBy(pool, byQkZ), best = 0;
+  Object.keys(g).forEach(function (k) { best = Math.max(best, Object.keys(groupsBy(g[k], val)).length); });
+  return best;
+}
+var byAnsZ = function (q) { return String(q.answer); };
+GG.push(
+  { id: 'mehrheit', fam: 'entweder', name: 'Was denkt die Mehrheit?', need: 3, val: byId, have: function (pool) { return entTally(pool).length; }, about: 'Entweder-oder-Antworten', w: 1.3, round: true, cap: 6 },
+  { id: 'meiste', fam: 'zahl', name: 'Wer hat am meisten?', need: 3, val: byAnsZ, have: function (pool) { return zahlBest(pool, byAnsZ); }, about: 'Zahlen der Gäste', w: 1.1 },
+  { id: 'zahlenstrahl', fam: 'zahl', name: 'Der Zahlenstrahl', need: 4, val: byAnsZ, have: function (pool) { return zahlBest(pool, byAnsZ); }, about: 'Zahlen der Gäste', w: 1.6 },
+  { id: 'summe', fam: 'zahl', name: 'Alles zusammen', need: 3, val: byAuthor, have: function (pool) { return zahlBest(pool, byAuthor); }, about: 'Zahlen der Gäste', w: 1.0 },
+  { id: 'gestaendnisse', fam: 'geheim', name: 'Geständnisse', need: 3, val: byId, about: 'Geständnissen', w: 2.6, round: true, cap: 5 }
+);
+ROUND_FAMS.push('entweder', 'zahl', 'geheim');
+/* builds the step for the rounds above; false if the round is not one of ours */
+function ggExtra(g, P, c) {
+  var pool = c.pool, k = c.k, mn = c.mn, take = c.take, authors = c.authors, main = c.main;
+  if (g.id === 'mehrheit') {
+    var tally = shuffle(entTally(pool)).sort(function (a, b) { return b.n - a.n; }).slice(0, Math.max(g.need, Math.min(g.cap, k || 4)));
+    P.mode = 'multi';
+    P.text = 'Die Gäste haben über ' + mn + ' abgestimmt: entweder oder. Was sagt die Mehrheit?';
+    P.items = tally.map(function (x) { var p = entPair(x.k), maj = x.v[1] > x.v[0] ? 1 : 0; return { prompt: p[1] + ' oder ' + p[2] + '?', options: [p[1], p[2]], correct: maj, reveal: x.v[maj] + ' von ' + x.n + ' sagen ' + p[maj + 1], by: x.by[maj][0] || '', line: p[maj + 1] + ': ' + x.v[maj] + ' von ' + x.n + ' Gästen' }; });
+    P.choices = P.items.map(function () { return null; });
+    P.entPairs = tally.map(function (x) { return x.k; });
+    var all = []; pool.forEach(function (q) { if ((q.ans || []).some(function (a) { return P.entPairs.indexOf(a.k) >= 0; })) all.push(q); });
+    P.win = { names: authors(all), note: 'haben ' + mn + ' eingeschätzt' };
+    /* the answers of these pairs are spent, the guests' records stay for other pairs */
+    all.forEach(function (q) { P.marks.push({ qid: q.id, sub: 'ent:' + P.entPairs.join(',') }); if (isGuestAuthor(q.author) && P.credit.indexOf(q.author) < 0) P.credit.push(q.author); });
+    return true;
+  }
+  if (g.id === 'meiste' || g.id === 'zahlenstrahl' || g.id === 'summe') {
+    var gq = groupsBy(pool, byQkZ), val = g.id === 'summe' ? byAuthor : byAnsZ, bestK = null, bestN = 0;
+    Object.keys(gq).forEach(function (key) { var n = Object.keys(groupsBy(gq[key], val)).length; if (n > bestN) { bestN = n; bestK = key; } });
+    var z = zahlQ(bestK), list = latestBy(gq[bestK] || []), num = function (q) { return Math.round(Number(q.answer)); }, lineOf = function (q) { return z.line.replace('{A}', q.author).replace('{V}', fmtNum(num(q))); };
+    if (!z || !list.length) return true;
+    if (g.id === 'meiste') {
+      var reps = distinctPick(list, byAnsZ, 4).sort(function (a, b) { return num(b) - num(a); }), least = Math.random() < 0.3, right = least ? reps[reps.length - 1] : reps[0];
+      P.mode = 'auswahl';
+      P.text = least ? z.most.replace('die meisten', 'die wenigsten').replace('am öftesten', 'am seltensten').replace('am meisten', 'am wenigsten').replace('am längsten', 'am kürzesten').replace('auf den meisten', 'auf den wenigsten') : z.most;
+      P.opts = shuffle(reps.map(function (q) { return q.author; })); P.correct = P.opts.indexOf(right.author);
+      P.lines = reps.map(function (q) { return { ok: q === right, t: lineOf(q) }; });
+      P.win = { single: true, name: right.author, note: least ? 'die kleine Zahl stößt mit an' : 'auf die große Zahl' };
+      take(reps, '');
+    } else if (g.id === 'zahlenstrahl') {
+      var rz = distinctPick(list, byAnsZ, Object.keys(groupsBy(list, byAnsZ)).length >= 6 ? 5 : 4);
+      P.mode = 'sort';
+      P.text = z.all + ' Bring sie in die richtige Reihenfolge.';
+      P.sortLabel = z.sort;
+      P.items = rz.map(function (q) { return { label: q.author, rank: -num(q) }; });
+      P.pickOrder = [];
+      P.lines = rz.slice().sort(function (a, b) { return num(b) - num(a); }).map(function (q, i) { return { t: (i + 1) + '. ' + lineOf(q) }; });
+      P.win = { names: authors(rz), note: 'stehen auf dem Zahlenstrahl' };
+      take(rz, '');
+    } else {
+      var rj = spreadPick(list, Math.min(6, list.length)), sum = 0;
+      rj.forEach(function (q) { sum += num(q); });
+      P.mode = 'schaetzen';
+      P.text = z.sum.replace('{N}', joinNames(rj.map(function (q) { return q.author; })));
+      P.answer = sum; P.unit = z.unit; P.tol = Math.max(2, Math.round(sum * 0.15));
+      P.lines = rj.map(function (q) { return { t: lineOf(q) }; });
+      P.win = { names: authors(rj), note: 'stoßen auf ' + fmtNum(sum) + ' ' + z.unit + ' an' };
+      take(rj, '');
+    }
+    return true;
+  }
+  if (g.id === 'gestaendnisse') {
+    var rg = spreadPick(pool, k), names = authors(rg);
+    shuffle(knownGuests()).forEach(function (n) { if (names.length < 4 && names.map(function (x) { return x.toLowerCase(); }).indexOf(n.toLowerCase()) < 0) names.push(n); });
+    names = shuffle(names);
+    P.mode = 'multi';
+    P.text = 'Die Gäste haben ' + mn + ' etwas gestanden, das ' + mn + ' noch nicht wusste. Von wem ist welches Geständnis?';
+    P.items = rg.map(function (q) { return { prompt: '„' + q.text + '“', options: names, correct: names.indexOf(q.author), reveal: q.author, by: q.author }; });
+    P.choices = P.items.map(function () { return null; });
+    P.win = { names: authors(rg), note: 'haben gebeichtet' };
+    take(rg, '');
+    return true;
+  }
+  return false;
+}
+/* a played Mehrheits-Runde spends only the pairs it showed */
+function markEntUsed(q, sub) {
+  var ks = sub.slice(4).split(',').filter(Boolean);
+  q.usedPairs = (q.usedPairs || []).concat(ks.filter(function (x) { return (q.usedPairs || []).indexOf(x) < 0; }));
+  if ((q.ans || []).every(function (a) { return q.usedPairs.indexOf(a.k) >= 0; })) q.used = true;
+}
 /* =========================================================
    Bonus cards in the guest link. When every contribution is
    ready, a hidden button slides out from under "Abschicken".
@@ -12085,7 +12823,7 @@ A.passReset = function () { var p = passGet(); if (!p || !p.test) return; UI.pas
    quick games and five stations of a run. The rest says: Game Pass.
    ========================================================= */
 var DEMO_LIMITS = !(typeof window !== 'undefined' && window.DEMO_OFF);
-var DEMO_GTYPES = ['worte', 'luege', 'wer'];
+var DEMO_GTYPES = ['worte', 'entweder', 'luege', 'wer'];
 var DEMO_CARDS = ['wenn', 'portrait'];
 var DEMO_FREE = ['spiel', 'wwe', 'schaetzen'];
 var DEMO_STEPS = 5;
@@ -12404,6 +13142,7 @@ function draftToQ(d, author, master) {
     else if (E() && E().focus.length > 1 && !d.forId) err = 'Wähl aus, über wen die zwei Worte sind.';
     else { q.trait = tr; q.interest = ir; q.text = 'In zwei Worten'; }
   }
+  if (!err && GQ_MORE[d.type]) err = draftMore(d, q) || '';
   if (!err && d.type === 'tipp') {
     var mins = Number(d.answer);
     if (d.answer === '' || isNaN(mins) || mins < 5 || mins > 600) err = 'Tipp eine Zahl zwischen 5 und 600 Minuten.';
@@ -12442,12 +13181,13 @@ A.gAdd = function (d) {
   var it = qDraftNew(G.author); it.type = t; it.key = 'k' + Date.now().toString(36) + Math.floor(Math.random() * 1000);
   if (t === 'luege' || t === 'auswahl') it.correct = -1;
   if (t === 'bereich') { it.min = '0'; it.max = '100'; }
-  if ((t === 'steckbrief' || t === 'worte') && E() && E().focus.length > 1) {
+  if ((t === 'steckbrief' || t === 'worte' || t === 'entweder') && E() && E().focus.length > 1) {
     var have = G.items.filter(function (x) { return x.type === t; });
     have.forEach(function (x, i) { if (!x.forId) x.forId = E().focus[i].id; });
     var free = E().focus.filter(function (p) { return !have.some(function (x) { return x.forId === p.id; }); })[0];
-    it.forId = have.length && free ? free.id : t === 'worte' ? E().focus[0].id : '';
+    it.forId = have.length && free ? free.id : t === 'worte' || t === 'entweder' ? E().focus[0].id : '';
   }
+  if (GQ_MORE[t]) gAddMore(it, t);
   G.items.push(it); UI.qErr = '';
   UI.gBump = t; UI.gNew = it.key; UI.gFlyT = { t: t, i: G.items.length - 1 };
   gSay(gRareSet().indexOf(t) >= 0 && n === 0 ? 'rare' : 'add_' + gFam(t), it);
@@ -12480,7 +13220,7 @@ A.gMonth = function (d) {
   var mon = app.querySelector('#gi' + d.k + ' .gmon.on'); if (mon) gBurst(mon, GQ_STYLE.steckbrief.c, 8);
 };
 A.gFlip = function () { var t = app.querySelector('.gticket'); if (t) { t.classList.toggle('flipped'); gVibe(10); } };
-A.gFor = function (d) { var it = gForm().items[+d.k]; if (it) { it.forId = d.v; gAfterClick(+d.k); gRender(); } };
+A.gFor = function (d) { var it = gForm().items[+d.k]; if (it) { it.forId = d.v; if (it.type === 'entweder') { it.pairs = entPick(d.v); it.ans = {}; } gAfterClick(+d.k); gRender(); } };
 A.gSubmit = function () {
   var G = gForm(), author = String(G.author || '').trim(), first = -1, out = [], cardsDone = G.cards || [];
   UI.qErr = '';

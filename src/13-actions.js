@@ -188,6 +188,7 @@ function draftToQ(d, author, master) {
     else if (E() && E().focus.length > 1 && !d.forId) err = 'Wähl aus, über wen die zwei Worte sind.';
     else { q.trait = tr; q.interest = ir; q.text = 'In zwei Worten'; }
   }
+  if (!err && GQ_MORE[d.type]) err = draftMore(d, q) || '';
   if (!err && d.type === 'tipp') {
     var mins = Number(d.answer);
     if (d.answer === '' || isNaN(mins) || mins < 5 || mins > 600) err = 'Tipp eine Zahl zwischen 5 und 600 Minuten.';
@@ -226,12 +227,13 @@ A.gAdd = function (d) {
   var it = qDraftNew(G.author); it.type = t; it.key = 'k' + Date.now().toString(36) + Math.floor(Math.random() * 1000);
   if (t === 'luege' || t === 'auswahl') it.correct = -1;
   if (t === 'bereich') { it.min = '0'; it.max = '100'; }
-  if ((t === 'steckbrief' || t === 'worte') && E() && E().focus.length > 1) {
+  if ((t === 'steckbrief' || t === 'worte' || t === 'entweder') && E() && E().focus.length > 1) {
     var have = G.items.filter(function (x) { return x.type === t; });
     have.forEach(function (x, i) { if (!x.forId) x.forId = E().focus[i].id; });
     var free = E().focus.filter(function (p) { return !have.some(function (x) { return x.forId === p.id; }); })[0];
-    it.forId = have.length && free ? free.id : t === 'worte' ? E().focus[0].id : '';
+    it.forId = have.length && free ? free.id : t === 'worte' || t === 'entweder' ? E().focus[0].id : '';
   }
+  if (GQ_MORE[t]) gAddMore(it, t);
   G.items.push(it); UI.qErr = '';
   UI.gBump = t; UI.gNew = it.key; UI.gFlyT = { t: t, i: G.items.length - 1 };
   gSay(gRareSet().indexOf(t) >= 0 && n === 0 ? 'rare' : 'add_' + gFam(t), it);
@@ -264,7 +266,7 @@ A.gMonth = function (d) {
   var mon = app.querySelector('#gi' + d.k + ' .gmon.on'); if (mon) gBurst(mon, GQ_STYLE.steckbrief.c, 8);
 };
 A.gFlip = function () { var t = app.querySelector('.gticket'); if (t) { t.classList.toggle('flipped'); gVibe(10); } };
-A.gFor = function (d) { var it = gForm().items[+d.k]; if (it) { it.forId = d.v; gAfterClick(+d.k); gRender(); } };
+A.gFor = function (d) { var it = gForm().items[+d.k]; if (it) { it.forId = d.v; if (it.type === 'entweder') { it.pairs = entPick(d.v); it.ans = {}; } gAfterClick(+d.k); gRender(); } };
 A.gSubmit = function () {
   var G = gForm(), author = String(G.author || '').trim(), first = -1, out = [], cardsDone = G.cards || [];
   UI.qErr = '';

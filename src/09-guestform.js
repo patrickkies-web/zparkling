@@ -137,6 +137,7 @@ function gMissing(it) {
       else if (!gNum(it.answer) || Number(it.answer) < Number(it.min) || Number(it.answer) > Number(it.max)) m.push('Lösung im Bereich');
       break;
     case 'aufgabe': if (!t) m.push('Aufgabe'); break;
+    default: if (typeof gMissingMore === 'function') gMissingMore(it, m); break;
     case 'worte':
       if (!String(it.trait || '').trim()) m.push('ein Wort, das die Person beschreibt');
       if (!String(it.interest || '').trim()) m.push('ein Interesse');
@@ -358,6 +359,7 @@ function gPreview(it) {
   else if (it.type === 'tipp') lines.push('Am Ende des Abends: Wer lag mit seinem Tipp am nächsten dran?');
   else if (it.type === 'worte') { var iw = String(it.interest || '').trim(); lines.push(iw ? 'Daraus werden eigene Fragen und Sprüche für ' + W + ', zum Beispiel rund um ' + iw + '.' : 'Aus allen Worten der Gäste werden Fragen und Sprüche, die es nur bei ' + W + ' gibt.'); }
   else if (it.type === 'aufgabe') lines.push(t ? 'Aufgabe für ' + W + ': ' + t : 'Hier erscheint deine Aufgabe für ' + W + '.');
+  else if (GQ_MORE[it.type]) lines = lines.concat(gPreviewMore(it, A, W, t));
   else lines.push(t || 'Hier erscheint deine Frage, so wie sie im Spiel aussieht.');
   var extra = '';
   if (it.type === 'auswahl') { var o = it.options.filter(function (x) { return String(x || '').trim(); }); if (o.length) extra = '<span class="gprev-o">' + o.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') + '</span>'; }
@@ -368,6 +370,7 @@ function gStat(it) {
   return '<span class="gst">Fehlt noch: ' + esc(gMissing(it).join(', ')) + '</span>';
 }
 function gLiveW(it) {
+  if (GQ_MORE[it.type]) return gLiveMore(it);
   if (it.type === 'steckbrief') {
     var pills = [], n = gYears(it), b = parseBday(it.bday);
     if (n != null) pills.push([emb('cheers', 20), n === 0 ? 'Frisch dabei, seit diesem Jahr' : '<b class="gcnt" data-to="' + n + '">' + n + '</b>' + (n === 1 ? ' Jahr' : ' Jahre') + ' Freundschaft' + (n >= 10 ? ', alter Hase!' : ''), 'pop']);
@@ -472,7 +475,7 @@ function gRender() { render(); gAfter(); }
 /* ---------- the cards ---------- */
 function gForBlock(it, i) {
   var who = E() ? E().focus : [];
-  if (it.type === 'tipp' || who.length < 2) return '';
+  if (it.type === 'tipp' || it.type === 'zahl' || who.length < 2) return '';
   return '<span class="eyebrow mt14 block">Über wen?</span><div class="chips mt10" role="group" aria-label="Über wen">' +
     (it.type === 'worte' ? '' : '<button type="button" class="chip-btn sm' + (!it.forId ? ' is-sel' : '') + '" data-act="gFor" data-k="' + i + '" data-v="" aria-pressed="' + !it.forId + '">Alle</button>') +
     who.map(function (p) { var s = it.forId === p.id; return '<button type="button" class="chip-btn sm' + (s ? ' is-sel' : '') + '" data-act="gFor" data-k="' + i + '" data-v="' + p.id + '" aria-pressed="' + s + '">' + face(p, 22) + esc(p.name) + '</button>'; }).join('') + '</div>';
@@ -514,6 +517,8 @@ function gFields(it, i) {
   } else if (it.type === 'aufgabe') {
     o += gField('Was muss ' + esc(W) + ' tun?', 'qText' + s, b + 'text', it.text, 'z. B. Den Trinkspruch vom Abiball aufsagen', 'area') +
       gField('So wird gewertet', 'qNote' + s, b + 'note', it.note, 'z. B. Geschafft, wenn zwei Gäste es bestätigen', 'area');
+  } else if (GQ_MORE[it.type]) {
+    o += gFieldsMore(it, i, b, s, W);
   } else {
     o += gField('Deine Frage', 'qText' + s, b + 'text', it.text, 'Was willst du über ' + W + ' wissen?', 'area');
     if (it.type === 'schaetzen') o += '<div class="grid2">' + gField('Lösung', 'qAns' + s, b + 'answer', it.answer, 'z. B. 31', 'num') + gField('Einheit', 'qUnit' + s, b + 'unit', it.unit, 'z. B. Paar', 'text') + '</div>';

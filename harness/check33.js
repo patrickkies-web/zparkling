@@ -47,7 +47,7 @@ const typing = (c, on) => { c.document.activeElement = on ? { tagName: 'INPUT' }
   c.A.setEventAnlass({ v: 'treppe' }); ok(c.E().anlass === 'treppe', 'A party type is switched with one tap');
   c.A.setEventAnlass({ v: 'socken' });
   c.A.openGuestForm(); c.gPass().welcomed = true; h = c.V.guestForm();
-  ok((h.match(/data-act="gAdd"/g) || []).length === 3 && /Noch 6 weitere Beitragsarten/.test(h), 'Guest view: three kinds open, the others only counted');
+  ok((h.match(/data-act="gAdd"/g) || []).length === 4 && /Noch 8 weitere Beitragsarten/.test(h), 'Guest view: four kinds open, the others only counted');
   c.A.gAdd({ v: 'steckbrief' }); ok(!c.gForm().items.length, 'A locked kind cannot be added');
   const kinds = {}; for (let i = 0; i < 60; i++) kinds[c.gkPickType().type] = 1;
   ok(Object.keys(kinds).every(k => ['portrait', 'wenn'].indexOf(k) >= 0), 'Bonus cards: only the two open kinds (' + Object.keys(kinds).join(', ') + ')');
