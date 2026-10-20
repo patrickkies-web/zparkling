@@ -1,0 +1,25 @@
+const { chromium } = (() => { try { return require('playwright'); } catch (e) { return require('/opt/npm-tools/node_modules/playwright'); } })();
+const path = require('path');
+(async () => {
+  const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
+  const page = await browser.newPage({ viewport: { width: 400, height: 860 } });
+  const errs = [];
+  page.on('pageerror', e => errs.push(e.message));
+  await page.addInitScript(() => { localStorage.setItem('altesocke.tour', JSON.stringify({ done: 1, name: '', roll: 0 })); });
+  await page.goto('file://' + path.join(__dirname, 'debug.html'));
+  const ev = c => page.evaluate(c => window.__ev(c), c);
+  await ev("A.loadDemo(); A.openGuestForm(); UI.gForm.author = 'Paula'; A.gAdd({ v: 'worte' }); var it = gForm().items[0]; it.forId = E().focus[0].id; it.trait = 'herzlich'; it.interest='Kochen'; gRender();");
+  await page.waitForTimeout(3800);
+  await page.click('#gdraw');
+  await page.waitForTimeout(1500);
+  const st = await ev("JSON.stringify({ ac: UI.gkAC && UI.gkAC.state, nodes: GKS ? GKS.nodes.length : -1, fx: !!GKFX, sw: GKFX ? GKFX.sw.length : -1 })");
+  console.log('during', st);
+  await page.click('.gk-mute'); await page.waitForTimeout(300);
+  console.log('muted', await ev("JSON.stringify({ on: gkSoundOn(), s: !!GKS })"));
+  await page.click('.gk-mute'); await page.waitForTimeout(200);
+  await page.click('.gk-stage'); await page.waitForTimeout(600);
+  console.log('skipped', await ev("JSON.stringify({ cls: document.getElementById('gkov').className, s: !!GKS, fx: GKFX && GKFX.burst })"));
+  await page.waitForTimeout(2500);
+  console.log(errs.length ? 'ERRORS ' + errs.join(' | ') : 'no errors');
+  await browser.close();
+})();

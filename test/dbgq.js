@@ -1,0 +1,22 @@
+const { chromium } = (() => { try { return require('playwright'); } catch (e) { return require('/opt/npm-tools/node_modules/playwright'); } })();
+const path = require('path');
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 400, height: 860 } });
+  page.on('pageerror', e => console.log('ERR', e.message));
+  await page.addInitScript(() => { localStorage.setItem('altesocke.tour', JSON.stringify({ done: 1, name: '', roll: 0 })); });
+  await page.goto('file://' + path.join(__dirname, 'debug.html'));
+  const ev = c => page.evaluate(c => window.__ev(c), c);
+  await ev("A.loadDemo(); go('questions');");
+  await page.waitForTimeout(800);
+  await ev("document.querySelector('.body').scrollTop = 2900");
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: path.join(__dirname, 'dbgq-1.png') });
+  await ev("document.querySelector('.body').scrollTop = 3700");
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: path.join(__dirname, 'dbgq-2.png') });
+  await ev("document.querySelector('.body').scrollTop = 4500");
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: path.join(__dirname, 'dbgq-3.png') });
+  await browser.close();
+})();

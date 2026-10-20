@@ -1,0 +1,20 @@
+const { chromium } = (() => { try { return require('playwright'); } catch (e) { return require('/opt/npm-tools/node_modules/playwright'); } })();
+const path = require('path');
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 400, height: 860 } });
+  page.on('pageerror', e => console.log('pageerror: ' + e.message + '\n' + e.stack));
+  page.on('console', m => { if (m.type() === 'error') console.log('console: ' + m.text()); });
+  await page.addInitScript(() => { try { localStorage.setItem('altesocke.tour', JSON.stringify({ done: 1, name: '', roll: 0 })); } catch (e) {} });
+  await page.goto('file://' + path.join(__dirname, 'debug.html'));
+  const ev = code => page.evaluate(c => window.__ev(c), code);
+  await ev("A.loadDemo(); A.matPreset({v:'all'}); A.openRun(); A.startRun();");
+  await ev("var r=R(); r.pending = makeGameStep(r.who[0], {focus:[r.who[0]], together:'gemeinsam', variant:'socke', themes: themesOf(r.who)}, 'zwiebel', 'duellGast'); r.steps=1; commit(); go('step');");
+  await page.click('[data-act="chSkip"]');
+  console.log(await ev("JSON.stringify(R().pending.ch)"));
+  const n = await page.$$eval('[data-act="stepResolve"]', els => els.map(e => e.outerHTML.slice(0, 120)));
+  console.log(n);
+  await page.click('[data-act="stepResolve"][data-v="fail"]');
+  console.log('result', await ev("JSON.stringify(R().pending.result && R().pending.result.title)"), await ev("UI.screen"));
+  await browser.close();
+})();

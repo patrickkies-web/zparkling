@@ -1,0 +1,20 @@
+const { chromium } = (() => { try { return require('playwright'); } catch (e) { return require('/opt/npm-tools/node_modules/playwright'); } })();
+const path = require('path'), fs = require('fs');
+const OUT = path.join(__dirname, 'ch29'); fs.mkdirSync(OUT, { recursive: true });
+(async () => {
+  const browser = await chromium.launch(); const errors = [];
+  const p = await (await browser.newContext({ viewport: { width: 375, height: 812 }, deviceScaleFactor: 2 })).newPage();
+  p.on('pageerror', e => errors.push(e.message));
+  await p.addInitScript(() => { localStorage.setItem('altesocke.tour', JSON.stringify({ done: 1, name: '', roll: 0 })); localStorage.setItem('altesocke.sound', 'aus'); });
+  await p.goto('file://' + path.join(__dirname, 'debug.html'));
+  const ev = c => p.evaluate(c => window.__ev(c), c);
+  const mk = "var r = R(), main = r.who[0]; snapshot('task'); r.pending = makeGameStep(main, { focus: [main], together: r.together, variant: r.variant, themes: themesOf(r.who) }, 'zwiebel', 'duellGast'); r.pending.track = r.tracks[0].id; r.pending.unitNo = 1; go('step');";
+  await ev("A.loadDemo(); A.matPreset({ v: 'all' }); A.openRun(); UI.cfgStep = 3; A.startRun(); kickClose(); " + mk);
+  await p.waitForTimeout(500); await p.screenshot({ path: path.join(OUT, '1-nolist.png'), fullPage: false });
+  await ev("A.stepResolve({ v: 'ok' })"); await p.waitForTimeout(400); await p.screenshot({ path: path.join(OUT, '2-nolist-result.png') });
+  await ev("A.stepContinue(); E().crew = [{ name: 'Tom' }, { name: 'Lea' }, { name: 'Kalle' }]; " + mk);
+  await p.waitForTimeout(500); await p.screenshot({ path: path.join(OUT, '3-list-pick.png') });
+  await p.click('[data-act="chGuest"][data-v="Tom"]'); await p.waitForTimeout(200); await p.click('[data-act="chGo"]'); await p.waitForTimeout(400);
+  await p.screenshot({ path: path.join(OUT, '4-list-play.png') });
+  await browser.close(); console.log(errors.length ? errors.join('\n') : 'no errors');
+})();

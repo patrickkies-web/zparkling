@@ -1,0 +1,23 @@
+const { chromium } = (() => { try { return require('playwright'); } catch (e) { return require('/opt/npm-tools/node_modules/playwright'); } })();
+const path = require('path');
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 400, height: 860 } });
+  page.on('pageerror', e => console.log('ERR', e.message));
+  await page.addInitScript(() => { localStorage.setItem('altesocke.tour', JSON.stringify({ done: 1, name: '', roll: 0 })); });
+  await page.goto('file://' + path.join(__dirname, 'debug.html'));
+  const ev = c => page.evaluate(c => window.__ev(c), c);
+  const force = (type, n) => "(function(){ var _p = gkPickType; gkPickType = function(){ return { type: '" + type + "', n: " + n + " }; }; gkOpen(); gkPickType = _p; })()";
+  await ev('A.loadDemo(); A.openGuestForm();');
+  await ev("UI.gForm.author = 'Paula'; A.gAdd({ v: 'worte' }); var it = gForm().items[0]; it.forId = E().focus[0].id; it.trait = 'herzlich'; it.interest = 'Kochen'; gRender();");
+  await page.waitForTimeout(2600);
+  await ev(force('portrait', 0)); await page.waitForTimeout(3500);
+  await ev("A.gkStart(); UI.gk.strokes = [[0].concat([].concat.apply([], Array.from({length: 30}, function (_, i) { var a = i / 29 * Math.PI * 2; return [Math.round(500 + Math.cos(a) * 280), Math.round(520 + Math.sin(a) * 320)]; }))), [1, 380, 650, 450, 700, 550, 700, 620, 650], [0, 400, 430, 405, 440], [0, 600, 430, 605, 440]]; A.gkDone();");
+  await page.waitForTimeout(3200);
+  await ev(force('spruch', 4)); await page.waitForTimeout(3500);
+  await page.fill('#gkin', 'Das kriegen wir schon hin!'); await ev('A.gkDone()');
+  await page.waitForTimeout(3200);
+  await ev("document.querySelector('.body').scrollTop = 99999"); await page.waitForTimeout(400);
+  await page.screenshot({ path: path.join(__dirname, 'dbgmini.png') });
+  await browser.close();
+})();

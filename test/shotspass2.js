@@ -1,0 +1,32 @@
+const { chromium } = (() => { try { return require('playwright'); } catch (e) { return require('/opt/npm-tools/node_modules/playwright'); } })();
+const path = require('path'), fs = require('fs');
+const OUT = path.join(__dirname, 'pass2'); fs.mkdirSync(OUT, { recursive: true });
+(async () => {
+  const browser = await chromium.launch(); const errors = [], notes = [];
+  const p = await (await browser.newContext({ viewport: { width: 375, height: 812 }, deviceScaleFactor: 2, hasTouch: true })).newPage();
+  p.on('pageerror', e => errors.push(e.message));
+  const day = new Date(Date.now() + 5 * 86400000).toISOString().slice(0, 10);
+  await p.addInitScript(d => { localStorage.setItem('altesocke.tour', JSON.stringify({ done: 1, name: '', roll: 0 })); localStorage.setItem('altesocke.sound', 'aus'); }, day);
+  await p.goto('file://' + path.join(__dirname, 'debug.html'));
+  const ev = c => p.evaluate(c => window.__ev(c), c);
+  /* someone who already bought the pass earlier */
+  await ev("A.loadDemo(); S.demo = false; save(); lsSet(PASS_KEY, { days: 14, event: '" + day + "', bought: Date.now() - 86400000, changes: 0, test: true }); go('pass');");
+  await p.waitForTimeout(600); await p.screenshot({ path: path.join(OUT, '1-active.png'), fullPage: true });
+  await p.tap('.btn-dark[data-act="passReplay"]'); await p.waitForTimeout(2400);
+  if (!(await ev("!!document.getElementById('pvov')"))) errors.push('replay did not start'); else notes.push('replay runs');
+  await p.screenshot({ path: path.join(OUT, '2-replay.png') });
+  await p.waitForTimeout(5200);
+  if (await ev("!!document.getElementById('pvov')")) errors.push('replay did not end');
+  await ev("(document.querySelector('.body')||{}).scrollTop = 9999"); await p.waitForTimeout(200);
+  await p.tap('[data-act="askConfirm"][data-v="passReset"]'); await p.waitForTimeout(300);
+  await p.tap('.confirm [data-act="passReset"]'); await p.waitForTimeout(500);
+  await p.screenshot({ path: path.join(OUT, '3-reset.png') });
+  const buy = await ev("!!document.querySelector('[data-act=\"passBuy\"]:not([disabled])')");
+  if (!buy) errors.push('after reset the buy button is not ready'); else notes.push('after reset: buy button ready, date kept');
+  await p.tap('[data-act="passBuy"]'); await p.waitForTimeout(2600);
+  if (!(await ev("!!document.getElementById('pvov') && UI.screen === 'home' && passActive()"))) errors.push('buying again did not show the reveal'); else notes.push('buying again shows the reveal over home');
+  await p.screenshot({ path: path.join(OUT, '4-bought.png') });
+  await ev("go('settings')"); await p.waitForTimeout(400);
+  const set = await ev("!!document.querySelector('[data-act=\"passReplay\"]')"); if (!set) errors.push('no replay in settings'); else notes.push('settings: replay button there');
+  await browser.close(); console.log(notes.join('\n')); console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'no errors');
+})();
