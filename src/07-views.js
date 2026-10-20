@@ -22,10 +22,10 @@ function topbar(back, title, right) {
 function tabbar(active) {
   var open = S.questions.filter(function (q) { return q.status === 'offen'; }).length;
   var tabs = [['home', 'Party', 'i-sparkle'], ['games', 'Spiele', 'i-pad'], ['questions', 'Fragen', 'i-bubble'], ['counter', U(), 'i-shot']];
-  return '<nav class="tabbar" aria-label="Hauptnavigation">' + tabs.map(function (t) {
+  return '<nav class="tabbar" aria-label="Hauptnavigation"><button type="button" class="tb-brand" data-act="go" data-to="home" aria-label="zparkling, zur Party">' + lpLogo(30) + '<b>zparkling</b></button>' + tabs.map(function (t) {
     var badge = t[0] === 'questions' && open ? '<span class="badge-dot">' + open + '</span>' : '';
     return '<button type="button" class="tab' + (active === t[0] ? ' on' : '') + '" data-act="go" data-to="' + t[0] + '"' + (active === t[0] ? ' aria-current="page"' : '') + '><span style="position:relative">' + icon(t[2], 22) + badge + '</span>' + esc(t[1]) + '</button>';
-  }).join('') + '</nav>';
+  }).join('') + '<button type="button" class="tab tb-set" data-act="go" data-to="settings">' + icon('i-gear', 20) + 'Einstellungen</button></nav>';
 }
 function stepper(act, value, data, label) {
   return '<div class="stepper"><button type="button" class="iconbtn sm" data-act="' + act + '" data-d="-1"' + (data || '') + ' aria-label="' + (label || '') + ' weniger">' + icon('i-minus', 16) + '</button><span class="val num">' + value + '</span><button type="button" class="iconbtn sm" data-act="' + act + '" data-d="1"' + (data || '') + ' aria-label="' + (label || '') + ' mehr">' + icon('i-plus', 16) + '</button></div>';
@@ -78,10 +78,15 @@ function demoBanner() {
   var bub = ''; for (var i = 0; i < 10; i++) bub += '<i style="--x:' + (6 + i * 9.5).toFixed(1) + '%;--d:' + ((i * 0.53) % 2.4).toFixed(2) + 's;--s:' + (3 + (i * 7) % 5) + 'px"></i>';
   return '<button type="button" class="demobar" data-act="go" data-to="pass"><span class="db-fizz" aria-hidden="true">' + bub + '</span><span class="db-shine" aria-hidden="true"></span><span class="db-e" aria-hidden="true">' + emb('crown', 28) + '</span><span class="stack grow" style="gap:1px;min-width:0;text-align:left"><b>Beispiel-Abend</b><small>Zum Reinschnuppern</small></span><span class="db-cta">' + icon('i-star', 14) + 'Game Pass</span></button>';
 }
+/* on a laptop these pages use the full width, in two columns (dk); the rest stays a centered column */
+var DESK_WIDE = ['home', 'games', 'questions', 'counter', 'run', 'cards'];
 function scr(head, body, foot, cls) {
   var db = demoBanner(); if (db) head = db + (head || '');
-  return '<div class="scr' + (cls ? ' ' + cls : '') + '">' + (head ? '<div class="head">' + head + '</div>' : '') + '<div class="body">' + body + '</div>' + (foot ? '<div class="foot">' + foot + '</div>' : '') + '</div>';
+  var dw = DESK_WIDE.indexOf(UI.screen) >= 0 ? ' dw' : '', tf = foot && foot.indexOf('class="tabbar"') >= 0 ? ' tabfoot' : '';
+  return '<div class="scr' + (cls ? ' ' + cls : '') + dw + (tf ? ' tabscr' : '') + '">' + (head ? '<div class="head">' + head + '</div>' : '') + '<div class="body">' + body + '</div>' + (foot ? '<div class="foot' + tf + '">' + foot + '</div>' : '') + '</div>';
 }
+/* two columns on a laptop; on a phone the blocks simply follow each other, in the same order */
+function dk(a, b, cls) { return '<div class="dk' + (cls ? ' ' + cls : '') + '"><div class="dk-a">' + a + '</div><div class="dk-b">' + b + '</div></div>'; }
 function confirmBox(text, sub, okAct, okLabel) {
   return '<div class="confirm mt14"><p class="name">' + text + '</p>' + (sub ? '<p class="small mt6">' + sub + '</p>' : '') + '<div class="cta-row mt10"><button type="button" class="btn-dark" style="flex:1;height:48px" data-act="cancelConfirm">Abbrechen</button><button type="button" class="btn-dark" style="flex:1;height:48px;background:var(--danger);color:var(--ink)" data-act="' + okAct + '">' + okLabel + '</button></div></div>';
 }
@@ -373,11 +378,11 @@ V.home = function () {
     '<button type="button" class="play' + (running ? '' : ready ? ' ready' + (fx === 'unlock' ? ' unlocked' : '') : ' locked') + '" data-act="heroGo"' + (!running && !ready ? ' aria-label="' + esc(runLabel()) + ', erst den Abend einstellen"' : '') + '><span>' + icon(!running && !ready ? 'i-lock' : 'i-play', 18) + '</span>' + runLabel() + (ready && !running ? '<i class="play-glint" aria-hidden="true"></i>' : '') + '</button>' +
     (running ? '' : '<button type="button" class="hero-hint plain" data-act="go" data-to="questions">' + icon('i-users', 16) + '<span class="grow">' + (homeGuestN() ? 'Mehr Gäste, mehr Spiele: ladet noch mehr ein.' : 'Ladet eure Gäste ein, sie bauen die Spiele mit.') + '</span><b>Einladen</b></button>') + '</div>' +
     (running ? '' : homeSetBar(ready)) +
-    homeGuestCard() + demoHomeHtml() +
+    homeGuestCard() + '\u0001' + demoHomeHtml() +
     '<div class="mt14" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">' +
     '<button type="button" class="stat plain" data-act="go" data-to="questions"><b class="num">' + openQ + '</b><span>' + (openQ === 1 ? 'Frage wartet' : 'Fragen warten') + ' auf Freigabe</span><small>' + okQ + ' freigegeben</small></button>' +
     '<button type="button" class="stat plain" data-act="go" data-to="counter"><b class="num">' + drinksTotal + '</b><span>' + esc(U()) + ' eingetragen</span><small>Antippen zum Eintragen</small></button></div>' +
-    factCard('home') +
+    factCard('home') + '\u0002' +
     '<h3 class="sec">Schnell spielen</h3><div class="games mt10">' +
     '<button type="button" class="gtile" data-act="freeQuick" data-v="wwe" style="background:var(--sun)"' + (e.focus.length < 2 ? ' disabled' : '') + '><svg class="art" aria-hidden="true" width="86" height="70" style="top:12px;right:8px"><use href="#i-bubbles"></use></svg><b>Wer würde eher?</b><small>' + (e.focus.length < 2 ? 'Ab zwei Fokus-Personen' : 'Gruppe stimmt per Link ab') + '</small></button>' +
     '<button type="button" class="gtile" data-act="freeQuick" data-v="schaetzen" style="background:var(--violet)"><span class="art" aria-hidden="true" style="top:10px;right:14px;font:900 64px/1 var(--display)">≈</span><b>Schätzen gegen die Gruppe</b><small>Schieberegler per Link</small></button>' +
@@ -385,6 +390,8 @@ V.home = function () {
     '<button type="button" class="gtile" data-act="freeQuick" data-v="spiel" style="background:#FF9A73"><span class="art" aria-hidden="true" style="top:14px;right:14px">' + icon('i-dice', 50) + '</span><b>Zufalls-Minispiel</b><small>' + playableCount() + ' spielbar mit eurem Material</small></button></div>';
   var right = '<button type="button" class="iconbtn" data-act="go" data-to="settings" aria-label="Einstellungen" style="width:48px;height:48px;border-radius:16px">' + icon('i-gear', 22) + '</button>';
   var head = '<div class="row" style="justify-content:space-between;align-items:flex-start"><div class="stack gap6" style="min-width:0"><span class="eyebrow inline-ic">' + icon('i-star', 14) + 'Du bist Spielleiter · ' + esc(when.date) + '</span><h1 class="h-big">' + esc(when.big) + '</h1></div><div class="row gap8"><button type="button" class="iconbtn" data-act="openTour" aria-label="Was kann die App?" style="width:48px;height:48px;border-radius:16px">' + icon('i-sparkle', 22) + '</button>' + right + '</div></div>';
+  var cut1 = body.indexOf('\u0001'), cut2 = body.indexOf('\u0002');
+  body = dk(body.slice(0, cut1), body.slice(cut1 + 1, cut2), 'dk-home') + body.slice(cut2 + 1);
   body = passStatusHtml(true) + body;
   var hin = UI.homeIn; UI.homeIn = false;
   return scr(head, body, tabbar('home'), hin ? 'hin' : '');
@@ -438,9 +445,9 @@ V.counter = function () {
     return '<div class="logrow"><span class="num sub" style="width:42px">' + tm + '</span><span class="grow" style="font-size:13px;font-weight:700">' + esc(p.name) + ' · ' + (d.n > 0 ? '+' : '') + d.n + ' ' + esc(e.unit) + (d.note ? ' <span class="sub">' + esc(d.note) + '</span>' : '') + '</span><span class="sub">' + (d.src === 'spiel' ? 'Spiel' : 'Hand') + '</span></div>';
   }).join('') || '<p class="small" style="padding:12px 0">Noch nichts eingetragen.</p>';
   var body = '<p class="small">Gezählt wird nur bei den Geburtstagskindern, damit der Pilot weiterrechnen kann. Was die Gäste trinken, ist ihre Sache.</p>' +
-    '<span class="eyebrow mt18 block">Im Fokus</span><div class="mt10">' + focusCards + '</div>' +
+    dk('<span class="eyebrow mt18 block">Im Fokus</span><div class="mt10">' + focusCards + '</div>',
     '<span class="eyebrow mt22 block">Zuletzt</span><div class="card padrows mt10">' + log + '</div>' +
-    (S.drinks.length ? '<button type="button" class="btn-ghost mt10" data-act="undoDrink">' + icon('i-undo', 18) + 'Letzten Eintrag löschen</button>' : '');
+    (S.drinks.length ? '<button type="button" class="btn-ghost mt10" data-act="undoDrink">' + icon('i-undo', 18) + 'Letzten Eintrag löschen</button>' : ''));
   var head = UI.counterFrom ? topbar(UI.counterFrom, esc(e.unit) + '-Zähler') : topbar(null, esc(e.unit) + '-Zähler');
   return scr(head, body, UI.counterFrom ? '' : tabbar('counter'));
 };
@@ -604,15 +611,15 @@ V.questions = function () {
   var aufg = S.questions.filter(function (q) { return q.type === 'aufgabe' && questionPlayable(q); }).length;
   /* a long page: chips at the top jump to each part */
   var jump = '<nav class="qx-jump" aria-label="Springen zu">' + [['qs-neu', 'Neu' + (open.length ? ' · ' + open.length : '')], ['qs-link', 'Einladen'], AI_HOST ? ['qs-ki', 'KI'] : null, jokerAll().length ? ['qs-joker', 'Joker'] : null, ['qs-runden', 'Runden'], ['qs-alle', 'Alle Beiträge']].filter(Boolean).map(function (x) { return '<button type="button" class="qx-jb' + (x[0] === 'qs-neu' && open.length ? ' hot' : '') + '" data-act="jump" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
-  var body = jump + '<div class="qx' + (enter ? ' enter' : '') + '">' + qHero(rd.total) + qCollectOverview() +
-    '<div class="mt14" id="qs-link">' + collectShare() + '</div>' +
+  var body = jump + '<div class="qx' + (enter ? ' enter' : '') + '">' + dk(qHero(rd.total) + qCollectOverview(),
+    '<div class="mt14" id="qs-link">' + collectShare() + '</div>') + '\u0001' +
     '<h3 class="qx-h" id="qs-neu">Neu eingegangen' + (open.length ? '<span class="qx-n">' + open.length + '</span>' : '') + (open.length >= 2 ? '<button type="button" class="qx-all" data-act="qAllOk">' + icon('i-check', 14) + 'Alle freigeben</button>' : '') + '</h3>' +
     (open.length ? open.map(qCard).join('') : '<div class="qx-empty">' + emb('letter', 34) + '<span>Alles geprüft. Neue Beiträge landen hier, du gibst sie mit einem Tipp frei.</span></div>') +
-    aiSection() +
+    '\u0002' + aiSection() +
     jokerSection() +
     '<h3 class="qx-h" id="qs-runden">Daraus baut die App Runden<span class="qx-n mint">' + rd.total + '</span></h3>' +
     '<p class="qx-lead">Welche Runde wann kommt, bleibt eine Überraschung. Je mehr die Gäste schicken, desto mehr davon.' + (aufg ? ' Dazu ' + aufg + (aufg === 1 ? ' Aufgabe, die einzeln kommt.' : ' Aufgaben, die einzeln kommen.') : '') + '</p>' +
-    '<div class="qx-rounds">' + rd.html + '</div>' +
+    '<div class="qx-rounds">' + rd.html + '</div>' + '\u0003' +
     '<h3 class="qx-h" id="qs-alle">Alle Beiträge</h3>' +
     '<div class="seg mt10" style="grid-template-columns:repeat(2,minmax(0,1fr));height:46px" role="group" aria-label="Freigegeben oder abgelehnt">' + [['ok', 'Freigegeben'], ['nein', 'Abgelehnt']].map(function (x) { var s = f === x[0]; return '<button type="button" class="' + (s ? 'is-sel' : '') + '" data-act="qFilter" data-v="' + x[0] + '" aria-pressed="' + s + '">' + x[1] + ' ' + cnt[x[0]] + '</button>'; }).join('') + '</div>' +
     '<div class="qx-types" role="group" aria-label="Nach Art filtern">' + QTYPES.filter(function (t) { return demoTypeOk(t[0]); }).map(function (t) { var s = kind === t[0], n = tc[t[0]], st = qStyle(t[0]); return '<button type="button" class="qx-t' + (s ? ' is-sel' : '') + (n ? '' : ' zero') + '" style="--tc:' + st.c + '" data-act="qKind" data-v="' + t[0] + '" aria-pressed="' + s + '">' + emb(st.e, 26) + '<span><b>' + n + '</b><small>' + esc(QK_SHORT[t[0]]) + '</small></span></button>'; }).join('') + '</div>' +
@@ -620,6 +627,8 @@ V.questions = function () {
     (list.length ? '<div class="qx-list">' + (more ? list.slice(0, 6) : list).map(qRow).join('') + '</div>' + (more ? '<button type="button" class="qx-clear" data-act="qAllShow">' + icon('i-next', 14) + 'Alle ' + list.length + ' zeigen</button>' : '') : '<div class="qx-empty">' + emb('jar', 34) + '<span>' + (f === 'nein' ? 'Nichts abgelehnt.' : 'Hier ist noch nichts freigegeben.') + '</span></div>') +
     '<button type="button" class="qx-own" data-act="openMasterForm"><span class="qx-own-ic">' + emb('pen', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Eigene Frage anlegen</b><small>Landet direkt bei den freigegebenen</small></span>' + icon('i-plus', 20) + '</button>' +
     factCard('questions') + '</div>';
+  var c1 = body.indexOf('\u0001'), c2 = body.indexOf('\u0002'), c3 = body.indexOf('\u0003');
+  body = body.slice(0, c1) + dk(body.slice(c1 + 1, c2), body.slice(c2 + 1, c3)) + body.slice(c3 + 1);
   return scr(topbar(null, 'Beiträge der Gäste'), body, tabbar('questions'));
 };
 /* the QR code, big enough to scan from the master's phone */

@@ -1138,6 +1138,7 @@ var wrap = document.getElementById('wrap'), device = document.getElementById('de
 function fit() {
   document.body.classList.add('full');
   document.body.classList.toggle('wide', window.innerWidth > 640);
+  document.body.classList.toggle('desk', window.innerWidth >= 1000);
 }
 window.addEventListener('resize', fit);
 

@@ -2103,6 +2103,48 @@ body.full { --top: calc(env(safe-area-inset-top, 0px) + 14px); --bottom: calc(en
   .lp-hero { padding-bottom: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { .lp-drop, .lp-sk { animation: none; } }
+
+/* ---------- v36: on a laptop it is a website: navigation on top, wide pages in two columns ---------- */
+.dk, .dk-a, .dk-b { display: contents; }
+.tb-brand, .tb-set { display: none; }
+.hin .dk-a > *, .hin .dk-b > * { animation: wlin .55s cubic-bezier(.2,1.2,.4,1) both; animation-delay: .34s; }
+.hin .dk-a > :nth-child(1) { animation-delay: .05s; } .hin .dk-a > :nth-child(2) { animation-delay: .12s; } .hin .dk-a > :nth-child(3) { animation-delay: .19s; }
+.hin .dk-b > :nth-child(1) { animation-delay: .16s; } .hin .dk-b > :nth-child(2) { animation-delay: .23s; } .hin .dk-b > :nth-child(3) { animation-delay: .3s; }
+body.desk .scr:not(.lp) { --col: 760px; --gx: max(32px, calc((100% - var(--col)) / 2)); }
+body.desk .scr.dw { --col: 1160px; }
+body.desk .head { padding-top: 22px; }
+body.desk .body { scrollbar-width: thin; scrollbar-color: #3A3463 transparent; }
+body.desk .body::-webkit-scrollbar { display: block; width: 10px; }
+body.desk .body::-webkit-scrollbar-thumb { background: #3A3463; border-radius: 10px; border: 2px solid var(--ink); }
+/* the navigation */
+body.desk .foot.tabfoot { order: -1; padding: 0 var(--gx); background: rgba(12,10,26,.86); border-bottom: 1px solid var(--line); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+body.desk .tabbar { height: 68px; padding: 0; border: 0; border-radius: 0; background: transparent; justify-content: flex-start; gap: 4px; }
+body.desk .tb-brand { display: inline-flex; align-items: center; gap: 10px; margin-right: auto; padding: 0; border: 0; background: transparent; color: var(--white); }
+body.desk .tb-brand b { font: 800 19px var(--display); letter-spacing: -0.02em; }
+body.desk .tab { flex-direction: row; width: auto; gap: 9px; height: 44px; padding: 0 14px; border-radius: 14px; font-size: 15px; font-weight: 700; color: var(--muted); }
+body.desk .tabscr .tb3 { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+body.desk .tabscr .tb3 > span:empty { display: none; }
+body.desk .tabscr .topbar-title { flex: 1; text-align: left; font: 800 32px/1.15 var(--display); letter-spacing: -0.025em; overflow: visible; white-space: normal; }
+body.desk .tab:hover { color: var(--text); background: var(--surface); }
+body.desk .tab.on { background: var(--surface-2); color: var(--white); }
+body.desk .tab.on .ic { color: var(--accent); }
+body.desk .tb-set { display: flex; margin-left: 6px; }
+body.desk .scr.dw .head .iconbtn[data-to="settings"] { display: none; }
+/* two columns */
+body.desk .dk { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 0 32px; align-items: start; }
+body.desk .dk-a, body.desk .dk-b { display: block; min-width: 0; }
+body.desk .dk > div > :first-child { margin-top: 0 !important; }
+body.desk .dk + * { margin-top: 28px; }
+body.desk .qx .dk { margin-top: 14px; }
+body.desk .dk-run { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+body.desk .games { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+body.desk .gtile { height: 168px; }
+/* buttons at the bottom of a page stay a comfortable width */
+body.desk .foot:not(.tabfoot) { align-items: center; }
+body.desk .foot:not(.tabfoot) > * { width: 100%; max-width: 560px; box-sizing: border-box; }
+body.desk .toast { bottom: 40px; }
+@media (hover: hover) { body.desk .gtile:hover, body.desk .stat:hover { filter: brightness(1.05); } }
+@media (prefers-reduced-motion: reduce) { .hin .dk-a > *, .hin .dk-b > * { animation: none; } }
 </style>
 
 <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">

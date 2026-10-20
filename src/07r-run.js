@@ -245,7 +245,7 @@ V.run = function () {
   else if (r.variant === 'wuerfel') primary = '<button type="button" class="cta" data-act="runNext">' + icon('i-dice', 22) + (r.dice === 'echt' ? 'Gewürfelte Zahl eintragen' : 'Würfeln') + '</button>';
   else primary = '<button type="button" class="cta" data-act="runNext">' + (u.ic === 'sock' ? sockIc('currentColor', 15) : icon(u.ic || 'i-flag', 20)) + esc(u.unit) + ' ' + Math.min(tr.total, tr.pos + 1) + (fam === 'frei' ? ' starten' : ' aufdecken') + '</button>';
   var demoCard = demoEnd ? '<div class="dm-end mt14">' + emb('crown', 40) + '<span class="stack grow" style="gap:3px;min-width:0"><b>Das war der Beispiel-Abend</b><span>' + DEMO_STEPS + ' Stationen zum Reinschnuppern. Mit dem Game Pass spielt ihr den ganzen Abend, mit allen Spielen und Gäste-Runden.</span></span></div>' : '';
-  var body = cockpit + demoCard + tiles + race + (demoEnd ? '' : peekCard()) + pilot + extras + hist + tools;
+  var body = dk(cockpit + demoCard + tiles + race, (demoEnd ? '' : peekCard()) + pilot + extras + hist + tools, 'dk-run');
   var head = '<div class="topbar tb3">' + navBtn('data-act="go" data-to="home" aria-label="Zur Party, das Spiel bleibt gespeichert"', 'i-back', 'Party') + '<span class="live"><i></i>Läuft</span>' +
     navBtn('data-act="runUndo" aria-label="Letzten Schritt rückgängig machen"' + (r.hist && r.hist.length ? '' : ' disabled'), 'i-undo', 'Rückgängig') + '</div>';
   /* remember what was shown once it had time to play, so the next visit animates only what changed */
