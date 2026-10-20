@@ -27,7 +27,7 @@ und die Testseiten. Nach jeder Änderung in `src/` bauen und `public/index.html`
 Workers & Pages → Erstellen → Pages → Mit Git verbinden → `zparkling` wählen.
 
 - Framework: keins
-- Build-Befehl: leer lassen
+- Build-Befehl: `exit 0` (baut nichts, die Seite liegt fertig in `public/`)
 - Ausgabeverzeichnis: `public`
 
 Danach unter „Benutzerdefinierte Domains“ die eigene Domain hinzufügen. Jeder Push auf `main` geht automatisch online.
