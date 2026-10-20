@@ -50,7 +50,7 @@ V.landing = function () {
     '<div class="lp-chip" style="--tc:' + ls.c + '">' + emb(ls.e, 30) + '<span class="stack" style="gap:1px"><b>Zwei Wahrheiten, eine Lüge</b><span>Drei Sätze, einer ist gelogen</span></span></div>' +
     '</div></section>';
   var occ = '<section class="lp-sec"><h2 class="lp-h2">Für jeden Anlass</h2>' +
-    '<p class="lp-p lp-narrow">Beim Sockenkranz wird abgenommen, bei der Treppe gefegt, beim JGA ganz ohne Kranz gespielt. Tippt einen Anlass an und seht euch den Beispiel-Abend dazu an.</p>' +
+    '<p class="lp-p lp-narrow">Beim Sockenkranz wird abgenommen, bei der Treppe gefegt, beim JGA ganz ohne Kranz gespielt. Tippt einen Anlass an und seht euch den Beispiel-Abend dazu an. Wie die Bräuche genau funktionieren, steht im <a class="lp-a" href="/ratgeber/">Ratgeber</a>.</p>' +
     '<div class="lp-occs dp-list">' + EVENT_TYPES.map(lpOcc).join('') + '</div></section>';
   var fair = '<section class="lp-sec"><h2 class="lp-h2">Mit eingebauter Bremse</h2><div class="lp-fair">' +
     '<div><span class="lp-fair-e">' + emb('cheers', 44) + '</span><b>Höchstens ein Pinnchen pro Spiel</b><p>Pro Spiel und Person nie mehr als eins. Wer viel gewinnt, trinkt weniger.</p></div>' +
@@ -64,7 +64,7 @@ V.landing = function () {
     '<div class="lp-ctas lp-ctas-col">' + lpBtn('openDemoPick', 'Beispiel-Abend ansehen', 'ink') + lpBtn('go', 'Game Pass ansehen', 'ghost ink-ghost').replace('data-act="go"', 'data-act="go" data-to="pass"') + '</div></div></section>';
   var end = '<section class="lp-end"><h2 class="lp-h2">Bereit für eure Party?</h2><p class="lp-p">Das Intro zeigt in gut einer Minute, was zparkling aus eurem Abend macht.</p>' +
     '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('newEvent', 'Gleich eure Party anlegen', 'ghost') + '</div></section>' +
-    '<footer class="lp-foot"><span class="lp-brand">' + lpLogo(24) + '<b>zparkling</b></span><span>Das Partyspiel für euren Abend</span></footer>';
+    '<footer class="lp-foot"><span class="lp-brand">' + lpLogo(24) + '<b>zparkling</b></span><span>Das Partyspiel für euren Abend · <a class="lp-a" href="/ratgeber/">Ratgeber zu Sockenkranz, Schachtelkranz, Treppe fegen</a></span></footer>';
   return scr('', top + lpMarquee() + hero + steps + guests + occ + fair + pass + end, '', 'lp');
 };
 A.lpIntro = function () { A.openTour(); };

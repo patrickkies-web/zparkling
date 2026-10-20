@@ -1,0 +1,105 @@
+/* zparkling Ratgeber: dieselbe Linie wie die App (Nachtblau, Unbounded/Figtree, Tickets, Konfetti-Farben) */
+:root { --page: #0C0A1A; --ink: #15122B; --surface: #211D3D; --surface-2: #2C2750; --line: #312C58; --line-2: #3A3463; --text: #F4F1FF; --white: #FFFFFF; --muted: #ABA4D4; --orange: #FF7A45; --mint: #48D9A6; --violet: #9886FF; --violet-text: #B3A6FF; --sun: #FFC940; --pink: #FF8FC4; --display: 'Unbounded', 'Arial Black', system-ui, sans-serif; --body: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif; --gx: max(20px, env(safe-area-inset-left, 0px)); color-scheme: dark; }
+* { box-sizing: border-box; }
+html { background: var(--page); scroll-behavior: smooth; }
+body { margin: 0; background: var(--page); color: var(--text); font: 500 17px/1.55 var(--body); -webkit-font-smoothing: antialiased; }
+a { color: var(--violet-text); }
+img { max-width: 100%; height: auto; }
+.rg-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px var(--gx); max-width: 1100px; margin: 0 auto; }
+.rg-brand { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; color: var(--white); }
+.rg-brand b { font: 800 20px var(--display); letter-spacing: -0.02em; }
+.rg-nav { display: flex; align-items: center; gap: 14px; }
+.rg-nav > a:not(.rg-btn) { color: var(--text); font-weight: 700; text-decoration: none; }
+.rg-btn, .rg-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 10px 22px; border-radius: 18px; background: var(--orange); color: var(--ink); font: 800 16px var(--body); text-decoration: none; box-shadow: inset 0 -5px 0 rgba(0,0,0,.18); max-width: 100%; text-align: center; }
+.rg-app .rg-cta { width: 100%; }
+.rg-btn.sm { min-height: 42px; padding: 6px 16px; font-size: 14px; border-radius: 14px; white-space: nowrap; }
+.rg-btn:active, .rg-cta:active { transform: translateY(2px); box-shadow: inset 0 -3px 0 rgba(0,0,0,.18); }
+.rg-main { max-width: 760px; margin: 0 auto; padding: 8px var(--gx) 60px; }
+.rg-crumbs { display: flex; flex-wrap: wrap; gap: 6px; font-size: 13px; color: var(--muted); margin: 6px 0 14px; }
+.rg-crumbs a { color: var(--muted); text-decoration: none; }
+.rg-crumbs a:hover { color: var(--white); }
+/* Hero: Farbfläche mit Girlande, wie die Hero-Karte der App */
+.rg-hero { position: relative; overflow: hidden; border-radius: 32px; background: var(--c, var(--orange)); color: var(--ink); padding: 84px 24px 24px; box-shadow: inset 0 -8px 0 rgba(0,0,0,.16); }
+.rg-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(rgba(21,18,43,.1) 1.2px, transparent 1.6px) 0 0 / 12px 12px; pointer-events: none; }
+.rg-garland { position: absolute; left: 0; top: 0; width: 100%; height: 76px; }
+@media (min-width: 700px) { .rg-garland { height: 96px; } .rg-hero { padding-top: 104px; } }
+.rg-kicker { position: relative; display: inline-block; font: 800 12px var(--display); letter-spacing: .06em; text-transform: uppercase; opacity: .72; }
+.rg-hero h1 { position: relative; margin: 8px 0 0; font: 900 clamp(26px, 5.4vw, 38px)/1.06 var(--display); letter-spacing: -0.03em; text-wrap: balance; }
+.rg-lead { position: relative; margin: 14px 0 0; font-size: 17px; font-weight: 600; line-height: 1.5; max-width: 620px; }
+.rg-meta { position: relative; margin: 14px 0 0; font-size: 13px; font-weight: 700; opacity: .7; }
+.rg-toc { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 18px 0 6px; font-size: 13.5px; }
+.rg-toc span { font-weight: 800; color: var(--muted); margin-right: 4px; }
+.rg-toc a { padding: 7px 12px; border-radius: 999px; background: var(--surface); border: 1.5px solid var(--line); color: var(--text); text-decoration: none; font-weight: 700; }
+.rg-toc a:hover { border-color: var(--line-2); background: var(--surface-2); }
+/* Artikel */
+.rg-article h2 { margin: 40px 0 10px; font: 800 24px/1.2 var(--display); letter-spacing: -0.02em; color: var(--white); scroll-margin-top: 16px; }
+.rg-article h3 { margin: 24px 0 6px; font: 800 18px/1.25 var(--display); color: var(--white); }
+.rg-article p { margin: 0 0 14px; max-width: 68ch; }
+.rg-article ul, .rg-article ol { margin: 0 0 16px; padding-left: 22px; max-width: 68ch; }
+.rg-article li { margin: 6px 0; }
+.rg-article li::marker { color: var(--sun); font-weight: 800; }
+.rg-article strong { color: var(--white); }
+.rg-tw { overflow-x: auto; margin: 0 0 18px; border-radius: 18px; border: 1.5px solid var(--line); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 11px 14px; vertical-align: top; border-bottom: 1px solid var(--line); }
+th { font: 800 13px var(--display); color: var(--white); background: var(--surface-2); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.rg-note { margin: 0 0 18px; padding: 14px 16px; border-radius: 18px; background: var(--surface); border: 1.5px solid var(--line); font-size: 15.5px; }
+.rg-note b { color: var(--white); }
+.rg-quote { margin: 0 0 18px; padding: 16px 18px; border-radius: 20px; background: linear-gradient(135deg, rgba(152,134,255,.18), rgba(152,134,255,.06)); border: 1.5px solid rgba(152,134,255,.35); }
+.rg-quote p { margin: 0; font-weight: 600; color: var(--white); }
+.rg-quote footer { margin-top: 8px; font-size: 13px; color: var(--violet-text); font-weight: 700; }
+/* Minispiele: Karten wie die Aufgaben in der App */
+.rg-games { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin: 6px 0 20px; }
+.rg-game { padding: 14px 16px 12px; border-radius: 22px; background: var(--surface); border: 1.5px solid var(--line); box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+.rg-game-top { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.rg-game-k { align-self: flex-start; padding: 3px 9px; border-radius: 999px; background: var(--sun); color: var(--ink); font: 800 11px var(--display); letter-spacing: .04em; text-transform: uppercase; }
+.rg-game b { font: 800 17px/1.2 var(--display); color: var(--white); letter-spacing: -0.01em; }
+.rg-game p { margin: 0; font-size: 15px; line-height: 1.45; }
+.rg-game small { display: block; margin-top: 8px; font-size: 12.5px; font-weight: 700; color: var(--muted); }
+/* In der App */
+.rg-app { margin: 10px 0 24px; }
+.rg-app-in { padding: 18px 18px 16px; border-radius: 24px; background: linear-gradient(135deg, #2E2868, #1E1A40); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.1), 0 14px 30px rgba(0,0,0,.3); }
+.rg-app-k { display: inline-block; font: 800 11.5px var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--sun); }
+.rg-app-in b, .rg-cta-box b { display: block; margin-top: 6px; font: 800 20px/1.2 var(--display); color: var(--white); letter-spacing: -0.01em; }
+.rg-app-in p, .rg-cta-box p { margin: 8px 0 14px; font-size: 15.5px; color: var(--text); }
+.rg-cta-box { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin: 36px 0 0; padding: 22px 22px 20px; border-radius: 28px; background: var(--c, var(--orange)); color: var(--ink); box-shadow: inset 0 -8px 0 rgba(0,0,0,.14); }
+.rg-cta-box b, .rg-cta-box p { color: var(--ink); }
+.rg-cta-box .rg-app-k { color: rgba(21,18,43,.7); }
+.rg-cta-box .rg-cta { background: var(--ink); color: var(--white); box-shadow: 0 5px 0 rgba(0,0,0,.3); }
+/* FAQ */
+.rg-faq details { border-radius: 18px; background: var(--surface); border: 1.5px solid var(--line); margin: 0 0 10px; padding: 0 16px; }
+.rg-faq summary { list-style: none; cursor: pointer; padding: 14px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rg-faq summary::-webkit-details-marker { display: none; }
+.rg-faq summary::after { content: '+'; flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; background: var(--surface-2); color: var(--white); display: grid; place-items: center; font: 800 18px var(--display); }
+.rg-faq details[open] summary::after { content: '–'; }
+.rg-faq summary h3 { margin: 0; font: 800 16px/1.3 var(--display); color: var(--white); }
+.rg-faq details > div { padding: 0 0 14px; font-size: 15.5px; }
+.rg-faq details > div p { margin: 0 0 8px; }
+.rg-sources { margin-top: 36px; font-size: 14px; color: var(--muted); }
+.rg-sources ul { padding-left: 18px; }
+/* Weiterlesen */
+.rg-related { margin-top: 36px; }
+.rg-related h2, .rg-faq h2, .rg-sources h2 { font: 800 22px/1.2 var(--display); color: var(--white); margin: 0 0 12px; }
+.rg-rels { display: grid; gap: 10px; }
+.rg-rel { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 20px; background: var(--surface); border: 1.5px solid var(--line); color: var(--text); text-decoration: none; }
+.rg-rel:hover { border-color: var(--line-2); background: var(--surface-2); }
+.rg-rel-ic { flex: 0 0 auto; width: 14px; height: 44px; border-radius: 8px; box-shadow: inset 0 -4px 0 rgba(0,0,0,.16); }
+.rg-rel > span:not(.rg-rel-ic) { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.rg-rel b { font: 800 15.5px var(--body); color: var(--white); }
+.rg-rel small { font-size: 13px; color: var(--muted); }
+.rg-rel > svg { color: var(--muted); flex: 0 0 auto; }
+/* Übersicht */
+.rg-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 24px 0 0; }
+.rg-tile { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 6px; padding: 18px 18px 16px; border-radius: 26px; background: var(--c); color: var(--ink); text-decoration: none; box-shadow: inset 0 -6px 0 rgba(0,0,0,.14), 0 12px 28px rgba(0,0,0,.3); transition: transform .2s; }
+.rg-tile::before { content: ''; position: absolute; inset: 0; background: radial-gradient(rgba(21,18,43,.1) 1.2px, transparent 1.6px) 0 0 / 12px 12px; pointer-events: none; }
+.rg-tile:hover { transform: translateY(-3px); }
+.rg-tile-k { position: relative; font: 800 11.5px var(--display); letter-spacing: .05em; text-transform: uppercase; opacity: .7; }
+.rg-tile b { position: relative; font: 900 20px/1.1 var(--display); letter-spacing: -0.02em; }
+.rg-tile p { position: relative; margin: 2px 0 6px; font-size: 14.5px; font-weight: 600; line-height: 1.4; }
+.rg-tile-go { position: relative; display: inline-flex; align-items: center; gap: 4px; font-weight: 800; font-size: 14px; }
+.rg-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; max-width: 1100px; margin: 0 auto; padding: 22px var(--gx) 40px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+.rg-foot a { color: var(--muted); }
+@media (min-width: 900px) { .rg-main { max-width: 820px; } .rg-rels { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .rg-hero { padding: 72px 18px 20px; border-radius: 26px; } .rg-nav > a:not(.rg-btn) { display: none; } .rg-cta-box .rg-cta { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .rg-tile { transition: none; } }

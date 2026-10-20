@@ -1,0 +1,182 @@
+{
+ "blindabhaengen": {
+  "name": "Blind abhängen",
+  "mat": "Augenbinde",
+  "solo": "Augen verbinden, am Kranz {UN} ertasten und abnehmen. Geschafft, wenn in 60 Sekunden 3 {UN} in der Hand sind.",
+  "duell": "Beide gleichzeitig mit verbundenen Augen am Kranz: {UN} ertasten und abnehmen. Gewonnen hat, wer zuerst 3 {UN} in der Hand hält."
+ },
+ "sockenball": {
+  "name": "Socken-Basketball",
+  "mat": "Zusammengerollte Socke, Eimer",
+  "solo": "Aus 3 Metern eine zusammengerollte Socke in einen Eimer werfen. Fünf Würfe. Geschafft, wenn mindestens 3 im Eimer landen.",
+  "duell": "Beide werfen aus 3 Metern zusammengerollte Socken in einen Eimer. Je fünf Würfe. Gewonnen hat, wer öfter trifft."
+ },
+ "klammern": {
+  "name": "Klammer-Blitz",
+  "mat": "Wäscheklammern",
+  "solo": "Mit nur einer Hand Wäscheklammern an den Kranz klemmen. Geschafft, wenn nach 30 Sekunden 10 Klammern hängen.",
+  "duell": "Beide klemmen gleichzeitig mit einer Hand, jeder an seiner Seite des Kranzes. Gewonnen hat, wer nach 30 Sekunden mehr Klammern dran hat."
+ },
+ "blindpaare": {
+  "name": "Blind sortieren",
+  "mat": "Socken vom Kranz, Augenbinde",
+  "solo": "Augen verbinden. Der Spielleiter legt sechs Socken durcheinander auf den Tisch. Durch Tasten passende Paare bilden. Geschafft, wenn in 60 Sekunden 3 richtige Paare in der Hand sind.",
+  "duell": "Beide mit verbundenen Augen. Jeder hat einen eigenen Haufen aus sechs Socken und bildet durch Tasten Paare. Gewonnen hat, wer zuerst 2 richtige Paare hochhält."
+ },
+ "sockenturbo": {
+  "name": "Socken-Turbo",
+  "mat": "Ersatz-Socken",
+  "solo": "Socken übereinander an einen Fuß ziehen. Geschafft, wenn nach 30 Sekunden 5 Socken drüber sind.",
+  "duell": "Beide ziehen gleichzeitig Socken an einen Fuß. Gewonnen hat, wer nach 30 Sekunden mehr Socken am Fuß hat."
+ },
+ "waescheleine": {
+  "name": "Socken-Wäscheleine",
+  "mat": "Ersatz-Socken, Wäscheklammern, Schnur, Augenbinde",
+  "solo": "Eine Schnur zwischen zwei Stühle spannen. Augen verbinden und Socken mit Klammern aufhängen. Geschafft, wenn nach 60 Sekunden 5 Socken hängen.",
+  "duell": "Eine Schnur ist zwischen zwei Stühle gespannt. Beide hängen gleichzeitig mit verbundenen Augen Socken mit Klammern auf. Gewonnen hat, wer nach 60 Sekunden mehr Socken hängen hat."
+ },
+ "schachtelturm": {
+  "name": "Schachtel-Turm",
+  "mat": "Leere Schachteln",
+  "solo": "Leere Schachteln zu einem Turm stapeln. Geschafft, wenn nach 30 Sekunden 6 Schachteln stehen und der Turm 5 Sekunden hält.",
+  "duell": "Beide stapeln gleichzeitig 30 Sekunden lang leere Schachteln zu einem Turm. Gewonnen hat der höhere Turm, wenn er 5 Sekunden steht."
+ },
+ "schachtelraten": {
+  "name": "Was ist drin?",
+  "mat": "Leere Schachteln, Kleinkram",
+  "solo": "Der Spielleiter versteckt heimlich etwas in einer Schachtel. Schütteln, wiegen und horchen ist erlaubt, aufmachen nicht. Geschafft, wenn der Inhalt mit höchstens 3 Tipps erraten wird.",
+  "duell": "Der Spielleiter versteckt in zwei Schachteln je etwas. Schütteln, wiegen und horchen, aber nicht aufmachen. Abwechselnd je ein Tipp. Gewonnen hat, wer zuerst richtig rät."
+ },
+ "schachtelblind": {
+  "name": "Blind sortiert",
+  "mat": "Leere Schachteln, Augenbinde",
+  "solo": "Augen verbinden, fünf Schachteln ertasten und der Größe nach aufreihen. Geschafft, wenn die Reihe nach 45 Sekunden stimmt.",
+  "duell": "Beide sortieren gleichzeitig mit verbundenen Augen je fünf Schachteln der Größe nach. Gewonnen hat, wer zuerst richtig sortiert hat."
+ },
+ "schachtelkegeln": {
+  "name": "Schachtel-Kegeln",
+  "mat": "Leere Schachteln, Fußball",
+  "solo": "Sechs Schachteln zu einer Pyramide stapeln und aus 4 Metern den Ball rollen. Zwei Würfe. Geschafft, wenn alle sechs fallen.",
+  "duell": "Jeder hat eine Pyramide aus sechs Schachteln. Aus 4 Metern den Ball rollen, je zwei Würfe. Gewonnen hat, wer mehr Schachteln umwirft."
+ },
+ "besenbalance": {
+  "name": "Besen-Balance",
+  "mat": "Besen",
+  "solo": "Den Besen mit dem Stiel auf die flache Hand stellen und balancieren. Geschafft, wenn er 15 Sekunden nicht umfällt.",
+  "duell": "Beide balancieren gleichzeitig einen Besen. Gewonnen hat, wer länger durchhält."
+ },
+ "kehrwurf": {
+  "name": "Kehrblech-Zielwurf",
+  "mat": "Kehrblech, Eimer, Kronkorken",
+  "solo": "Einen Kronkorken aufs Kehrblech legen und mit Schwung in einen Eimer in 2 Metern schleudern. Geschafft, wenn nach 60 Sekunden 3 Kronkorken im Eimer sind.",
+  "duell": "Beide schleudern abwechselnd Kronkorken mit dem Kehrblech in einen Eimer in 2 Metern Entfernung. Gewonnen hat, wer zuerst 3 im Eimer hat."
+ },
+ "fegeslalom": {
+  "name": "Fege-Slalom",
+  "mat": "Besen, Becher, Kronkorken",
+  "solo": "Fünf Becher als Slalom aufstellen und einen Kronkorken mit dem Besen hindurchfegen. Geschafft, wenn es in 30 Sekunden klappt. Jeder umgeworfene Becher kostet 5 Sekunden.",
+  "duell": "Fünf Becher stehen als Slalom. Beide fegen nacheinander einen Kronkorken mit dem Besen hindurch, der Spielleiter stoppt die Zeit. Gewonnen hat die schnellere Zeit. Jeder umgeworfene Becher gibt 5 Sekunden Strafe."
+ },
+ "besenhockey": {
+  "name": "Besen-Hockey",
+  "mat": "Besen, Tischtennisball",
+  "solo": "Mit dem Besen einen Tischtennisball zwischen zwei Schuhen hindurch ins Tor fegen. Drei Versuche aus 3 Metern. Geschafft, wenn einmal ein Tor fällt.",
+  "duell": "Ein Tischtennisball, zwei Tore aus je zwei Schuhen. Beide spielen mit dem Besen gegeneinander. Gewonnen hat, wer zuerst ein Tor fegt."
+ },
+ "zahnbuerstensprint": {
+  "name": "Zahnbürsten-Sprint",
+  "mat": "Alte Zahnbürste, Kronkorken",
+  "solo": "Mit einer Zahnbürste drei Kronkorken 2 Meter weit über eine Ziellinie schieben. Geschafft, wenn alle drei in 45 Sekunden drüber sind.",
+  "duell": "Beide schieben gleichzeitig mit einer Zahnbürste je drei Kronkorken 2 Meter weit über eine Ziellinie. Gewonnen hat, wer zuerst alle drei über der Linie hat."
+ },
+ "stufenbecher": {
+  "name": "Becher auf die Stufen",
+  "mat": "Becher mit Wasser",
+  "solo": "Auf jede der ersten fünf Stufen einen randvollen Becher Wasser stellen. Geschafft, wenn es in 45 Sekunden ohne Verschütten klappt.",
+  "duell": "Jeder bekommt eine Seite der Treppe und stellt auf jede der ersten fünf Stufen einen randvollen Becher Wasser. Gewonnen hat, wer zuerst fünf volle Becher stehen hat."
+ },
+ "kehrblechlauf": {
+  "name": "Kehrblech-Kellner",
+  "mat": "Kehrblech, Becher mit Wasser",
+  "solo": "Einen vollen Becher Wasser auf dem Kehrblech 5 Meter weit tragen. Geschafft, wenn am Ziel noch mindestens drei Viertel drin sind.",
+  "duell": "Beide tragen gleichzeitig einen vollen Becher Wasser auf dem Kehrblech 5 Meter weit. Gewonnen hat, wer mehr Wasser ins Ziel bringt."
+ },
+ "lappenwurf": {
+  "name": "Lappen-Wurf",
+  "mat": "Lappen, Eimer",
+  "solo": "Aus 3 Metern einen nassen Lappen in einen Eimer werfen. Drei Versuche. Geschafft, wenn er einmal im Eimer landet.",
+  "duell": "Beide werfen aus 3 Metern einen nassen Lappen in einen Eimer, je drei Würfe. Gewonnen hat, wer öfter trifft."
+ },
+ "klinkenpolitur": {
+  "name": "Blind-Politur",
+  "mat": "Lappen, Augenbinde",
+  "solo": "Augen verbinden, Lappen in die Hand. Drei Türklinken finden und polieren. Die Gäste rufen nur „warm“ oder „kalt“. Geschafft, wenn alle drei in 60 Sekunden poliert sind.",
+  "duell": "Beide nacheinander mit verbundenen Augen und Lappen: In 60 Sekunden Türklinken finden und polieren. Die Gäste rufen nur „warm“ oder „kalt“. Gewonnen hat, wer mehr Klinken poliert."
+ },
+ "spiegelputzen": {
+  "name": "Spiegel blank",
+  "mat": "Lappen",
+  "solo": "Mit der schwachen Hand einen Spiegel streifenfrei wischen. Geschafft, wenn nach 30 Sekunden keine Streifen mehr zu sehen sind. Die Gäste prüfen.",
+  "duell": "Beide wischen gleichzeitig je einen Spiegel mit der schwachen Hand. Gewonnen hat, wessen Spiegel die Gäste blanker finden."
+ },
+ "klinkenzaehlen": {
+  "name": "Klinken schätzen",
+  "mat": "",
+  "solo": "Schätzen, wie viele Türklinken es im ganzen Haus gibt. Danach wird nachgezählt. Geschafft, wenn es höchstens eine Klinke daneben ist.",
+  "duell": "Beide schätzen geheim, wie viele Türklinken es im Haus gibt, und sagen ihre Zahl gleichzeitig. Danach wird gezählt. Gewonnen hat, wer näher dran ist."
+ },
+ "stufenschaetzen": {
+  "name": "Stufen schätzen",
+  "mat": "",
+  "solo": "Ohne zu zählen schätzen, wie viele Stufen die Treppe hat. Danach wird nachgezählt. Geschafft, wenn es höchstens 2 Stufen daneben ist.",
+  "duell": "Beide schätzen geheim, wie viele Stufen die Treppe hat, und sagen ihre Zahl gleichzeitig. Danach wird gezählt. Gewonnen hat, wer näher dran ist."
+ },
+ "zungenbrecher": {
+  "name": "Zungenbrecher",
+  "mat": "",
+  "solo": "Dreimal hintereinander und schnell sagen: „Fischers Fritz fischt frische Fische.“ Geschafft, wenn alle drei Male ohne Verhaspeln klappen.",
+  "duell": "Abwechselnd „Blaukraut bleibt Blaukraut, Brautkleid bleibt Brautkleid“ sagen, jede Runde ein bisschen schneller. Gewonnen hat, wer sich nicht als Erster verhaspelt."
+ },
+ "rede": {
+  "name": "Kühlschrank-Rede",
+  "mat": "",
+  "solo": "30 Sekunden lang eine Rede über den eigenen Kühlschrank halten. Kein „äh“, kein „ähm“. Geschafft, wenn die 30 Sekunden ohne Äh durchgehalten werden.",
+  "duell": "Der Spielleiter nennt ein Thema. Beide halten nacheinander 30 Sekunden eine Rede dazu. Gewonnen hat die Rede mit mehr Applaus."
+ },
+ "starren": {
+  "name": "Ernst bleiben",
+  "mat": "",
+  "solo": "30 Sekunden lang ernst bleiben. Die Gäste dürfen Grimassen schneiden und Witze reißen, aber nicht anfassen. Geschafft, wenn kein Lachen und kein Grinsen kommt.",
+  "duell": "Beide schauen sich in die Augen. Gewonnen hat, wer nicht als Erster blinzelt oder lacht."
+ },
+ "kk-schnipp": {
+  "name": "Kronkorken-Schnippen",
+  "mat": "Kronkorken, Becher",
+  "solo": "Einen Kronkorken aus einem Meter Abstand mit dem Finger über den Tisch in einen liegenden Becher schnippen. Drei Versuche. Geschafft, wenn einer im Becher landet.",
+  "duell": "Beide schnippen aus einem Meter Abstand Kronkorken mit dem Finger in einen liegenden Becher. Je fünf Versuche. Gewonnen hat, wer öfter in den Becher trifft."
+ },
+ "janein": {
+  "name": "Ja-Nein-Verbot",
+  "mat": "",
+  "solo": "60 Sekunden lang Fragen beantworten, die die Gäste zurufen. Dabei nie „ja“ oder „nein“ sagen, auch nicht nicken oder den Kopf schütteln. Geschafft, wenn die ganze Minute ohne Ja und Nein klappt.",
+  "duell": "Der Spielleiter stellt beiden abwechselnd schnelle Fragen. Gewonnen hat, wer nicht als Erster „ja“ oder „nein“ sagt."
+ },
+ "jahrgang": {
+  "name": "Jahrgangs-Quiz",
+  "mat": "",
+  "solo": "Drei Dinge aus dem eigenen Geburtsjahr nennen: einen Hit, einen Film und ein Ereignis. Die Gäste dürfen am Handy nachprüfen. Geschafft, wenn alle drei stimmen.",
+  "duell": "Abwechselnd je ein Ding aus dem eigenen Geburtsjahr nennen: Hit, Film, Ereignis oder Sportler. Gewonnen hat, wem nicht als Erstem etwas einfällt."
+ },
+ "loeffelnase": {
+  "name": "Löffel auf der Nase",
+  "mat": "Löffel",
+  "solo": "Einen Löffel anhauchen und mit der Wölbung an die Nase hängen. Hände weg. Geschafft, wenn er 15 Sekunden hängen bleibt.",
+  "duell": "Beide hauchen einen Löffel an und hängen ihn mit der Wölbung an die Nase, gleichzeitig und ohne Hände. Gewonnen hat, wessen Löffel länger hängt."
+ },
+ "pyramide": {
+  "name": "Becher-Pyramide",
+  "mat": "10 Becher",
+  "solo": "Aus 10 Bechern eine Pyramide bauen (4, 3, 2, 1) und sie danach wieder zu einem Stapel zusammenschieben. Geschafft, wenn beides in 30 Sekunden klappt.",
+  "duell": "Beide bauen gleichzeitig aus je 10 Bechern eine Pyramide (4, 3, 2, 1) und schieben sie danach wieder zu einem Stapel zusammen. Gewonnen hat, wer zuerst wieder einen Stapel in der Hand hat."
+ }
+}

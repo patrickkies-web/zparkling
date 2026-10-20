@@ -1,0 +1,22 @@
+# zparkling: Such-Crawler willkommen, Trainings-Crawler nicht.
+User-agent: Googlebot
+Allow: /
+User-agent: Bingbot
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Perplexity-User
+Allow: /
+User-agent: GPTBot
+Disallow: /
+User-agent: ClaudeBot
+Disallow: /
+User-agent: CCBot
+Disallow: /
+User-agent: *
+Allow: /
+Sitemap: https://www.zparkling.com/sitemap.xml

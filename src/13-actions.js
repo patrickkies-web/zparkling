@@ -1213,6 +1213,8 @@ else {
 }
 fit();
 render();
+/* a guide page sends people straight into the example evening for its occasion: #beispiel-socken */
+if (/^beispiel-/.test(hash)) { var bv = hash.slice(9); if (EVENT_TYPES.some(function (t) { return t.id === bv; })) { try { history.replaceState(null, '', location.pathname); } catch (e) {} A.openDemoPick({ from: 'landing', v: bv }); } }
 if (UI.screen === 'guestForm') gAfter();
 
 })();
