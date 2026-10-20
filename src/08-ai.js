@@ -196,9 +196,8 @@ function aiCard(p, k) {
 }
 function aiSection() {
   var e = E(); if (!AI_HOST || !e || !e.focus.length) return '';
-  if (demoOn()) return '<h3 class="qx-h" id="qs-ki">Maßgeschneidert mit KI</h3>' + demoLockRow('Aus den Worten der Gäste baut die KI eigene Fragen und Sprüche. Mit dem Game Pass.');
-  return '<h3 class="qx-h" id="qs-ki">Maßgeschneidert mit KI</h3>' +
-    '<p class="qx-lead">Im Gäste-Link schickt jeder zwei Worte: wie ' + (e.focus.length > 1 ? 'eure Leute im Mittelpunkt sind' : esc(e.focus[0].name) + ' ist') + ' und wofür ' + (e.focus.length > 1 ? 'sie brennen' : esc(e.focus[0].name) + ' brennt') + '. Auf Knopfdruck liest die KI alles und baut 20 Fragen, die es nur hier gibt, dazu Sätze fürs Lippenlesen und Konter-Sprüche für Herausforderungen. Auch ohne KI fließen die Worte in Sätze und Sprüche ein.</p>' +
-    e.focus.map(aiCard).join('');
+  if (demoOn()) return qPanel('qs-ki', '#B3A6FF', 'wand', 'Maßgeschneidert mit KI', 'Aus den Worten der Gäste baut die KI eigene Fragen und Sprüche.', null, demoLockRow('Die KI-Fragen gibt es mit dem Game Pass.'));
+  return qPanel('qs-ki', '#B3A6FF', 'wand', 'Maßgeschneidert mit KI', 'Im Gäste-Link schickt jeder zwei Worte: wie ' + (e.focus.length > 1 ? 'eure Leute im Mittelpunkt sind' : esc(e.focus[0].name) + ' ist') + ' und wofür ' + (e.focus.length > 1 ? 'sie brennen' : esc(e.focus[0].name) + ' brennt') + '. Auf Knopfdruck baut die KI daraus 20 Fragen, Sätze fürs Lippenlesen und Konter-Sprüche. Auch ohne KI fließen die Worte in Sätze und Sprüche ein.', null,
+    e.focus.map(aiCard).join(''));
 }
 

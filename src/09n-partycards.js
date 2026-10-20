@@ -371,14 +371,16 @@ A.prGo = function () {
 };
 /* ---------- on the guests' page ---------- */
 function pcSection() {
-  if (demoOn()) return '<h3 class="qx-h" id="qs-joker">Karten für die Party</h3>' + demoLockRow('Joker, Weiterleiten in Silber und die Regel-Karte gibt es mit dem Game Pass.');
-  var all = []; PC_KINDS.forEach(function (t) { all = all.concat(pcAll(t)); });
-  if (!all.length) return '';
-  var free = all.filter(function (q) { return q.status === 'ok' && !q.used; }).length;
-  return '<h3 class="qx-h" id="qs-joker">Karten im Umlauf<span class="qx-n">' + free + '</span></h3><p class="qx-lead">Gäste ziehen sie als Bonuskarte und lösen sie auf der Party ein. Der Joker erlässt ein ' + esc(U()) + ', Weiterleiten gibt den Trinkbuddy-Job ab, die Regel-Karte startet eine Regel für fünf Minuten.</p>' +
-    '<div class="pc-sum">' + PC_KINDS.map(function (t) {
-      var a = pcAll(t), f = a.filter(function (q) { return q.status === 'ok' && !q.used; }).length;
-      return a.length ? '<span class="pc-sc pk-' + t + '">' + emb(GQ_STYLE[t].e, 26) + '<span class="stack" style="gap:0"><b>' + f + ' ' + esc(pcName(t)) + '</b><small>' + esc(joinNames(a.map(function (q) { return q.author; }).slice(0, 3))) + (a.length > 3 ? ' und mehr' : '') + '</small></span></span>' : '';
-    }).join('') + '</div>' +
-    '<button type="button" class="qx-own mt10" data-act="openCards" data-from="questions"><span class="qx-own-ic">' + emb('forward', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Zum Kartenbereich</b><small>' + (S.collectClosed ? 'Einlösen und drucken' : 'Einlösen, und drucken nach dem Schließen der Gäste-Runde') + '</small></span>' + icon('i-next', 16) + '</button>';
+  var demo = demoOn(), all = [];
+  if (!demo) PC_KINDS.forEach(function (t) { all = all.concat(pcAll(t)); });
+  if (!demo && !all.length) return qPanel('qs-joker', '#C6CFDA', 'forward', 'Karten für die Party', 'Gäste ziehen im Gäste-Link Bonuskarten: den Joker, Weiterleiten in Silber und die Regel-Karte. Hier siehst du, wer welche hat.', 0, '<div class="qx-empty">' + emb('forward', 34) + '<span>Noch keine Karten gezogen. Sobald Gäste mitmachen, tauchen sie hier auf.</span></div>');
+  var list = demo ? [{ id: 'd1', type: 'joker', author: 'Max', text: '', status: 'ok' }, { id: 'd2', type: 'weiter', author: 'Lea', text: '', status: 'ok' }, { id: 'd3', type: 'regel', author: 'Tom', text: '', status: 'ok' }] : all;
+  var free = list.filter(function (q) { return q.status === 'ok' && !q.used; }).length;
+  var cards = '<div class="pc-shelf' + (demo ? ' locked' : '') + '">' + list.slice(0, 12).map(function (q) {
+    var st = q.status === 'offen' ? 'Wartet auf Freigabe' : q.used ? 'Eingelöst' : 'Im Umlauf';
+    return '<div class="pc-slot' + (q.used ? ' used' : '') + '"><div class="pc-mini">' + pcCardHtml(q, false) + '</div><span class="pc-st">' + esc(st) + '</span></div>';
+  }).join('') + '</div>';
+  var inner = cards + (demo ? demoLockRow('Joker, Weiterleiten und Regel-Karte gibt es mit dem Game Pass.') :
+    '<button type="button" class="qx-own mt10" data-act="openCards" data-from="questions"><span class="qx-own-ic">' + emb('forward', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Zum Kartenbereich</b><small>' + (S.collectClosed ? 'Einlösen und drucken' : 'Einlösen, und drucken nach dem Schließen der Gäste-Runde') + '</small></span>' + icon('i-next', 16) + '</button>');
+  return qPanel('qs-joker', '#C6CFDA', 'forward', 'Karten für die Party', 'Der Joker erlässt ein ' + esc(U()) + ', Weiterleiten gibt den Trinkbuddy-Job ab, die Regel-Karte startet eine Regel für fünf Minuten.', demo ? null : free, inner);
 }

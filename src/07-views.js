@@ -135,6 +135,10 @@ V.welcome = function () {
   body += '<button type="button" class="tourcard plain mt18" data-act="openTour"><span class="tc-e" aria-hidden="true">' + emb('garland', 40) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Was kann die App?</b><span>Das Intro in einer Minute</span></span>' + icon('i-play', 18) + '</button>';
   return scr('', body, '<button type="button" class="cta" data-act="newEvent">Neuen Abend anlegen</button><button type="button" class="btn-ghost" data-act="loadDemo">Mit Beispiel-Abend ausprobieren</button>', 'welcome');
 };
+/* nobody yet: the empty spot invites, like a seat with a name card */
+function focusEmpty() {
+  return '<button type="button" class="fx-empty" data-act="addPerson" data-from="setup"><span class="fx-empty-av" aria-hidden="true">' + icon('i-plus', 30) + '</span><span class="stack" style="gap:4px;align-items:center"><b>Wer wird gefeiert?</b><span>Name, Look und Tradition. Dauert eine Minute, und der Avatar zieht in die App ein.</span></span></button>';
+}
 function focusList(from) {
   var f = E().focus;
   var rows = f.map(function (p, i) {
@@ -155,10 +159,7 @@ function themeIc(col, size) {
 function typeIcon(t, col) { return t.ic === 'sock' ? sockIc(col || '#15122B', 16) : icon(t.ic, 22); }
 function typePicker() {
   var e = E();
-  return '<div class="stack gap8" role="group" aria-label="Was wird gefeiert?">' + EVENT_TYPES.map(function (t) {
-    var sel = e.anlass === t.id;
-    return '<button type="button" class="opt row' + (sel ? ' is-sel' : '') + '" data-act="setEventAnlass" data-v="' + t.id + '" aria-pressed="' + sel + '" style="min-height:58px;border-radius:18px;padding:7px 12px 7px 7px"><span class="tile-ic" style="width:40px;height:40px;border-radius:12px;background:' + t.bg + '">' + typeIcon(t) + '</span><span class="stack grow"><span style="font-size:15px;font-weight:800">' + esc(t.label) + '</span><span class="sub">' + esc(t.sub) + '</span></span><span class="check">' + icon('i-check', 14) + '</span></button>';
-  }).join('') + '</div>';
+  return '<div class="dp-list" role="group" aria-label="Was wird gefeiert?">' + EVENT_TYPES.map(function (t, i) { return occTicket(t, { sel: e.anlass === t.id, i: i, act: 'setEventAnlass', id: 'tp-' + t.id }); }).join('') + '</div>';
 }
 /* settings: only the chosen party type, the list opens on demand */
 function typeCurrent() {
@@ -200,8 +201,8 @@ V.setup = function () {
       '<label class="field mt22" for="evName">Name des Abends (freiwillig)<input id="evName" class="input" type="text" placeholder="z. B. Kranz-Abend Jonas & Mia" autocomplete="off" data-bind="event.name" value="' + esc(e.name) + '"></label>';
     foot = '<button type="button" class="cta" data-act="setupNext">Weiter' + icon('i-next', 18) + '</button>';
   } else {
-    body = '<span class="eyebrow">Schritt 2 von 2</span><h1 class="h1 mt8">Wer wird gefeiert?</h1><p class="lead mt8">Eine bis drei Personen stehen im Fokus. Gäste musst du nicht eintragen.</p><div class="mt18">' + focusList('setup') + '</div>' + (UI.setupErr ? '<p class="err mt10">' + UI.setupErr + '</p>' : '');
-    foot = '<button type="button" class="cta" data-act="setupNext">Fertig' + icon('i-check', 18) + '</button>';
+    body = '<span class="eyebrow">Schritt 2 von 2</span><h1 class="h1 mt8">Wer wird gefeiert?</h1><p class="lead mt8">Eine bis drei Personen stehen im Fokus. Gäste musst du nicht eintragen.</p><div class="mt18">' + (e.focus.length ? focusList('setup') : focusEmpty()) + '</div>' + (UI.setupErr ? '<p class="err mt10">' + UI.setupErr + '</p>' : '');
+    foot = e.focus.length ? '<button type="button" class="cta mint" data-act="setupNext">Fertig' + icon('i-check', 18) + '</button>' : '<button type="button" class="cta" data-act="addPerson" data-from="setup">' + icon('i-plus', 18) + 'Erste Person anlegen</button>';
   }
   return scr(head, body, foot);
 };
@@ -390,7 +391,7 @@ V.home = function () {
     '<button type="button" class="play' + (running ? '' : ready ? ' ready' + (fx === 'unlock' ? ' unlocked' : '') : ' locked') + '" data-act="heroGo"' + (!running && !ready ? ' aria-label="' + esc(runLabel()) + ', erst den Abend einstellen"' : '') + '><span>' + icon(!running && !ready ? 'i-lock' : 'i-play', 18) + '</span>' + runLabel() + (ready && !running ? '<i class="play-glint" aria-hidden="true"></i>' : '') + '</button>' +
     (running ? '' : '<button type="button" class="hero-hint plain" data-act="go" data-to="questions">' + icon('i-users', 16) + '<span class="grow">' + (homeGuestN() ? 'Mehr Gäste, mehr Spiele: ladet noch mehr ein.' : 'Ladet eure Gäste ein, sie bauen die Spiele mit.') + '</span><b>Einladen</b></button>') + '</div>' +
     (running ? '' : homeSetBar(ready)) +
-    homeGuestCard() + homeQSection() + '\u0001' + demoHomeHtml() +
+    homeGuestCard() + '\u0001' + demoHomeHtml() + homeQSection() +
     factCard('home') + '\u0002' +
     '<h3 class="sec" id="hm-spiele">Spiele</h3><p class="small mt6">Zwischendurch spielen, auch ohne Kranz. Welche Spiele im Abend drankommen, bleibt geheim.</p><div class="games mt10">' +
     '<button type="button" class="gtile" data-act="freeQuick" data-v="wwe" style="background:var(--sun)"' + (e.focus.length < 2 ? ' disabled' : '') + '><svg class="art" aria-hidden="true" width="86" height="70" style="top:12px;right:8px"><use href="#i-bubbles"></use></svg><b>Wer würde eher?</b><small>' + (e.focus.length < 2 ? 'Ab zwei Fokus-Personen' : 'Gruppe stimmt per Link ab') + '</small></button>' +
@@ -417,7 +418,7 @@ V.settings = function () {
     '<span class="eyebrow mt22 block">Party-Art</span><div class="mt10">' + (UI.setTypeOpen ? typePicker() + '<button type="button" class="linkbtn mt6" data-act="setTypeOpen">Liste schließen</button>' : typeCurrent()) + '</div>' + (S.run && !S.run.finished ? '<p class="small mt8">Ein laufendes Spiel behält seine Art bis zum Ende.</p>' : '') +
     '<span class="eyebrow mt22 block">Im Fokus</span><div class="mt10">' + focusList('settings') + '</div>' +
     '<span class="eyebrow mt22 block">Material & Zubehör</span><button type="button" class="card pad row plain mt10" data-act="openMaterial" data-from="settings" style="width:100%"><span class="tile-ic" style="width:44px;height:44px;border-radius:14px;background:var(--sun)">' + icon('i-box', 22) + '</span><span class="stack grow" style="text-align:left;gap:2px"><span class="name">Was habt ihr da?</span><span class="sub">' + esc(matSummary()) + '</span></span>' + icon('i-next', 18) + '</button>' +
-    '<span class="eyebrow mt22 block">' + esc(U()) + '-Regeln</span>' + rulesBlock() +
+    '\u0001<span class="eyebrow mt22 block">' + esc(U()) + '-Regeln</span>' + rulesBlock() +
     '<button type="button" class="set-fold mt22" data-act="setPilotOpen" aria-expanded="' + !!UI.setPilotOpen + '"><span class="stack grow" style="gap:2px;text-align:left"><b>So rechnet der Pinnchen-Pilot</b><span class="sub">' + (UI.setPilotOpen ? 'Zuklappen' : 'Ziel, Maximum, Joker und Tempo, kurz erklärt') + '</span></span>' + icon('i-next', 18) + '</button>' +
     (!UI.setPilotOpen ? '' : '<div class="card pad mt10 stack gap10 small" style="color:var(--text)">' +
     '<p>Für jede Fokus-Person gibt es ein Maximum für den ganzen Abend und ein Ziel (' + e.target + ' % davon). Alles zählt zusammen: Kranz, freie Spiele und Einträge im Zähler. Das Maximum wird nie überschritten.</p>' +
@@ -434,9 +435,11 @@ V.settings = function () {
     passSettingsHtml() +
     '<button type="button" class="tourcard plain mt14" data-act="openTour"><span class="tc-e" aria-hidden="true">' + emb('garland', 40) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Was kann die App?</b><span>Das Intro noch einmal ansehen</span></span>' + icon('i-play', 18) + '</button>' +
     '<span class="eyebrow mt22 block">Daten</span><p class="small mt6">Alles bleibt nur in diesem Browser gespeichert.</p>' +
-    '<button type="button" class="btn-ghost mt10" data-act="loadDemo">Beispiel-Abend laden</button>' +
+    (S.demo ? '<button type="button" class="btn-ghost mt10" data-act="openDemoPick" data-from="home">Anderen Beispiel-Abend laden</button>' : UI.confirm === 'loadDemo' ? confirmBox('Den Beispiel-Abend laden?', 'Dein eigener Abend wird dabei ersetzt. Lieber erst die Party zu Ende feiern.', 'loadDemo', 'Laden') : '<button type="button" class="btn-ghost mt10" data-act="askConfirm" data-v="loadDemo">Beispiel-Abend laden</button>') +
     (UI.confirm === 'resetAll' ? confirmBox('Den ganzen Abend löschen?', 'Personen, Fragen, Zähler und der Spielstand gehen verloren.', 'resetAll', 'Löschen') : '<button type="button" class="btn-ghost danger mt10" data-act="askConfirm" data-v="resetAll">Abend löschen und neu anfangen</button>');
-  return scr(topbar('home', 'Einstellungen'), body, '');
+  var cut = body.indexOf('\u0001');
+  body = dk(body.slice(0, cut), body.slice(cut + 1), 'dk-set');
+  return scr(topbar('home', 'Einstellungen'), body, '', 'dw');
 };
 
 /* =========================================================
@@ -614,6 +617,10 @@ function qHero(rounds) {
     '<p>' + (subs.length ? 'Aus jedem Beitrag wird ein Stück eures Abends. Du prüfst kurz, was reinkommt, den Rest plant die App.' : 'Schick den Link in die Gruppe. Hier landet alles, was eure Gäste schicken, und du gibst es mit einem Tipp frei.') + '</p>' +
     (st.length ? '<div class="qx-stk">' + st.map(function (x, i) { return '<span class="qx-st ' + x[2] + '" style="--i:' + i + ';--r:' + [-3, 2, -2, 3][i] + 'deg"><b>' + esc(String(x[0])) + '</b>' + esc(x[1]) + '</span>'; }).join('') + '</div>' : '') + '</div>';
 }
+/* a part of the guests' page: its own frame, a coloured head with emblem, title, count, a line what it is */
+function qPanel(id, color, em, title, lead, count, inner, headExtra) {
+  return '<section class="qp mt18" id="' + id + '" style="--pc:' + color + '"><header class="qp-h"><span class="qp-e">' + emb(em, 28) + '</span><span class="stack grow" style="gap:3px;min-width:0"><b>' + title + (count != null && count !== '' ? '<span class="qp-n">' + count + '</span>' : '') + '</b>' + (lead ? '<small>' + lead + '</small>' : '') + '</span>' + (headExtra || '') + '</header><div class="qp-b">' + inner + '</div></section>';
+}
 V.questions = function () {
   var enter = app.getAttribute('data-screen') !== 'questions';
   var open = S.questions.filter(function (q) { return q.status === 'offen' && !q.ai; }).sort(function (a, b) { return b.t - a.t; });
@@ -625,23 +632,17 @@ V.questions = function () {
   var more = list.length > 6 && !kind && !UI.qAll;
   var rd = qRounds();
   var aufg = S.questions.filter(function (q) { return q.type === 'aufgabe' && questionPlayable(q); }).length;
-  /* a long page: chips at the top jump to each part */
-  var jump = '<nav class="qx-jump" aria-label="Springen zu">' + [['qs-neu', 'Neu' + (open.length ? ' · ' + open.length : '')], ['qs-link', 'Einladen'], AI_HOST ? ['qs-ki', 'KI'] : null, pcAny() || demoOn() ? ['qs-joker', 'Karten'] : null, ['qs-runden', 'Runden'], ['qs-alle', 'Alle Beiträge']].filter(Boolean).map(function (x) { return '<button type="button" class="qx-jb' + (x[0] === 'qs-neu' && open.length ? ' hot' : '') + '" data-act="jump" data-v="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</nav>';
-  var body = jump + '<div class="qx' + (enter ? ' enter' : '') + '">' + dk(qHero(rd.total) + qCollectOverview(),
+  var filt = '<div class="qp-filter" role="group" aria-label="Nach Art filtern"><button type="button" class="qp-f' + (kind ? '' : ' on') + '"' + (kind ? ' data-act="qKind" data-v="' + kind + '"' : '') + '>Alle</button>' + QTYPES.filter(function (t) { return demoTypeOk(t[0]) && tc[t[0]]; }).map(function (t) { var s2 = kind === t[0], st = qStyle(t[0]); return '<button type="button" class="qp-f' + (s2 ? ' on' : '') + '" style="--tc:' + st.c + '" data-act="qKind" data-v="' + t[0] + '" aria-pressed="' + s2 + '">' + emb(st.e, 18) + esc(QK_SHORT[t[0]] || t[1]) + '<i>' + tc[t[0]] + '</i></button>'; }).join('') + '</div>';
+  var seg = '<div class="seg" style="grid-template-columns:repeat(2,minmax(0,1fr));height:44px" role="group" aria-label="Freigegeben oder abgelehnt">' + [['ok', 'Freigegeben'], ['nein', 'Abgelehnt']].map(function (x) { var s2 = f === x[0]; return '<button type="button" class="' + (s2 ? 'is-sel' : '') + '" data-act="qFilter" data-v="' + x[0] + '" aria-pressed="' + s2 + '">' + x[1] + ' ' + cnt[x[0]] + '</button>'; }).join('') + '</div>';
+  var allList = list.length ? '<div class="qx-list">' + (more ? list.slice(0, 6) : list).map(qRow).join('') + '</div>' + (more ? '<button type="button" class="qx-clear" data-act="qAllShow">' + icon('i-next', 14) + 'Alle ' + list.length + ' zeigen</button>' : '') : '<div class="qx-empty">' + emb('jar', 34) + '<span>' + (f === 'nein' ? 'Nichts abgelehnt.' : 'Hier ist noch nichts freigegeben.') + '</span></div>';
+  var body = '<div class="qx' + (enter ? ' enter' : '') + '">' + dk(qHero(rd.total) + qCollectOverview(),
     '<div class="mt14" id="qs-link">' + collectShare() + collectCloseHtml() + '</div>') + '\u0001' +
-    '<h3 class="qx-h" id="qs-neu">Neu eingegangen' + (open.length ? '<span class="qx-n">' + open.length + '</span>' : '') + (open.length >= 2 ? '<button type="button" class="qx-all" data-act="qAllOk">' + icon('i-check', 14) + 'Alle freigeben</button>' : '') + '</h3>' +
-    (open.length ? open.map(qCard).join('') : '<div class="qx-empty">' + emb('letter', 34) + '<span>Alles geprüft. Neue Beiträge landen hier, du gibst sie mit einem Tipp frei.</span></div>') +
-    '\u0002' + aiSection() +
-    pcSection() +
-    '<h3 class="qx-h" id="qs-runden">Daraus baut die App Runden<span class="qx-n mint">' + rd.total + '</span></h3>' +
-    '<p class="qx-lead">Welche Runde wann kommt, bleibt eine Überraschung. Je mehr die Gäste schicken, desto mehr davon.' + (aufg ? ' Dazu ' + aufg + (aufg === 1 ? ' Aufgabe, die einzeln kommt.' : ' Aufgaben, die einzeln kommen.') : '') + '</p>' +
-    '<div class="qx-rounds">' + rd.html + '</div>' + '\u0003' +
-    '<h3 class="qx-h" id="qs-alle">Alle Beiträge</h3>' +
-    '<div class="seg mt10" style="grid-template-columns:repeat(2,minmax(0,1fr));height:46px" role="group" aria-label="Freigegeben oder abgelehnt">' + [['ok', 'Freigegeben'], ['nein', 'Abgelehnt']].map(function (x) { var s = f === x[0]; return '<button type="button" class="' + (s ? 'is-sel' : '') + '" data-act="qFilter" data-v="' + x[0] + '" aria-pressed="' + s + '">' + x[1] + ' ' + cnt[x[0]] + '</button>'; }).join('') + '</div>' +
-    '<div class="qx-types" role="group" aria-label="Nach Art filtern">' + QTYPES.filter(function (t) { return demoTypeOk(t[0]); }).map(function (t) { var s = kind === t[0], n = tc[t[0]], st = qStyle(t[0]); return '<button type="button" class="qx-t' + (s ? ' is-sel' : '') + (n ? '' : ' zero') + '" style="--tc:' + st.c + '" data-act="qKind" data-v="' + t[0] + '" aria-pressed="' + s + '">' + emb(st.e, 26) + '<span><b>' + n + '</b><small>' + esc(QK_SHORT[t[0]]) + '</small></span></button>'; }).join('') + '</div>' +
-    (kind ? '<button type="button" class="qx-clear" data-act="qKind" data-v="' + kind + '">' + icon('i-close', 14) + 'Nur ' + esc(QK_SHORT[kind]) + ', alle zeigen</button>' : '') +
-    (list.length ? '<div class="qx-list">' + (more ? list.slice(0, 6) : list).map(qRow).join('') + '</div>' + (more ? '<button type="button" class="qx-clear" data-act="qAllShow">' + icon('i-next', 14) + 'Alle ' + list.length + ' zeigen</button>' : '') : '<div class="qx-empty">' + emb('jar', 34) + '<span>' + (f === 'nein' ? 'Nichts abgelehnt.' : 'Hier ist noch nichts freigegeben.') + '</span></div>') +
-    '<button type="button" class="qx-own" data-act="openMasterForm"><span class="qx-own-ic">' + emb('pen', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Selbst Fragen eintragen</b><small>Geführt, mit eigenen Leveln. Sofort freigegeben.</small></span>' + icon('i-next', 16) + '</button>' +
+    qPanel('qs-neu', '#FF7A45', 'letter', 'Neu eingegangen', open.length ? 'Kurz prüfen und freigeben. Abgelehntes kommt nicht ins Spiel.' : 'Alles geprüft. Neue Beiträge landen hier.', open.length,
+      (open.length >= 2 ? '<button type="button" class="qp-allok" data-act="qAllOk">' + icon('i-check', 16) + 'Alle ' + open.length + ' freigeben</button>' : '') + (open.length ? open.map(qCard).join('') : '<div class="qx-empty">' + emb('letter', 34) + '<span>Alles geprüft. Du gibst neue Beiträge hier mit einem Tipp frei.</span></div>')) +
+    '\u0002' + aiSection() + pcSection() +
+    qPanel('qs-runden', '#48D9A6', 'dice', 'Daraus baut die App Runden', 'Welche Runde wann kommt, bleibt eine Überraschung. Je mehr die Gäste schicken, desto mehr davon.' + (aufg ? ' Dazu ' + aufg + (aufg === 1 ? ' Aufgabe, die einzeln kommt.' : ' Aufgaben, die einzeln kommen.') : ''), rd.total, '<div class="qx-rounds">' + rd.html + '</div>') + '\u0003' +
+    qPanel('qs-alle', '#9886FF', 'jar', 'Alle Beiträge', 'Verwalten, was schon da ist. Ein Tipp auf einen Beitrag zeigt alles.', cnt.ok, seg + filt + allList) +
+    '<button type="button" class="qx-own mt14" data-act="openMasterForm"><span class="qx-own-ic">' + emb('pen', 30) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Selbst Fragen eintragen</b><small>Geführt, mit eigenen Leveln. Sofort freigegeben.</small></span>' + icon('i-next', 16) + '</button>' +
     factCard('questions') + '</div>';
   var c1 = body.indexOf('\u0001'), c2 = body.indexOf('\u0002'), c3 = body.indexOf('\u0003');
   body = body.slice(0, c1) + dk(body.slice(c1 + 1, c2), body.slice(c2 + 1, c3)) + body.slice(c3 + 1);

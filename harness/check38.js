@@ -1,4 +1,4 @@
-/* v38: date fields do not re-render while picking, accessories when sweeping, the master's guided entry, the slot machine. node harness/check38.js */
+/* v38: date fields do not re-render while picking, accessories when sweeping, the master's guided entry, the occasion marquee. node harness/check38.js */
 'use strict';
 const { load } = require('./run');
 let fails = 0;
@@ -71,7 +71,7 @@ function party(seed, anlass) { const c = load({ seed }); c.A.loadDemo(); c.A.mat
 /* 5. the slot machine on the landing page */
 {
   const c = load({ seed: 5 }); c.go('landing'); const h = c.V.landing();
-  ok(/id="lpslot"/.test(h) && (h.match(/class="lp-reel"/g) || []).length === 5 && c.EVENT_TYPES.every(t => h.indexOf('data-v="' + t.id + '"') >= 0) && !holes(h), 'Landing: a slot machine with every occasion');
+  ok(/class="lp-mq"/.test(h) && (h.match(/class="lp-mq-row/g) || []).length === 2 && (h.match(/class="lp-mc"/g) || []).length === c.EVENT_TYPES.length * 6 && c.EVENT_TYPES.every(t => h.indexOf('data-v="' + t.id + '"') >= 0) && !holes(h), 'Landing: two rows of occasion cards, every occasion in them');
 }
 console.log(fails ? fails + ' FAILED' : 'all ok');
 process.exit(fails ? 1 : 0);

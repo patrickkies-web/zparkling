@@ -22,9 +22,9 @@ const holes = s => /undefined|NaN|\[object|null</.test(s.replace(/data-[a-z]+="[
   const L = c.V.landing();
   ok(/data-act="openDemoPick"/.test(L) && !/data-act="loadDemo"/.test(L), 'Landing: the example evening opens the choice first');
   c.A.openDemoPick({ from: 'landing' }); let h = c.V.demoPick();
-  ok(c.UI.screen === 'demoPick' && (h.match(/class="dp-card/g) || []).length === c.EVENT_TYPES.length && !/dp-det/.test(h) && !holes(h), 'Every occasion as a card, nothing open yet');
+  ok(c.UI.screen === 'demoPick' && (h.match(/class="dp-tk"/g) || []).length === c.EVENT_TYPES.length && !/dp-tk on/.test(h) && !/25 Socken|25 Stück/.test(h) && !holes(h), 'Every occasion as a ticket, nothing open yet, no sock count');
   c.A.dpSel({ v: 'jga' }); h = c.V.demoPick();
-  ok(/id="dpdet"/.test(h) && /Junggesellenabschied/.test(h) && /Missionen/.test(h) && /data-act="dpStart"/.test(h), 'A tap opens a short note with a start button');
+  ok(/class="dp-tk on"/.test(h) && /Junggesellenabschied/.test(h) && /Missionen/.test(h) && /data-act="dpStart"/.test(h), 'A tap opens a short note with a start button');
   c.A.dpStart();
   ok(c.S.demo && c.E().anlass === 'jga' && c.UI.screen === 'home', 'Start: the example evening with that occasion, on the home page');
   const d = load({ seed: 3 }); d.go('landing'); d.A.lpTry({ v: 'treppe' });

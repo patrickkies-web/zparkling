@@ -11,17 +11,19 @@ function render() {
   var body = app.querySelector('.body');
   var keep = body && app.getAttribute('data-screen') === UI.screen ? body.scrollTop : 0;
   var fn = V[UI.screen] || V.landing;
-  app.innerHTML = fn() + (UI.qrBig ? qrBigHtml() : '') + (UI.toast ? '<div class="toast" role="status">' + esc(UI.toast) + '</div>' : '');
+  var html = fn();
+  /* a new screen comes in with a small rise; a re-render of the same screen stays still */
+  if (UI.sin) { html = html.replace('class="scr', 'class="scr sin'); UI.sin = false; }
+  app.innerHTML = html + (UI.qrBig ? qrBigHtml() : '') + (UI.toast ? '<div class="toast" role="status">' + esc(UI.toast) + '</div>' : '');
   app.setAttribute('data-screen', UI.screen);
   if (UI.screen !== 'guestForm' && app.classList) app.classList.remove('gglow');
   var nb = app.querySelector('.body');
   if (nb) nb.scrollTop = keep;
   if (UI.gk && UI.screen === 'guestForm') gkRestore();
-  KB = null;
+  if (UI.screen === 'guestForm') gKeyHints();
   tintSoon();
-  if (UI.screen === 'landing' && UI.slotOn !== app.querySelector('#lpslot')) { UI.slotOn = app.querySelector('#lpslot'); slotRun(); }
 }
-function go(screen) { UI.confirm = null; UI.qrBig = null; UI.screen = screen; if (S && S.event) save(); render(); var b = app.querySelector('.body'); if (b) b.scrollTop = 0; }
+function go(screen) { UI.confirm = null; UI.qrBig = null; UI.sin = UI.screen !== screen; UI.screen = screen; if (S && S.event) save(); render(); var b = app.querySelector('.body'); if (b) b.scrollTop = 0; }
 function commit() { save(); render(); }
 function setToast(msg) {
   UI.toast = msg;
@@ -74,6 +76,8 @@ A.setEventAnlass = function (d) {
 };
 A.setUnit = function (d) { E().unit = d.v; commit(); };
 A.setMax = function (d) { E().max = clamp(E().max + (+d.d), 2, 30); commit(); };
+/* the target in steps of one drink: the percentage follows */
+A.setTarget = function (d) { var e = E(), T = clamp(Math.round(e.max * e.target / 100) + (+d.d), 1, e.max); e.target = clamp(Math.round(T / e.max * 100), 20, 100); commit(); };
 A.setJokers = function (d) { E().jokers = clamp(E().jokers + (+d.d), 0, 5); commit(); };
 
 /* persons & avatars */
@@ -192,6 +196,20 @@ A.qSubmit = function () {
   render();
 };
 /* guests: several contributions at once */
+/* the keyboard says Weiter inside a card and Fertig on its last field */
+function gKeyHints() {
+  var cards = app.querySelectorAll('.gcard');
+  for (var k = 0; k < cards.length; k++) { var f = cards[k].querySelectorAll('input[data-bind], textarea[data-bind]'); for (var i = 0; i < f.length; i++) f[i].setAttribute('enterkeyhint', i === f.length - 1 ? 'done' : 'next'); }
+}
+/* something is missing: the card comes into view, the first empty field gets the focus, and once the keyboard is up the field is revealed again */
+function gJumpTo(id) {
+  var el = document.getElementById(id), b = app.querySelector('.body'); if (!el || !b) return;
+  var f = el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' ? el : null;
+  if (!f) { var fs = el.querySelectorAll('input[data-bind], textarea[data-bind]'); for (var k = 0; k < fs.length; k++) if (!String(fs[k].value || '').trim()) { f = fs[k]; break; } if (!f) f = fs[0] || null; }
+  var card = el.classList && el.classList.contains('gcard') ? el : el.closest && el.closest('.gcard');
+  scrollToEl(id); if (card) gShakeEl(card);
+  if (f) { try { f.focus({ preventScroll: true }); } catch (e) { f.focus(); } setTimeout(function () { kbReveal(f); }, 420); }
+}
 function scrollToEl(id) { var el = document.getElementById(id), b = app.querySelector('.body'); if (el && b && el.getBoundingClientRect) b.scrollTop += el.getBoundingClientRect().top - b.getBoundingClientRect().top - 12; }
 A.gAdd = function (d) {
   if (!(UI.guestMode === 'master' ? mDemoOk(d.v) : demoTypeOk(d.v))) { A.demoInfo(); return; }
@@ -244,14 +262,14 @@ A.gSubmit = function () {
   var G = gForm(), author = String(G.author || '').trim(), first = -1, out = [], cardsDone = G.cards || [];
   UI.qErr = '';
   if (UI.gk) return;
-  if (!author) { UI.qErr = 'Bitte gib oben deinen Namen an.'; gSay('missing'); gRender(); scrollToEl('qAuthor'); var a = document.getElementById('qAuthor'); if (a) a.focus(); return; }
+  if (!author) { UI.qErr = 'Bitte gib oben deinen Namen an.'; gSay('missing'); gRender(); gJumpTo('qAuthor'); return; }
   if (!G.items.length && !cardsDone.length) { UI.qErr = 'Tipp oben an, was du beitragen willst.'; gSay('hello'); gRender(); return; }
   G.items.forEach(function (it, i) { var r = draftToQ(it, author, false), miss = gMissing(it); it.err = miss.length ? 'Fehlt noch: ' + miss.join(', ') : r.err; if (it.err) { if (first < 0) first = i; } else out.push(r.q); });
   if (first >= 0) {
     var bad = G.items.filter(function (x) { return x.err; }).length;
     UI.qErr = bad === 1 ? 'Bei einem Beitrag fehlt noch etwas, er ist rot markiert.' : 'Bei ' + bad + ' Beiträgen fehlt noch etwas, sie sind rot markiert.';
     UI.gShake = true; gSay('missing'); gVibe([40, 30, 40]);
-    gRender(); scrollToEl('gi' + first); return;
+    gRender(); gJumpTo('gi' + first); return;
   }
   var pts = gScore(), stickers = gStickers();
   cardsDone.forEach(function (c, i) { out.push(gkToQ(c, author, i)); });
@@ -275,7 +293,12 @@ A.qSet = function (d, el) {
   apply();
 };
 A.qAllShow = function () { UI.qAll = true; render(); };
-A.qAllOk = function () { var n = 0; S.questions.forEach(function (q) { if (q.status === 'offen') { q.status = 'ok'; n++; } }); commit(); setToast(n === 1 ? '1 Beitrag freigegeben' : n + ' Beiträge freigegeben'); };
+A.qAllOk = function (d, el) {
+  var apply = function () { var n = 0; S.questions.forEach(function (q) { if (q.status === 'offen') { q.status = 'ok'; n++; } }); commit(); setToast(n === 1 ? '1 Beitrag freigegeben' : n + ' Beiträge freigegeben'); };
+  /* the button answers first: a small burst, then the cards leave */
+  if (el && el.classList && !el.classList.contains('go')) { el.classList.add('go'); gBurst(el, '#48D9A6', 18); var cards = app.querySelectorAll('#qs-neu .qx-card'); for (var k = 0; k < cards.length; k++) cards[k].classList.add('qx-out', 'yes'); setTimeout(apply, 420); return; }
+  apply();
+};
 A.qOpen = function (d) { UI.qOpen = UI.qOpen === d.id ? null : d.id; render(); };
 A.qKind = function (d) { UI.qKind = UI.qKind === d.v ? '' : d.v; UI.qOpen = null; render(); };
 A.qrBig = function (d) { UI.qrBig = { code: d.code, title: d.title }; render(); };
@@ -1070,56 +1093,41 @@ app.addEventListener('focusout', function () {
   }, 80);
 });
 /* =========================================================
-   Keyboard bar: on phones a big Weiter/Fertig button sits right
-   above the keyboard, where the thumb is. The iPhone number pad
-   has no return key, there was only the small "Fertig" up top.
+   The keyboard. No bar of our own: Weiter and Fertig sit on the
+   phone's keyboard (enterkeyhint). What we do take care of is that a
+   field is never hidden behind the keyboard: the app shrinks to the
+   part of the screen that is still visible (visualViewport), and the
+   focused field is scrolled into that part.
    ========================================================= */
-var KB = null;
-function kbField(el) { return !!(el && el.tagName && app.contains(el) && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && ['text', 'number', 'search', 'tel', 'email', 'url', ''].indexOf(el.type || '') >= 0))); }
-function kbTouch() { try { return !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); } catch (e) { return false; } }
-/* the field the button leads to: the next one in the same card, or none */
-function kbNext(el) {
-  var scope = el.closest && (el.closest('.gcard') || el.closest('.grid2') || el.closest('.grid3'));
-  if (!scope) return null;
-  var f = Array.prototype.slice.call(scope.querySelectorAll('input[data-bind], textarea[data-bind]')).filter(function (x) { return x.type !== 'range'; }), i = f.indexOf(el);
-  return i >= 0 ? f[i + 1] || null : null;
+function kbField(el) { return !!(el && el.tagName && app.contains(el) && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && ['text', 'number', 'search', 'tel', 'email', 'url', 'date', ''].indexOf(el.type || '') >= 0))); }
+var KBV = { on: false, h: 0 };
+function kbFit() {
+  var vv = window.visualViewport; if (!vv) return;
+  var wrap = document.querySelector('.wrap'); if (!wrap) return;
+  var full = document.body.classList.contains('full'), kb = full ? Math.max(0, Math.round(window.innerHeight - vv.height)) : 0, on = kb > 80 && kbField(document.activeElement);
+  if (on) {
+    var ds = document.documentElement.style;
+    ds.setProperty('--vvt', Math.round(vv.offsetTop) + 'px'); ds.setProperty('--vvh', Math.round(vv.height) + 'px'); ds.setProperty('--kb', kb + 'px');
+  } else if (KBV.on) { var ds2 = document.documentElement.style; ds2.removeProperty('--vvt'); ds2.removeProperty('--vvh'); ds2.removeProperty('--kb'); }
+  document.body.classList.toggle('kb', on);
+  var was = KBV.on; KBV.on = on; KBV.h = on ? kb : 0;
+  if (on && (!was || kb !== KBV.last)) kbReveal();
+  KBV.last = kb;
 }
-function kbLabel(el) {
-  var l = el.closest && el.closest('label'), t = '';
-  if (l) for (var i = 0; i < l.childNodes.length; i++) { var n = l.childNodes[i]; if (n.nodeType === 3 && n.textContent.trim()) { t = n.textContent; break; } }
-  return String(t || el.getAttribute('placeholder') || '').trim();
+/* the focused field, with its label, in the visible part of the screen */
+function kbReveal(el) {
+  el = el || document.activeElement; if (!kbField(el)) return;
+  var b = el.closest && el.closest('.body'); if (!b) return;
+  var br = b.getBoundingClientRect(), r = (el.closest('.field') || el).getBoundingClientRect();
+  var hd = b.parentElement && b.parentElement.querySelector(':scope > .head'), hb = hd ? hd.getBoundingClientRect().bottom : br.top;
+  var top = Math.max(br.top, hb) + 10, bottom = br.bottom - 24;
+  var d = r.top < top ? r.top - top : r.bottom > bottom ? Math.min(r.top - top, r.bottom - bottom) : 0;
+  if (Math.abs(d) < 2) return;
+  try { b.scrollBy({ top: d, behavior: 'smooth' }); } catch (e) { b.scrollTop += d; }
 }
-function kbShow(el) {
-  if (!kbTouch()) return;
-  var bar = document.getElementById('kbbar');
-  if (!bar) {
-    app.insertAdjacentHTML('beforeend', '<div class="kbbar" id="kbbar"><span class="kb-l" id="kbl"></span><button type="button" class="kb-go" id="kbgo" tabindex="-1"></button></div>');
-    bar = document.getElementById('kbbar');
-    var go = document.getElementById('kbgo'), act = function (e) { e.preventDefault(); kbGo(); };
-    go.addEventListener('touchstart', act, { passive: false }); go.addEventListener('mousedown', act);
-  }
-  var next = kbNext(el), go2 = document.getElementById('kbgo');
-  document.getElementById('kbl').textContent = kbLabel(el);
-  go2.innerHTML = next ? 'Weiter' + icon('i-next', 16) : icon('i-check', 16) + 'Fertig';
-  go2.classList.toggle('done', !next);
-  KB = { el: el }; bar.classList.add('on'); kbPlace();
-}
-function kbHide() { var bar = document.getElementById('kbbar'); if (bar) bar.classList.remove('on'); KB = null; }
-function kbPlace() {
-  var bar = document.getElementById('kbbar'); if (!bar || !KB) return;
-  var vv = window.visualViewport, h = bar.offsetHeight || 56, top = vv ? vv.offsetTop + vv.height - h : window.innerHeight - h;
-  bar.style.transform = 'translateY(' + Math.round(top) + 'px)';
-}
-/* the button does what the return key would do; without one, it closes the keyboard */
-function kbGo() {
-  var el = KB && KB.el; if (!el || document.activeElement !== el) { kbHide(); return; }
-  var ev = null; try { ev = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }); } catch (e) {}
-  if (ev) el.dispatchEvent(ev);
-  setTimeout(function () { if (document.activeElement === el) el.blur(); }, 40);
-}
-app.addEventListener('focusin', function (e) { if (kbField(e.target)) kbShow(e.target); });
-app.addEventListener('focusout', function () { setTimeout(function () { if (!kbField(document.activeElement)) kbHide(); }, 120); });
-if (window.visualViewport && window.visualViewport.addEventListener) { window.visualViewport.addEventListener('resize', kbPlace); window.visualViewport.addEventListener('scroll', kbPlace); }
+app.addEventListener('focusin', function (e) { if (kbField(e.target)) { KBV.t && clearTimeout(KBV.t); KBV.t = setTimeout(function () { kbFit(); kbReveal(e.target); }, 360); } });
+app.addEventListener('focusout', function () { setTimeout(function () { if (!kbField(document.activeElement)) kbFit(); }, 80); });
+if (window.visualViewport && window.visualViewport.addEventListener) { window.visualViewport.addEventListener('resize', kbFit); window.visualViewport.addEventListener('scroll', kbFit); }
 /* the reaction pad reacts on touch down, not on release */
 app.addEventListener('pointerdown', function (e) {
   var el = e.target && e.target.closest && e.target.closest('[data-bz]');

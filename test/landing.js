@@ -29,8 +29,8 @@ srv.listen(0, async () => {
   const s1 = await p.evaluate(() => document.querySelector('.scr').className);
   if (!/tourscr/.test(s1)) errors.push('intro button opened ' + s1); else notes.push('Intro starten opens the intro');
   await p.goto(base); await p.reload(); await p.waitForTimeout(600);
-  await p.evaluate(() => document.querySelector('.lp-occ[data-v="jga"]').scrollIntoView());
-  await p.tap('.lp-occ[data-v="jga"]'); await p.waitForTimeout(800);
+  await p.evaluate(() => document.querySelector('.lp-occs .dp-tk-top[data-v="jga"]').scrollIntoView());
+  await p.tap('.lp-occs .dp-tk-top[data-v="jga"]'); await p.waitForTimeout(800);
   const s2 = await p.evaluate(() => (document.querySelector('.demobar') ? 'demo ' : '') + document.body.innerText.slice(0, 400).replace(/\s+/g, ' '));
   notes.push('JGA tile: ' + s2.slice(0, 160));
   await browser.close(); srv.close();

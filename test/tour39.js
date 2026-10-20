@@ -1,6 +1,6 @@
 /* every slide of the intro after its animation: node test/tour39.js */
 const { chromium } = (() => { try { return require('playwright'); } catch (e) { return require('/opt/npm-tools/node_modules/playwright'); } })();
-const path = require('path'), fs = require('fs'); const OUT = path.join(__dirname, 'v39'); fs.mkdirSync(OUT, { recursive: true });
+const path = require('path'), fs = require('fs'); const OUT = path.join(__dirname, 'v41'); fs.mkdirSync(OUT, { recursive: true });
 (async () => {
   const b = await chromium.launch(), errors = [];
   const p = await b.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });

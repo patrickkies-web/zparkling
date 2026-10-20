@@ -104,7 +104,7 @@ function party(seed, anlass) { const c = load({ seed }); c.A.loadDemo(); c.A.mat
   c.A.setEventAnlass({ v: c.E().anlass });
   ok(!c.UI.setTypeOpen, 'Picking closes the list');
   c.go('questions'); h = c.V.questions();
-  ok(/class="qx-jump"/.test(h) && /data-v="qs-neu"/.test(h) && /id="qs-neu"/.test(h) && /id="qs-alle"/.test(h) && /id="qs-runden"/.test(h), 'Fragen: chips jump to each part');
+  ok(!/class="qx-jump"/.test(h) && /id="qs-neu"/.test(h) && /id="qs-alle"/.test(h) && /id="qs-runden"/.test(h) && (h.match(/class="qp /g) || []).length >= 4, 'Fragen: clear panels, no jump bar');
   const j = party(8, 'jga'); j.go('games');
   ok((j.V.games().match(/class="gtile gm-t"/g) || []).length === 8, 'JGA: the mission is one more tile');
 }

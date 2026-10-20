@@ -51,7 +51,7 @@ function nameLine(name, W, fresh) {
   var n = chars.length, gap = Math.min(46, (W - 30) / n), sw = Math.min(40, gap * 0.95), sag = 22, H = sag + 24;
   var x0 = W / 2 - gap * (n - 1) / 2;
   var yAt = function (x) { var t = Math.max(0, Math.min(1, x / W)); return 10 + 4 * sag * t * (1 - t); };
-  var o = '<svg class="t-rope" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true"><path d="M-6 9Q' + (W / 2) + ' ' + (10 + 2 * sag) + ' ' + (W + 6) + ' 9" fill="none" stroke="#15122B" stroke-width="2.6" stroke-linecap="round"/></svg>';
+  var o = '<svg class="t-rope" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true"><path d="M-6 9Q' + (W / 2) + ' ' + (10 + 2 * sag) + ' ' + (W + 6) + ' 9" fill="none" stroke="#F4F1FF" stroke-opacity=".55" stroke-width="2.6" stroke-linecap="round"/></svg>';
   for (var i = 0; i < n; i++) {
     var ch = chars[i]; if (ch === ' ') continue;
     var x = x0 + i * gap, col = SOCK_COLS[i % SOCK_COLS.length], rot = [-6, 5, -3, 7, -5, 4, -7, 3][i % 8];
@@ -91,7 +91,7 @@ var TOUR = [
   { id: 'easy', c: '#B6F07C', d: 9500 },
   { id: 'cards', c: '#E2D6FF', d: 9500 },
   { id: 'roles', c: '#FF9A73', d: 8500 },
-  { id: 'ticket', c: '#15122B', d: 0, dark: true }
+  { id: 'ticket', c: '#FFC940', d: 0, dark: true }
 ];
 var TOUR_TX = {
   name: function () { return { h: 'Für wen steigt die Party?', t: 'Gib einen Namen ein und schau zu, was daraus wird.' }; },
@@ -215,27 +215,45 @@ function artCards() {
 }
 var TOUR_ART = { name: artName, stage: artStage, link: artLink, games: artGames, modes: artModes, dials: artDials, ready: artReady, easy: artEasy, cards: artCards, roles: artRoles, ticket: artTicket };
 
+/* the ambient stage: a spotlight in the colour of the scene, sparks that rise slowly */
+function tourStars() {
+  var r = seedRand(77), o = '<span class="t-stars" aria-hidden="true">';
+  for (var i = 0; i < 14; i++) o += '<i style="left:' + Math.round(r() * 100) + '%;--d:' + (-r() * 14).toFixed(1) + 's;--du:' + (10 + r() * 9).toFixed(1) + 's;--s:' + (0.5 + r() * 0.9).toFixed(2) + ';--o:' + (0.35 + r() * 0.5).toFixed(2) + '"></i>';
+  return o + '</span>';
+}
 V.tour = function () {
   var i = Math.max(0, Math.min(TOUR.length - 1, UI.tourAt || 0)), s = TOUR[i], last = i === TOUR.length - 1, tx = TOUR_TX[s.id]();
   clearTimeout(UI.tourT);
   if (s.d && !UI.tourPause) UI.tourT = setTimeout(function () { if (UI.screen === 'tour' && (UI.tourAt || 0) === i) A.tourNext(); }, s.d);
   var prog = '<div class="t-prog" aria-hidden="true">' + TOUR.map(function (x, k) { return '<span class="' + (k < i ? 'done' : k === i ? 'now' : '') + '"><i style="animation-duration:' + (x.d || 1) + 'ms"></i></span>'; }).join('') + '</div>';
-  var hs = tx.h.length > 36 ? 25 : tx.h.length > 24 ? 28 : 32;
-  var body = '<div class="t-wrap">' + prog +
-    '<div class="t-top"><span class="t-brand">' + sockIc(s.dark ? '#FFFFFF' : '#15122B', 12) + 'zparkling</span><button type="button" class="t-skip" data-act="tourSkip">' + (last ? 'Schließen' : 'Überspringen') + '</button></div>' +
-    '<div class="t-stage" aria-live="polite"><h1 class="t-h" style="font-size:' + hs + 'px">' + kin(tx.h) + '</h1>' + (tx.t ? '<p class="t-p">' + esc(tx.t) + '</p>' : '') + '<div class="t-art">' + TOUR_ART[s.id]() + '</div></div>' +
+  var hs = tx.h.length > 36 ? 26 : tx.h.length > 24 ? 29 : 33;
+  var from = UI.tourFrom && UI.tourFrom !== s.c ? UI.tourFrom : '';
+  var bg = '<div class="t-bg" aria-hidden="true">' + (from ? '<span class="t-glow old" style="--tc:' + from + '"></span>' : '') + '<span class="t-glow"></span><span class="t-dots"></span>' + tourStars() + '</div>';
+  var body = '<div class="t-wrap">' + bg + prog +
+    '<div class="t-top"><span class="t-brand">' + sockIc('#FFFFFF', 12) + 'zparkling</span><button type="button" class="t-skip" data-act="tourSkip">' + (last ? 'Schließen' : 'Überspringen') + '</button></div>' +
+    '<div class="t-stage' + (from ? ' tin' + (UI.tourDir < 0 ? ' back' : '') : '') + '" aria-live="polite"><h1 class="t-h" style="font-size:' + hs + 'px">' + kin(tx.h) + '</h1>' + (tx.t ? '<p class="t-p">' + esc(tx.t) + '</p>' : '') + '<div class="t-art"><div class="t-art-in">' + TOUR_ART[s.id]() + '</div></div></div>' +
     (last || s.id === 'name' ? '' : '<button type="button" class="t-zone l" data-act="tourPrev" aria-label="Zurück"></button><button type="button" class="t-zone r" data-act="tourNext" aria-label="Weiter"></button>') + '</div>';
   var foot = last
     ? '<button type="button" class="cta t-cta-sun" data-act="tourPass">' + icon('i-star', 18) + 'Game Pass ansehen</button><button type="button" class="btn-ghost t-ghost" data-act="tourDemo">Erst mal den Beispiel-Abend ausprobieren</button>'
     : '<div class="cta-row">' + (i ? '<button type="button" class="t-back" data-act="tourPrev" aria-label="Zurück">' + icon('i-back', 20) + '</button>' : '') +
       '<button type="button" class="t-next" id="tNext" data-act="tourNext"><span id="tNextL">' + (s.id === 'name' ? (tourName() ? 'Weiter' : 'Ohne Namen weiter') : i === TOUR.length - 2 ? 'Zum Game Pass' : 'Weiter') + '</span>' + icon('i-next', 18) + '</button></div>';
-  var wipe = UI.tourFrom && UI.tourFrom !== s.c;
-  var html = scr('', body, foot, 'tourscr ts-' + s.id + (s.dark ? ' dark' : '') + (wipe ? ' wipe' + (UI.tourDir < 0 ? ' back' : '') : ''));
+  var html = scr('', body, foot, 'tourscr ts-' + s.id + (s.dark ? ' dark' : ''));
   html = html.replace('<div class="scr', '<div style="--tc:' + s.c + '" class="scr');
-  var under = wipe ? '<div class="t-under" style="background:' + UI.tourFrom + '"></div>' : '';
   UI.tourFrom = '';
-  return under + html;
+  return html;
 };
+/* on a laptop the picture leans with the mouse, a little, like a card in the hand */
+if (typeof window !== 'undefined' && window.matchMedia) {
+  try {
+    if (window.matchMedia('(hover: hover)').matches) app.addEventListener('pointermove', function (e) {
+      if (UI.screen !== 'tour') return;
+      var art = app.querySelector('.t-art'); if (!art) return;
+      var r = art.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      if (x < -0.7 || x > 0.7 || y < -0.7 || y > 0.7) { art.style.removeProperty('--rx'); art.style.removeProperty('--ry'); return; }
+      art.style.setProperty('--ry', (x * 9).toFixed(2) + 'deg'); art.style.setProperty('--rx', (-y * 7).toFixed(2) + 'deg');
+    });
+  } catch (e) {}
+}
 /* while typing the name, only the line, the avatar and the button change */
 function tourPatch() {
   var n = tourName(), line = document.getElementById('tLine'), me = document.getElementById('tMe'), mt = document.getElementById('tMeT'), nl = document.getElementById('tNextL');

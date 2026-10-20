@@ -22,7 +22,7 @@ srv.listen(0, async () => {
   /* 2. the example evening: invite link points here, no KI */
   await p.evaluate(() => { localStorage.setItem('altesocke.tour', JSON.stringify({ done: 1, name: '', roll: 0 })); }); await p.reload(); await p.waitForTimeout(800);
   await p.screenshot({ path: path.join(OUT, '02-welcome.png') });
-  const demoBtn = await p.$('.lp-hero [data-act="openDemoPick"]'); if (demoBtn) { await demoBtn.tap(); await p.waitForTimeout(900); await p.tap('.dp-card[data-v="socken"]', { force: true }); await p.waitForTimeout(600); await p.tap('.dp-go', { force: true }); await p.waitForTimeout(1200); } else errors.push('no example evening button');
+  const demoBtn = await p.$('.lp-hero [data-act="openDemoPick"]'); if (demoBtn) { await demoBtn.tap(); await p.waitForTimeout(900); await p.tap('.dp-tk-top[data-v="socken"]', { force: true }); await p.waitForTimeout(600); await p.tap('.dp-tk.on .dp-go', { force: true }); await p.waitForTimeout(1200); } else errors.push('no example evening button');
   await p.screenshot({ path: path.join(OUT, '03-home.png') });
   const fr = await p.$('[data-act="go"][data-to="questions"]'); if (fr) { await fr.tap(); await p.waitForTimeout(1200); }
   const q = await p.evaluate(() => ({ ki: !!document.getElementById('qs-ki'), chip: [...document.querySelectorAll('.qx-jb')].map(b => b.textContent).join(','), link: (document.body.innerHTML.match(/https?:\/\/[^"'<\s]*#gast-fragen/) || [''])[0] }));

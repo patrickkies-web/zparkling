@@ -43,7 +43,7 @@ const typing = (c, on) => { c.document.activeElement = on ? { tagName: 'INPUT' }
   const c = party(3, true);
   ok(c.demoOn(), 'Example evening with limits');
   c.go('home'); let h = c.V.home();
-  ok(/So machen eure Gäste mit/.test(h) && (h.match(/class="dm-type[ "]/g) || []).length === c.EVENT_TYPES.length && /Einladung als Gast ansehen/.test(h), 'Home: how guests take part, and every party type to try');
+  ok(/So machen eure Gäste mit/.test(h) && /class="dm-switch/.test(h) && /data-act="openDemoPick"/.test(h) && !/dm-type[ "]/.test(h) && /Einladung als Gast ansehen/.test(h), 'Home: how guests take part, and a banner back to the occasion choice');
   c.A.setEventAnlass({ v: 'treppe' }); ok(c.E().anlass === 'treppe', 'A party type is switched with one tap');
   c.A.setEventAnlass({ v: 'socken' });
   c.A.openGuestForm(); c.gPass().welcomed = true; h = c.V.guestForm();
@@ -55,7 +55,7 @@ const typing = (c, on) => { c.document.activeElement = on ? { tagName: 'INPUT' }
   ok(/Es gibt noch mehr Karten/.test(c.gkPanelHtml(c.UI.gk)), 'The card says there are more, without showing them');
   c.UI.gk = null;
   c.UI.guestMode = ''; c.go('questions'); h = c.V.questions();
-  ok((h.match(/class="qx-t[ "]/g) || []).length === 5 && /class="qo-t lock"/.test(h) && /Mit dem Game Pass/.test(h) && !/Joker im Umlauf/.test(h), 'Master page: five kinds, the rest locked, the KI and the Joker behind the pass');
+  ok((h.match(/class="qp-f[ "]/g) || []).length >= 5 && /class="qo-t lock"/.test(h) && /gibt es mit dem Game Pass/.test(h) && /pc-shelf locked/.test(h), 'Master page: the kinds as filters, the rest locked, the KI and the cards behind the pass');
   c.go('games'); h = c.V.games();
   ok((h.match(/gtile gm-t dlk/g) || []).length === 4, 'Spiele: four tiles locked');
   c.A.freeQuick({ v: 'quiz' }); ok(c.UI.screen === 'pass', 'A locked game leads to the Game Pass');

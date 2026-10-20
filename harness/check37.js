@@ -106,7 +106,7 @@ for (const [t, rar, pv] of [['weiter', 'wei', 'GK_WEITER_P'], ['regel', 'reg', '
 {
   const c = party(6);
   c.go('questions'); let h = c.V.questions();
-  ok(/Gäste-Runde schließen/.test(h) && /Karten im Umlauf/.test(h) && /Zum Kartenbereich/.test(h), 'The guests\' page: close the round, the cards in circulation');
+  ok(/Gäste-Runde schließen/.test(h) && /Im Umlauf/.test(h) && /Zum Kartenbereich/.test(h), 'The guests\' page: close the round, the cards in circulation');
   c.A.openCards({ from: 'questions' }); h = c.V.cards();
   ok(/Erst die Gäste-Runde schließen/.test(h) && !/data-act="prGo"/.test(h), 'Printing waits for the closed round');
   c.A.collectClose();

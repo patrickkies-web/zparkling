@@ -25,10 +25,7 @@ function lpGarland() {
 }
 function lpBtn(act, label, cls, ic) { return '<button type="button" class="lp-btn' + (cls ? ' ' + cls : '') + '" data-act="' + act + '">' + (ic ? icon(ic, 18) : '') + label + '</button>'; }
 function lpFace(name, size) { return '<span class="lp-face" style="width:' + size + 'px;height:' + size + 'px">' + avatarSVG(tourAvFor(name, 0)) + '</span>'; }
-function lpOcc(t) {
-  return '<button type="button" class="lp-occ" data-act="lpTry" data-v="' + t.id + '"><span class="lp-occ-ic" style="background:' + t.bg + '">' + (t.ic === 'sock' ? sockIc('#15122B', 17) : icon(t.ic, 20)) + '</span>' +
-    '<span class="stack" style="gap:2px;min-width:0"><b>' + esc(t.label) + '</b><span>' + esc(t.sub) + '</span></span></button>';
-}
+function lpOcc(t, i) { return occTicket(t, { act: 'lpTry', go: true, i: i, id: 'lo-' + t.id }); }
 V.landing = function () {
   var top = '<header class="lp-top" data-tint="#0C0A1A"><span class="lp-brand">' + lpLogo(32) + '<b>zparkling</b></span><nav class="lp-nav" aria-label="Start">' +
     '<button type="button" class="lp-link" data-act="openDemoPick">Beispiel-Abend</button>' + lpBtn('lpIntro', 'Intro starten', 'sm', 'i-play') + '</nav></header>';
@@ -54,7 +51,7 @@ V.landing = function () {
     '</div></section>';
   var occ = '<section class="lp-sec"><h2 class="lp-h2">Für jeden Anlass</h2>' +
     '<p class="lp-p lp-narrow">Beim Sockenkranz wird abgenommen, bei der Treppe gefegt, beim JGA ganz ohne Kranz gespielt. Tippt einen Anlass an und seht euch den Beispiel-Abend dazu an.</p>' +
-    '<div class="lp-occs">' + EVENT_TYPES.map(lpOcc).join('') + '</div></section>';
+    '<div class="lp-occs dp-list">' + EVENT_TYPES.map(lpOcc).join('') + '</div></section>';
   var fair = '<section class="lp-sec"><h2 class="lp-h2">Mit eingebauter Bremse</h2><div class="lp-fair">' +
     '<div><span class="lp-fair-e">' + emb('cheers', 44) + '</span><b>Höchstens ein Pinnchen pro Spiel</b><p>Pro Spiel und Person nie mehr als eins. Wer viel gewinnt, trinkt weniger.</p></div>' +
     '<div><span class="lp-fair-e">' + emb('watch', 44) + '</span><b>Die App achtet aufs Tempo</b><p>Wird der Abend zu schnell, tritt sie auf die Bremse.</p></div>' +
@@ -68,7 +65,7 @@ V.landing = function () {
   var end = '<section class="lp-end"><h2 class="lp-h2">Bereit für eure Party?</h2><p class="lp-p">Das Intro zeigt in gut einer Minute, was zparkling aus eurem Abend macht.</p>' +
     '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('newEvent', 'Gleich eure Party anlegen', 'ghost') + '</div></section>' +
     '<footer class="lp-foot"><span class="lp-brand">' + lpLogo(24) + '<b>zparkling</b></span><span>Das Partyspiel für euren Abend</span></footer>';
-  return scr('', top + lpSlot() + hero + steps + guests + occ + fair + pass + end, '', 'lp');
+  return scr('', top + lpMarquee() + hero + steps + guests + occ + fair + pass + end, '', 'lp');
 };
 A.lpIntro = function () { A.openTour(); };
 /* an occasion on the landing page: the example evening, switched to it */

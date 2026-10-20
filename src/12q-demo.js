@@ -25,24 +25,24 @@ A.demoInfo = function () { setToast('Im Beispiel-Abend ist nur ein Teil offen. A
 /* on the example home: every party type to try, and what guests do */
 function demoHomeHtml() {
   if (!demoOn()) return '';
-  var cur = E().anlass;
-  var types = EVENT_TYPES.map(function (t) { var on = t.id === cur; return '<button type="button" class="dm-type' + (on ? ' on' : '') + '" data-act="setEventAnlass" data-v="' + t.id + '" aria-pressed="' + on + '"><span class="tile-ic" style="width:34px;height:34px;border-radius:11px;background:' + t.bg + '">' + typeIcon(t) + '</span><span>' + esc(t.label) + '</span></button>'; }).join('');
+  var t = evType();
   return '<div class="dm-guests mt14"><span class="dm-k">' + icon('i-star', 12) + 'Das Herzstück</span><h3>So machen eure Gäste mit</h3>' +
     '<div class="dm-steps">' + [['i-link', 'Einladung per Link', 'Ein Link in die Gruppe, jeder bekommt eine Einladung.'], ['i-pencil', 'Zwei Minuten Beiträge', 'Erinnerungen, Lügen, zwei Worte über euch.'], ['i-pad', 'Daraus werden Spiele', 'Die App baut eigene Runden, nur für euren Abend.']].map(function (x, i) { return '<div class="dm-step"><span class="dm-n">' + (i + 1) + '</span><span class="stack" style="gap:1px;min-width:0"><b>' + x[1] + '</b><span>' + x[2] + '</span></span></div>'; }).join('') + '</div>' +
     '<button type="button" class="dm-go" data-act="openGuestForm">' + icon('i-play', 16) + 'Einladung als Gast ansehen</button></div>' +
-    '<span class="eyebrow mt22 block">Jeden Anlass ausprobieren</span><p class="small mt6">Tipp an, was gefeiert wird. Der Beispiel-Abend stellt sich sofort um.</p><div class="dm-types mt10">' + types + '</div>';
+    '<button type="button" class="dm-switch mt14" data-act="openDemoPick" data-from="home" data-v="' + t.id + '"><span class="dm-sw-ic" style="background:' + t.bg + '">' + typeIcon(t) + '</span><span class="stack grow" style="gap:2px;min-width:0;text-align:left"><small>Gerade im Beispiel</small><b>' + esc(t.label) + '</b><span>Anderen Anlass ausprobieren</span></span>' + icon('i-next', 18) + '</button>';
 }
 /* ---------- the example evening starts with a choice: which occasion ----------
-   Cards like the bonus cards. A tap opens a short note under the row, one more tap starts. */
+   One ticket per occasion, in its colour, the whole width. A tap opens the
+   ticket: a short note and the start button, right there. */
 var DP_INFO = {
-  socken: ['Mit 25 noch ledig? Am Kranz hängen 25 Socken, jede ist eine kleine Aufgabe.', ['Socke für Socke', 'Würfel möglich', 'Gäste-Runden']],
-  schachtel: ['Die Variante mit Schachteln: 25 Stück am Kranz, eine nach der anderen kommt ab.', ['Schachtel für Schachtel', 'Allein oder zu zweit', 'Gäste-Runden']],
-  treppe: ['Mit 30 noch ledig: Die Treppe wird gefegt, dazwischen gibt es Einlagen. Erst mit der Zahnbürste, mit Glück bald mit dem Besen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen']],
-  klinke: ['Mit 30 noch ledig: Klinken putzen, dazwischen Einlagen. Erst mit dem Wattestäbchen, mit Glück bald mit dem Lappen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen']],
-  geburtstag: ['Geburtstag ohne Kranz und Besen: Runde für Runde Spiele rund um das Geburtstagskind.', ['Runde für Runde', 'Würfel möglich', 'Gäste-Runden']],
-  hochzeit: ['Für Polterabend und Hochzeit: Spiele über das Brautpaar, mit den Geschichten der Gäste.', ['Für das Paar', 'Paar-Duelle', 'Gäste-Runden']],
-  jga: ['Der Junggesellenabschied: Missionen in der Stadt oder drinnen, die Truppe spielt mit.', ['Missionen', 'Mit der Truppe', 'Drinnen oder draußen']],
-  party: ['Einfach ein Spielabend: Runden, Duelle und Gäste-Runden, ganz ohne Brauch.', ['Runde für Runde', 'Duelle', 'Gäste-Runden']]
+  socken: ['Mit 25 noch ledig? Dann hängt ein Kranz voller Socken. Socke für Socke kommt ab, und hinter jeder steckt eine kleine Aufgabe.', ['Socke für Socke', 'Würfel möglich', 'Gäste-Runden'], 'Zum 25. Geburtstag'],
+  schachtel: ['Die Variante mit Schachteln: Eine nach der anderen kommt vom Kranz, und jede bringt ihr eigenes Spiel mit.', ['Schachtel für Schachtel', 'Allein oder zu zweit', 'Gäste-Runden'], 'Zum 25. Geburtstag'],
+  treppe: ['Mit 30 noch ledig: Die Treppe wird gefegt, dazwischen gibt es Einlagen. Erst mit der Zahnbürste, mit Glück bald mit dem Besen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen'], 'Zum 30. Geburtstag'],
+  klinke: ['Mit 30 noch ledig: Klinken putzen, dazwischen Einlagen. Erst mit dem Wattestäbchen, mit Glück bald mit dem Lappen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen'], 'Zum 30. Geburtstag'],
+  geburtstag: ['Geburtstag ohne Kranz und Besen: Runde für Runde Spiele rund um das Geburtstagskind.', ['Runde für Runde', 'Würfel möglich', 'Gäste-Runden'], 'Ohne Kranz und Besen'],
+  hochzeit: ['Für Polterabend und Hochzeit: Spiele über das Brautpaar, mit den Geschichten der Gäste.', ['Für das Paar', 'Paar-Duelle', 'Gäste-Runden'], 'Für das Brautpaar'],
+  jga: ['Der Junggesellenabschied: Missionen in der Stadt oder drinnen, die Truppe spielt mit.', ['Missionen', 'Mit der Truppe', 'Drinnen oder draußen'], 'Für Braut oder Bräutigam'],
+  party: ['Einfach ein Spielabend: Runden, Duelle und Gäste-Runden, ganz ohne Brauch.', ['Runde für Runde', 'Duelle', 'Gäste-Runden'], 'Einfach ein Spielabend']
 };
 A.openDemoPick = function (d) {
   var from = (d && d.from) || (UI.screen === 'demoPick' ? UI.dpFrom : UI.screen) || 'landing';
@@ -50,22 +50,26 @@ A.openDemoPick = function (d) {
   UI.dpSel = d && d.v ? d.v : null; go('demoPick');
   if (UI.dpSel) setTimeout(dpScroll, 80);
 };
-function dpScroll() { var el = document.getElementById('dpdet'), b = app.querySelector('.body'); if (!el || !b || !el.getBoundingClientRect) return; var y = el.getBoundingClientRect().bottom - b.getBoundingClientRect().bottom; if (y > -12) try { b.scrollBy({ top: y + 24, behavior: 'smooth' }); } catch (e) { b.scrollTop += y + 24; } }
+function dpScroll() { var el = UI.dpSel && document.getElementById('dp-' + UI.dpSel), b = app.querySelector('.body'); if (!el || !b || !el.getBoundingClientRect) return; var y = el.getBoundingClientRect().bottom - b.getBoundingClientRect().bottom; if (y > -12) try { b.scrollBy({ top: y + 24, behavior: 'smooth' }); } catch (e) { b.scrollTop += y + 24; } }
 A.dpSel = function (d) { UI.dpSel = UI.dpSel === d.v ? null : d.v; render(); if (UI.dpSel) setTimeout(dpScroll, 40); };
 A.dpStart = function () { var v = UI.dpSel || 'socken'; UI.homeIn = true; A.loadDemo(); A.setEventAnlass({ v: v }); };
-function dpDetail(t) {
-  var x = DP_INFO[t.id] || ['', []];
-  return '<div class="dp-det" id="dpdet" style="--c:' + t.bg + '"><div class="dp-det-h"><span class="dp-det-ic">' + (t.ic === 'sock' ? sockIc('#15122B', 16) : icon(t.ic, 20)) + '</span><b>' + esc(t.label) + '</b></div><p>' + esc(x[0]) + '</p>' +
-    '<div class="dp-chips">' + x[1].map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('') + '</div>' +
-    '<button type="button" class="cta dp-go" data-act="dpStart">' + icon('i-play', 18) + 'Diesen Abend ausprobieren</button></div>';
+/* one occasion as a ticket in its colour: the top row is the button, the rest opens below it */
+function occTicket(t, opt) {
+  var x = DP_INFO[t.id] || ['', [], t.sub], on = !!opt.on;
+  return '<div class="dp-tk' + (on ? ' on' : '') + (opt.dim ? ' dim' : '') + (opt.sel ? ' sel' : '') + '" id="' + (opt.id || 'dp-' + t.id) + '" style="--c:' + t.bg + ';--i:' + (opt.i || 0) + '">' +
+    '<button type="button" class="dp-tk-top" data-act="' + opt.act + '" data-v="' + t.id + '"' + (opt.more ? ' aria-expanded="' + on + '"' : ' aria-pressed="' + !!opt.sel + '"') + '>' +
+    '<span class="dp-tk-art" aria-hidden="true"><span class="dp-tk-ring"></span>' + (t.ic === 'sock' ? sockIc('#15122B', 30) : icon(t.ic, 36)) + '</span>' +
+    '<span class="dp-tk-t"><small>' + esc(x[2] || t.sub) + '</small><b>' + esc(t.label).replace('Junggesellenabschied', 'Junggesellen\u00ADabschied') + '</b></span>' +
+    '<span class="dp-tk-x' + (opt.go ? ' go' : '') + '">' + icon(opt.more ? 'i-plus' : opt.go ? 'i-next' : 'i-check', 18) + '</span></button>' + (opt.more || '') + '</div>';
+}
+function dpTicket(t, i, on, dim) {
+  var x = DP_INFO[t.id] || ['', [], t.sub];
+  var det = '<div class="dp-more"><div class="dp-more-in"><p>' + esc(x[0]) + '</p><div class="dp-chips">' + x[1].map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('') + '</div>' +
+    '<button type="button" class="dp-go" data-act="dpStart">' + icon('i-play', 18) + 'Diesen Abend ausprobieren</button></div></div>';
+  return occTicket(t, { on: on, dim: dim, i: i, act: 'dpSel', more: det });
 }
 V.demoPick = function () {
-  var sel = UI.dpSel, cards = '';
-  EVENT_TYPES.forEach(function (t, i) {
-    var on = sel === t.id;
-    cards += '<button type="button" class="dp-card' + (on ? ' on' : '') + (sel && !on ? ' dim' : '') + '" data-act="dpSel" data-v="' + t.id + '" aria-expanded="' + on + '" style="--c:' + t.bg + ';--i:' + i + '"><span class="dp-in"><span class="dp-art"><span class="dp-ring"></span>' + (t.ic === 'sock' ? sockIc('#15122B', 28) : icon(t.ic, 34)) + '</span><b>' + esc(t.label) + '</b><small>' + esc(t.sub) + '</small></span></button>';
-    if (on) cards += dpDetail(t);
-  });
-  var body = '<h1 class="h1 mt10">Welchen Abend wollt ihr ausprobieren?</h1><p class="lead mt8">Tippt einen Anlass an. Der Beispiel-Abend ist schon mit Gästen und ihren Beiträgen gefüllt, ihr könnt sofort losspielen.</p><div class="dp-grid mt18">' + cards + '</div>';
+  var sel = UI.dpSel, cards = EVENT_TYPES.map(function (t, i) { return dpTicket(t, i, sel === t.id, !!sel && sel !== t.id); }).join('');
+  var body = '<h1 class="h1 mt10">Welchen Abend wollt ihr ausprobieren?</h1><p class="lead mt8">Der Beispiel-Abend ist schon mit Gästen und ihren Beiträgen gefüllt. Tippt einen Anlass an, dann könnt ihr sofort losspielen.</p><div class="dp-list mt18">' + cards + '</div>';
   return scr(topbar(UI.dpFrom || 'landing', 'Beispiel-Abend'), body, '', 'dpscr');
 };

@@ -3,8 +3,8 @@
    - The browser bar (Safari on the iPhone, Chrome on Android, Safari on
      the Mac) takes the colour of the top of the screen. The Game Pass is
      always gold.
-   - The slot machine on the landing page: reels with every occasion,
-     they spin and stop one after the other, like stairs, again and again.
+   - The occasions on the landing page: two rows of cards that drift
+     across the screen from left to right, endlessly.
    ========================================================= */
 var TINT_BASE = '#0C0A1A', TINT_GOLD = '#F2B33D';
 function tintNow() {
@@ -39,46 +39,21 @@ if (typeof window !== 'undefined' && window.requestAnimationFrame && typeof setI
   try { window.addEventListener('resize', tintSoon); } catch (e) {}
 }
 
-/* ---------- the slot machine ---------- */
-var SLOT_SHORT = { socken: 'Sockenkranz', schachtel: 'Schachtelkranz', treppe: 'Treppe fegen', klinke: 'Klinken putzen', geburtstag: 'Geburtstag', hochzeit: 'Polterabend', jga: 'JGA', party: 'Spielabend' };
-var SLOT_REELS = 5, SLOT_COPIES = 4;
-function slotSym(t) {
-  return '<button type="button" class="lp-sym" data-act="lpTry" data-v="' + t.id + '" tabindex="-1"><span class="lp-sym-ic" style="background:' + t.bg + '">' + (t.ic === 'sock' ? sockIc('#15122B', 15) : icon(t.ic, 19)) + '</span>' +
-    '<span class="lp-sym-t"><b class="lp-long">' + esc(t.label) + '</b><b class="lp-short">' + esc(SLOT_SHORT[t.id] || t.label) + '</b><small>' + esc(t.sub) + '</small></span></button>';
+/* ---------- the occasions run across the landing page ----------
+   Two rows of occasion cards drift from left to right, endlessly, one a
+   little slower than the other. Every card opens the example evening for
+   that occasion. Pure CSS, so it costs nothing and never stutters. */
+var MQ_SHORT = { socken: 'Sockenkranz', schachtel: 'Schachtelkranz', treppe: 'Treppe fegen', klinke: 'Klinken putzen', geburtstag: 'Geburtstag', hochzeit: 'Hochzeit & Polterabend', jga: 'Junggesellenabschied', party: 'Spielabend' };
+function mqCard(t, k) {
+  return '<button type="button" class="lp-mc" data-act="lpTry" data-v="' + t.id + '" style="--c:' + t.bg + ';--k:' + k + '" tabindex="-1"><span class="lp-mc-ic">' + (t.ic === 'sock' ? sockIc('#15122B', 16) : icon(t.ic, 20)) + '</span>' +
+    '<span class="lp-mc-t"><b>' + esc(MQ_SHORT[t.id] || t.label) + '</b><small>' + esc(t.sub) + '</small></span></button>';
 }
-function lpSlot() {
-  var strip = ''; for (var c = 0; c < SLOT_COPIES; c++) strip += EVENT_TYPES.map(slotSym).join('');
-  var reels = '';
-  for (var i = 0; i < SLOT_REELS; i++) reels += '<div class="lp-reel" data-r="' + i + '"><div class="lp-strip" style="transform:translateY(calc(var(--sh) * -' + (i % EVENT_TYPES.length) + '))">' + strip + '</div></div>';
-  var bulbs = ''; for (var b = 0; b < 14; b++) bulbs += '<i></i>';
-  return '<section class="lp-slot" id="lpslot" aria-label="Für jeden Anlass: ' + esc(EVENT_TYPES.map(function (t) { return t.label; }).join(', ')) + '">' +
-    '<span class="lp-bulbs top" aria-hidden="true">' + bulbs + '</span><span class="lp-bulbs bot" aria-hidden="true">' + bulbs + '</span>' +
-    '<span class="lp-slot-k"><b>Für jeden Anlass</b><small>Tippt einen an</small></span><div class="lp-reels">' + reels + '</div></section>';
+function mqRow(list, cls, dur) {
+  var one = list.map(mqCard).join('');
+  return '<div class="lp-mq-row ' + cls + '" style="--dur:' + dur + 's"><div class="lp-mq-track">' + one + one + one + '</div></div>';
 }
-/* one spin: every reel travels a little longer than the one before, so they stop like stairs */
-function slotSpin() {
-  var box = document.getElementById('lpslot'); if (!box) return false;
-  var reels = box.querySelectorAll('.lp-reel'), n = EVENT_TYPES.length; if (!reels.length) return false;
-  var h = reels[0].querySelector('.lp-sym'); h = h ? h.offsetHeight : 0; if (!h) return true;
-  var vis = 0; for (var v = 0; v < reels.length; v++) if (reels[v].offsetWidth) vis++;
-  UI.slotK = ((UI.slotK == null ? -vis : UI.slotK) + Math.max(1, vis)) % n;
-  for (var i = 0; i < reels.length; i++) {
-    var r = reels[i], st = r.querySelector('.lp-strip'), from = +(r.getAttribute('data-pos') || i % n), to = (UI.slotK + i) % n;
-    var laps = 1 + Math.min(SLOT_COPIES - 2, Math.floor(i / 2)), end = laps * n + to, dur = 1.05 + i * 0.28;
-    st.style.transition = 'none'; st.style.transform = 'translateY(' + (-from * h) + 'px)';
-    void st.offsetHeight;
-    st.style.transition = 'transform ' + dur.toFixed(2) + 's cubic-bezier(.16,.72,.26,1.04)';
-    st.style.transform = 'translateY(' + (-end * h) + 'px)';
-    r.setAttribute('data-pos', to); r.classList.add('spin');
-    (function (r2, ms) { setTimeout(function () { r2.classList.remove('spin'); r2.classList.add('stop'); setTimeout(function () { r2.classList.remove('stop'); }, 420); }, ms); })(r, Math.round(dur * 1000) - 260);
-  }
-  return true;
-}
-/* the machine runs while the landing page is open; it rests when nothing moves on the screen */
-function slotRun() {
-  clearInterval(UI.slotT);
-  if (typeof window === 'undefined' || !window.requestAnimationFrame) return;
-  try { if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
-  setTimeout(slotSpin, 350);
-  UI.slotT = setInterval(function () { if (document.hidden) return; if (!slotSpin()) clearInterval(UI.slotT); }, 4600);
+function lpMarquee() {
+  var a = EVENT_TYPES.slice(), b = EVENT_TYPES.slice(3).concat(EVENT_TYPES.slice(0, 3)).reverse();
+  return '<section class="lp-mq" aria-label="Für jeden Anlass: ' + esc(EVENT_TYPES.map(function (t) { return t.label; }).join(', ')) + '">' +
+    mqRow(a, 'a', 44) + mqRow(b, 'b', 58) + '</section>';
 }
