@@ -30,7 +30,9 @@ function tintApply() {
     var m = document.querySelector('meta[name="theme-color"]');
     if (!m) { m = document.createElement('meta'); m.setAttribute('name', 'theme-color'); document.head.appendChild(m); }
     m.setAttribute('content', c);
-    document.documentElement.style.backgroundColor = c; document.body.style.backgroundColor = c;
+    /* only the bar takes the colour. The page itself stays dark: with the keyboard open, the strip between the
+       field and the keyboard shows the page background, and that must never be gold. */
+    document.documentElement.style.backgroundColor = ''; document.body.style.backgroundColor = '';
   } catch (e) {}
 }
 function tintSoon() { clearTimeout(UI.tintT); UI.tintT = setTimeout(tintApply, 40); }

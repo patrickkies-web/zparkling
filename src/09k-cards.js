@@ -333,15 +333,17 @@ A.gkDone = function () {
   else finish();
 };
 A.gkPen = function (d) { var k = UI.gk; if (!k) return; k.pen = +d.v || 0; var b = app.querySelectorAll('.gk-pen'); for (var i = 0; i < b.length; i++) { var on = +b[i].getAttribute('data-v') === k.pen; b[i].classList.toggle('on', on); b[i].setAttribute('aria-pressed', on); } gVibe(8); };
-A.gkStart = function () { var k = UI.gk; if (!k || k.type !== 'portrait') return; gkFxStop(); k.phase = 'draw'; k.strokes = []; k.t0 = Date.now(); gkStartClock(); gVibe(20); render(); };
-A.gkRedo = function () { var k = UI.gk; if (!k || k.type !== 'portrait' || k.phase === 'ready') return; k.strokes = []; k.phase = 'draw'; k.t0 = Date.now(); gkStartClock(); render(); };
+/* the paper comes up; the clock waits for the first stroke */
+A.gkStart = function () { var k = UI.gk; if (!k || k.type !== 'portrait') return; gkFxStop(); gkStopClock(); k.phase = 'draw'; k.strokes = []; k.t0 = 0; gVibe(20); render(); };
+A.gkRedo = function () { var k = UI.gk; if (!k || k.type !== 'portrait' || k.phase === 'ready') return; gkStopClock(); k.strokes = []; k.phase = 'draw'; k.t0 = 0; render(); };
+function gkClockGo(k) { if (k.t0) return; k.t0 = Date.now(); gkStartClock(); var sub = document.getElementById('gkdsub'); if (sub) sub.textContent = 'Die Uhr läuft!'; gVibe(14); }
 /* take back the last stroke */
 A.gkUndo = function () { var k = UI.gk; if (!k || k.type !== 'portrait' || k.phase === 'ready' || !k.strokes.length) return; k.strokes.pop(); gkRestore(); gkPatchGo(); gVibe(8); };
 function gkStartClock() { gkStopClock(); UI.gkClock = setInterval(gkTick, 100); }
 function gkStopClock() { if (UI.gkClock) { clearInterval(UI.gkClock); UI.gkClock = null; } }
-function gkSecsLeft(k) { return k.phase === 'draw' ? Math.max(0, GK_DRAW_SECS - (Date.now() - (k.t0 || Date.now())) / 1000) : k.phase === 'over' ? 0 : GK_DRAW_SECS; }
+function gkSecsLeft(k) { return k.phase === 'draw' ? (k.t0 ? Math.max(0, GK_DRAW_SECS - (Date.now() - k.t0) / 1000) : GK_DRAW_SECS) : k.phase === 'over' ? 0 : GK_DRAW_SECS; }
 function gkTick() {
-  var k = UI.gk; if (!k || k.type !== 'portrait' || k.phase !== 'draw') { gkStopClock(); return; }
+  var k = UI.gk; if (!k || k.type !== 'portrait' || k.phase !== 'draw' || !k.t0) { gkStopClock(); return; }
   var left = gkSecsLeft(k);
   var el = document.getElementById('gkclock'); if (el) el.innerHTML = gkClockHtml(k);
   var pp = document.getElementById('gkpaper'); if (pp) pp.classList.toggle('hurry', left <= 8);
@@ -359,6 +361,7 @@ function gkPointer(e, t) {
     if (e.target !== cv || k.phase !== 'draw') return;
     e.preventDefault(); UI.gkDrawing = true;
     try { cv.setPointerCapture(e.pointerId); } catch (x) {}
+    gkClockGo(k);
     k.strokes.push([k.pen]); gkAddPt(cv, e); return;
   }
   if (!UI.gkDrawing) return;
@@ -381,10 +384,28 @@ function gkAddPt(cv, e) {
   else { c.beginPath(); c.moveTo(s[n - 2] * fx, s[n - 1] * fy); c.lineTo(x * fx, y * fy); c.stroke(); }
   if (n === 1 || gkTotalPts(k.strokes) === 10) gkPatchGo();
 }
+/* the paper takes all the room the screen has: as wide as the panel, as tall as what is left next to
+   the header, the pens and the buttons (3:4). Side by side with them on a wide, low screen. */
+function gkFitPaper() {
+  var k = UI.gk; if (!k || k.type !== 'portrait' || k.phase === 'ready') return;
+  var sc = app.querySelector('.gk-scroll'), pn = app.querySelector('.gk-panel'), pp = document.getElementById('gkpaper');
+  if (!sc || !pn || !pp || !sc.clientHeight) return;
+  var cs = getComputedStyle(sc), ps = getComputedStyle(pn), px = function (v) { return parseFloat(v) || 0; };
+  var H = sc.clientHeight - px(cs.paddingTop) - px(cs.paddingBottom) - px(ps.marginTop) - px(ps.marginBottom), gap = px(ps.rowGap) || px(ps.gap) || 10, w;
+  if (ps.display === 'grid') { w = Math.min(pn.clientWidth - px(ps.columnGap) - 300, H * 0.75); }
+  else {
+    var used = 0, n = 0;
+    for (var c = pn.firstElementChild; c; c = c.nextElementSibling) { if (c === pp || !c.offsetHeight) continue; used += c.offsetHeight; n++; }
+    w = Math.min(pn.clientWidth, (H - used - gap * n) * 0.75);
+  }
+  w = Math.max(150, Math.floor(w));
+  if (pp.style.width !== w + 'px') pp.style.width = w + 'px';
+}
 /* after any render: paint the strokes again */
 function gkRestore() {
   gkFxRebind();
   var k = UI.gk; if (!k || k.type !== 'portrait') return;
+  gkFitPaper();
   var cv = document.getElementById('gkcv'); if (!cv || !cv.getContext) return;
   var c = cv.getContext('2d'); if (!c) return;
   var fx = cv.width / 1000, fy = cv.height / 1000;
@@ -491,9 +512,9 @@ function gkPanelHtml(k) {
   later += more;
   var go = function (label) { return '<button type="button" class="cta gk-go' + (ok ? ' mint' : '') + '" id="gkgo" data-act="gkDone"' + (ok ? '' : ' disabled') + '>' + label + '</button>'; };
   if (k.type === 'portrait') {
-    if (k.phase === 'ready') return '<button type="button" class="cta" data-act="gkStart">' + icon('i-play', 18) + 'Los, ' + GK_DRAW_SECS + ' Sekunden!</button><p class="gk-hint">Die Uhr startet erst mit dem Tippen. Mal einfach drauflos.</p>' + later;
+    if (k.phase === 'ready') return '<button type="button" class="cta" data-act="gkStart">' + icon('i-play', 18) + 'Los, ' + GK_DRAW_SECS + ' Sekunden!</button><p class="gk-hint">Die Uhr startet erst mit dem ersten Strich. Mal einfach drauflos.</p>' + later;
     var pens = GK_PENS.map(function (c, i) { var on = (k.pen || 0) === i; return '<button type="button" class="gk-pen' + (on ? ' on' : '') + '" data-act="gkPen" data-v="' + i + '" aria-pressed="' + on + '" aria-label="Farbe ' + (i + 1) + '" style="--pc:' + c + '"></button>'; }).join('');
-    return '<div class="gk-dhead"><span class="gk-dhead-e">' + emb('brush', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(gkTitle(k)) + '</b><small>' + (k.phase === 'over' ? 'Fertig gemalt. Einlösen oder nochmal?' : 'Mal los, die Uhr läuft!') + '</small></span><span class="gk-clock" id="gkclock">' + gkClockHtml(k) + '</span></div>' +
+    return '<div class="gk-dhead"><span class="gk-dhead-e">' + emb('brush', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(gkTitle(k)) + '</b><small id="gkdsub">' + (k.phase === 'over' ? 'Fertig gemalt. Einlösen oder nochmal?' : k.t0 ? 'Die Uhr läuft!' : 'Mal los, die Uhr startet mit dem ersten Strich.') + '</small></span><span class="gk-clock" id="gkclock">' + gkClockHtml(k) + '</span></div>' +
       '<div class="gk-paper' + (k.phase === 'over' ? ' over' : '') + '" id="gkpaper"><canvas id="gkcv" width="720" height="960" aria-label="Zeichenfläche für das Porträt"></canvas>' + (k.phase === 'over' ? '<span class="gk-over">Zeit um!</span>' : '') + '</div>' +
       '<div class="gk-tools"><div class="gk-pens" role="group" aria-label="Stiftfarbe">' + pens + '</div><button type="button" class="gk-undo" data-act="gkUndo" aria-label="Letzten Strich zurücknehmen">' + icon('i-undo', 18) + '</button></div>' +
       '<div class="cta-row"><button type="button" class="btn-dark" data-act="gkRedo">Neu anfangen</button>' + go('Einlösen · +' + k.pts) + '</div>' + later;
@@ -598,3 +619,6 @@ function demoDoodle(seed, style) {
   strokes.forEach(function (s) { for (var i2 = 1; i2 < s.length; i2++) s[i2] = Math.max(0, Math.min(999, s[i2])); });
   return gkEncode(strokes);
 }
+
+/* a turned phone or a resized window: the paper follows */
+window.addEventListener('resize', function () { if (UI.gk && UI.gk.type === 'portrait') gkFitPaper(); });

@@ -70,7 +70,7 @@ function budGames(n) { return n === 1 ? '1 Spiel' : n + ' Spiele'; }
 function budStart(pid) {
   var r = runLive(); if (!r || !bud(r).on) return;
   var b = bud(r), x = b.bond[pid]; if (!x || x.state !== 'wait' || !b.map[pid]) return;
-  x.state = 'on'; logRun('info', person(pid).name + ' trinkt, ' + b.map[pid] + ' trinkt mit. Verbunden für noch ' + budGames(x.left));
+  x.state = 'on'; logRun('info', person(pid).name + ' trinkt, ' + budName(b.map[pid]) + ' trinkt mit. Verbunden für noch ' + budGames(x.left));
 }
 /* after a game: does the buddy drink along, how long the bond still holds */
 function budSettle(P) {
@@ -82,22 +82,34 @@ function budSettle(P) {
     var drinks = !!(row && row.n > 0 && !row.freed && !row.water), info = { name: name, along: false, left: x.left, end: false, start: false };
     if (x.state === 'on') {
       info.along = drinks; x.left -= 1; info.left = Math.max(0, x.left);
-      if (x.left <= 0) { x.state = 'end'; info.end = true; logRun('info', person(pid).name + ' und ' + name + ': die Verbindung ist vorbei'); }
+      if (x.left <= 0) { x.state = 'end'; info.end = true; logRun('info', person(pid).name + ' und ' + budName(name) + ': die Verbindung ist vorbei'); }
     } else if (drinks) {
       x.state = 'on'; info.along = true; info.start = true; info.left = x.left;
-      logRun('info', person(pid).name + ' trinkt, ' + name + ' trinkt mit. Verbunden für noch ' + budGames(x.left));
+      logRun('info', person(pid).name + ' trinkt, ' + budName(name) + ' trinkt mit. Verbunden für noch ' + budGames(x.left));
     }
     P.budInfo[pid] = info;
   });
   save();
 }
-function budCard(name) { return pcFree('weiter').filter(function (q) { return pcSame(q.author, name); })[0] || null; }
-/* names to pick from: who is there tonight, not the previous buddy, not someone another focus person already took, not who just passed it on */
+function budCard(name) { return budAnon(name) ? null : pcFree('weiter').filter(function (q) { return pcSame(q.author, name); })[0] || null; }
+/* a buddy without a name: the master only confirms that someone was found. Nobody has to type a name. */
+var BUD_ANON = '\u2022';
+function budAnon(n) { return n === BUD_ANON; }
+function budName(n) { return budAnon(n) ? 'der Trinkbuddy' : String(n || ''); }
+/* names to pick from: the guests known by name (sent something via the link, crew, named tonight), not the previous buddy,
+   not someone another focus person already took, not who just passed it on */
+function budKnown() {
+  var out = [], seen = {}, e = E(), foc = e ? e.focus.map(function (p) { return pcKey(p.name); }) : [];
+  var add = function (n) { n = String(n || '').trim(); var k = pcKey(n); if (!n || seen[k] || foc.indexOf(k) >= 0 || budAnon(n)) return; seen[k] = 1; out.push(n); };
+  (typeof guestSubmissions === 'function' ? guestSubmissions() : []).forEach(function (q) { if (q && q.status !== 'nein' && isGuestAuthor(q.author)) add(q.author); });
+  presentNames().forEach(add);
+  return out;
+}
 function budPool(r, pid, picks) {
   var b = bud(r), taken = {};
-  Object.keys(picks).forEach(function (k) { if (k !== pid && picks[k]) taken[pcKey(picks[k])] = 1; });
-  r.who.forEach(function (k) { if (k !== pid && !budNeeds(r, k) && b.map[k]) taken[pcKey(b.map[k])] = 1; });
-  var all = presentNames().filter(function (n) { return !taken[pcKey(n)] && !pcSame(n, b.fwd[pid]); });
+  Object.keys(picks).forEach(function (k) { if (k !== pid && picks[k] && !budAnon(picks[k])) taken[pcKey(picks[k])] = 1; });
+  r.who.forEach(function (k) { if (k !== pid && !budNeeds(r, k) && b.map[k] && !budAnon(b.map[k])) taken[pcKey(b.map[k])] = 1; });
+  var all = budKnown().filter(function (n) { return !taken[pcKey(n)] && !pcSame(n, b.fwd[pid]); });
   var fresh = all.filter(function (n) { return !pcSame(n, b.map[pid]); });
   return fresh.length ? fresh : all;
 }
@@ -114,16 +126,17 @@ V.buddy = function () {
       : 'Die Verbindung ist vorbei. Wer trinkt als Nächstes mit? Ab dem ersten gemeinsamen ' + esc(U()) + ' hält sie wieder ein bis drei Spiele.') + '</p></div>';
   var rows = ids.map(function (id) {
     var p = person(id), pick = picks[id], pool = budPool(r, id, picks), card = pick ? budCard(pick) : null;
-    var head = '<div class="bd-who">' + face(p, 46, '', 'jubel') + '<span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(p.name) + ' wählt</b><span>' + (b.fwd[id] ? esc(b.fwd[id]) + ' hat weitergeleitet' : b.map[id] && mode === 'swap' ? 'Bisher: ' + esc(b.map[id]) : 'Wer trinkt mit?') + '</span></span></div>';
+    var was = b.map[id] && mode === 'swap' ? (budAnon(b.map[id]) ? 'Bisher: jemand ohne Namen' : 'Bisher: ' + esc(b.map[id])) : 'Wer trinkt mit?';
+    var head = '<div class="bd-who">' + face(p, 46, '', 'jubel') + '<span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(p.name) + ' wählt</b><span>' + (b.fwd[id] ? esc(b.fwd[id]) + ' hat weitergeleitet' : was) + '</span></span></div>';
     if (pick) {
-      return '<div class="bd-row done">' + head + '<div class="bd-pick">' + guestFace(pick, 44, '', 'jubel') + '<span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(pick) + '</b><span>trinkt mit, wenn ' + esc(p.name) + ' trinkt</span></span><button type="button" class="linkbtn" data-act="budClear" data-id="' + id + '">Ändern</button></div>' +
+      var anon = budAnon(pick);
+      return '<div class="bd-row done">' + head + '<div class="bd-pick">' + (anon ? '<span class="bd-anon">' + emb('cheers', 28) + '</span>' : guestFace(pick, 44, '', 'jubel')) + '<span class="stack grow" style="gap:1px;min-width:0"><b>' + (anon ? 'Buddy gefunden' : esc(pick)) + '</b><span>trinkt mit, wenn ' + esc(p.name) + ' trinkt</span></span><button type="button" class="linkbtn" data-act="budClear" data-id="' + id + '">Ändern</button></div>' +
         (card ? '<div class="bd-fwd"><span class="bd-fwd-e">' + emb('forward', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(pick) + ' hat eine Weiterleiten-Karte</b><span>Setzt sie die Karte ein, sucht sie aus, wer stattdessen mittrinkt.</span></span><button type="button" class="bd-fwd-go" data-act="budFwd" data-id="' + id + '">Weiterleiten</button></div>' : '') + '</div>';
     }
-    var typing = UI.budType === id;
+    /* no typing here: the names known from the link (and the crew) as chips, otherwise one tap that says "found someone" */
     var chips = pool.map(function (n) { return '<button type="button" class="bd-chip" data-act="budPick" data-id="' + id + '" data-v="' + esc(n) + '">' + guestFace(n, 30) + '<span>' + esc(n) + '</span></button>'; }).join('');
-    var type = typing ? '<div class="bd-type"><input id="budIn" class="input" type="text" maxlength="24" autocomplete="off" autocapitalize="words" enterkeyhint="done" data-bind="bud.txt" value="' + esc(UI.budTxt || '') + '" placeholder="Name"><button type="button" class="btn-dark" data-act="budTypeOk" data-id="' + id + '">Übernehmen</button></div>'
-      : '<button type="button" class="bd-chip add" data-act="budTypeOpen" data-id="' + id + '">' + icon('i-plus', 16) + '<span>' + (pool.length ? 'Jemand anderes' : 'Namen eintippen') + '</span></button>';
-    return '<div class="bd-row">' + head + (pool.length ? '' : '<p class="small mt8">Noch niemand von heute eingetragen. Tipp den Namen einfach ein.</p>') + '<div class="bd-chips">' + chips + type + '</div></div>';
+    var ok = '<button type="button" class="bd-chip ok" data-act="budPick" data-id="' + id + '" data-v="' + BUD_ANON + '">' + icon('i-check', 16) + '<span>' + (pool.length ? 'Jemand anderes, ohne Namen' : 'Buddy gefunden') + '</span></button>';
+    return '<div class="bd-row">' + head + '<p class="small mt8">' + (pool.length ? 'Antippen, wer mittrinkt, oder einfach bestätigen. Namen sind freiwillig.' : 'Einfach bestätigen, sobald sich jemand gefunden hat. Niemand muss einen Namen eintippen.') + '</p><div class="bd-chips">' + chips + ok + '</div></div>';
   }).join('');
   var body = hero + '<div class="bd-rows">' + rows + '</div>';
   var foot = mode === 'swap' ? '<button type="button" class="cta mint" data-act="budGo"' + (all ? '' : ' disabled') + '>' + icon('i-check', 18) + (all ? 'Prost, weiter zur Aufgabe' : ids.length > 1 ? 'Erst alle Buddys wählen' : 'Erst den Buddy wählen') + '</button>' : '';
@@ -131,11 +144,11 @@ V.buddy = function () {
 };
 A.budPick = function (d) {
   var r = runLive(), name = String(d.v || '').trim(); if (!r || !name || !d.id) return;
-  var b = bud(r), mode = budMode(); notePresent(name); UI.budType = null; UI.budTxt = '';
+  var b = bud(r), mode = budMode(); if (!budAnon(name)) notePresent(name); UI.budType = null; UI.budTxt = '';
   if (mode === 'fwd') {
     b.map[d.id] = name; delete b.fwd[d.id]; UI.budFwd = null;
-    logRun('info', name + ' übernimmt als Trinkbuddy für ' + person(d.id).name);
-    commit(); go(UI.budFrom || 'run'); setToast(name + ' trinkt jetzt mit ' + person(d.id).name + ' mit'); return;
+    logRun('info', (budAnon(name) ? 'Jemand' : name) + ' übernimmt als Trinkbuddy für ' + person(d.id).name);
+    commit(); go(UI.budFrom || 'run'); setToast((budAnon(name) ? 'Der neue Buddy' : name) + ' trinkt jetzt mit ' + person(d.id).name + ' mit'); return;
   }
   b.next[d.id] = name; commit();
 };
@@ -160,7 +173,7 @@ A.budGo = function () {
   if (!b.due || !ids.every(function (id) { return b.next[id]; })) return;
   ids.forEach(function (id) { b.prev[id] = b.map[id]; b.map[id] = b.next[id]; var n = budRand(); b.bond[id] = { state: 'wait', left: n, total: n }; });
   b.next = {}; b.fwd = {}; b.due = false; b.n += 1;
-  logRun('info', (b.n === 1 ? 'Trinkbuddys: ' : 'Neuer Trinkbuddy: ') + ids.map(function (id) { return person(id).name + ' mit ' + b.map[id]; }).join(', '));
+  logRun('info', (b.n === 1 ? 'Trinkbuddys: ' : 'Neuer Trinkbuddy: ') + ids.map(function (id) { return person(id).name + ' mit ' + (budAnon(b.map[id]) ? 'jemandem' : b.map[id]); }).join(', '));
   commit(); go('step');
 };
 
@@ -203,7 +216,7 @@ A.ruleBroke = function (d) {
   if (!x || !ruleLive(x) || x.broke[d.pid] || x.who.indexOf(d.pid) < 0) return;
   x.broke[d.pid] = true;
   var p = person(d.pid), bg = budget(d.pid), bd = budOf(d.pid);
-  if (bg.C < bg.M) { addDrink(d.pid, 1, 'regel', 'Regel gebrochen: ' + x.text); budStart(d.pid); bd = budOf(d.pid); setToast(p.name + ' trinkt ein ' + U() + (bd ? ', ' + bd + ' trinkt mit' : '')); x.water = x.water || {}; }
+  if (bg.C < bg.M) { addDrink(d.pid, 1, 'regel', 'Regel gebrochen: ' + x.text); budStart(d.pid); bd = budOf(d.pid); setToast(p.name + ' trinkt ein ' + U() + (bd ? ', ' + budName(bd) + ' trinkt mit' : '')); x.water = x.water || {}; }
   else { x.water = x.water || {}; x.water[d.pid] = true; setToast(p.name + ' ist am Maximum, es gibt Wasser'); }
   logRun('fail', p.name + ' hat die Regel gebrochen' + (bg.C < bg.M ? ' und trinkt ein ' + U() : ', am Maximum gibt es Wasser'));
   commit();
@@ -251,7 +264,7 @@ function partyRunHtml(r, full) {
     if (pairs.length) out += '<div class="zc-pairs">' + pairs.map(function (id) {
       var n = b.map[id], x = b.bond[id], card = budCard(n);
       var st = x.state === 'wait' ? 'wartet aufs erste ' + U() : 'noch ' + budGames(x.left);
-      return '<div class="zc-pair">' + face(person(id), 30) + '<span class="zc-amp">' + icon('i-cup', 14) + '</span>' + guestFace(n, 30) + '<span class="grow"><b>' + esc(person(id).name) + '</b> mit <b>' + esc(n) + '</b><small class="zc-st">' + esc(st) + '</small></span>' + (card ? '<button type="button" class="zc-fwd" data-act="budFwd" data-id="' + id + '">' + emb('forward', 18) + 'Weiterleiten</button>' : '') + '</div>';
+      return '<div class="zc-pair">' + face(person(id), 30) + '<span class="zc-amp">' + icon('i-cup', 14) + '</span>' + (budAnon(n) ? '<span class="bd-anon sm">' + emb('cheers', 20) + '</span>' : guestFace(n, 30)) + '<span class="grow"><b>' + esc(person(id).name) + '</b> mit <b>' + (budAnon(n) ? 'Buddy' : esc(n)) + '</b><small class="zc-st">' + esc(st) + '</small></span>' + (card ? '<button type="button" class="zc-fwd" data-act="budFwd" data-id="' + id + '">' + emb('forward', 18) + 'Weiterleiten</button>' : '') + '</div>';
     }).join('') + '</div>';
   }
   var rules = rulesOf(r).filter(function (x) { return ruleLive(x) || (full && x.done); });

@@ -47,16 +47,21 @@ function gWelcomeView() {
 }
 /* „Ich bin dabei!“: the invitation opens like two doors, the form is behind it */
 A.gWelcome = function () {
-  var old = app.querySelector('.scr'), html = old && old.outerHTML ? old.outerHTML : '';
+  var old = app.querySelector('.scr'), html = old && old.outerHTML ? old.outerHTML : '', ob = old ? old.querySelector('.body') : null, st = ob ? ob.scrollTop : 0;
   var P = gPass(); P.welcomed = true; gPassSave();
   UI.gIn = true;
   gkAudioUnlock();
   gSay('hello');
   gRender();
+  /* the doors are the old screen, cut in two; the form behind them stands still and comes forward (see .gscr.gin) */
   if (html && app.insertAdjacentHTML) {
     app.insertAdjacentHTML('beforeend', '<div class="wl-doors" aria-hidden="true"><div class="wl-door l">' + html + '</div><div class="wl-door r">' + html + '</div><div class="wl-light"></div></div>');
-    setTimeout(function () { var d = app.querySelector('.wl-doors'); if (d) d.remove(); }, 1500);
+    var d = app.querySelector('.wl-doors');
+    if (d && st) { var bs = d.querySelectorAll('.body'); for (var i = 0; i < bs.length; i++) bs[i].scrollTop = st; }
+    setTimeout(function () { var x = app.querySelector('.wl-doors'); if (x) x.remove(); }, 1400);
   }
-  gConfetti(40); gVibe([20, 40, 20, 40, 90]);
-  var S2 = gkSndBegin(); if (S2) { try { gkSndWhoosh(S2, S2.t0, 0.5, 300, 2400, 0.1); gkSndChord(S2, S2.t0 + 0.18, 'epi'); } catch (e) {} }
+  gVibe([18, 40, 12]);
+  /* the welcome (confetti, chord, a second buzz) waits until the doors are open */
+  setTimeout(function () { if (UI.screen === 'guestForm') { gConfetti(40); gVibe([20, 40, 70]); } }, 980);
+  var S2 = gkSndBegin(); if (S2) { try { gkSndWhoosh(S2, S2.t0 + 0.08, 0.9, 220, 1800, 0.1); gkSndChord(S2, S2.t0 + 0.98, 'epi'); } catch (e) {} }
 };

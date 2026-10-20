@@ -170,7 +170,7 @@ function gStage(big) {
   return '<div class="glights" aria-hidden="true"><i></i><i></i><i></i></div><div class="gbubble' + (UI.gPop ? ' pop' : '') + '">' + (f.length > 1 && sp ? '<span class="gwho">' + esc(sp.name) + '</span>' : '') + '<span aria-live="polite">' + gWords(b.text) + '</span></div><div class="gavs">' + (avs || groupFace(96)) + '</div>';
 }
 /* every word slides in out of a blur, one after the other */
-function gWords(t) { return esc(t).split(' ').map(function (w, k) { return '<span class="gw" style="animation-delay:' + (k * 55) + 'ms">' + w + '</span>'; }).join(' '); }
+function gWords(t) { return esc(t).split(' ').map(function (w, k) { return '<span class="gw" style="--wd:' + (k * 55) + 'ms">' + w + '</span>'; }).join(' '); }
 function gStagePatch() { var el = document.getElementById('gstage'); if (el) el.innerHTML = gStage(!!UI.qSent); UI.gPop = false; }
 
 /* ---------- party pass ---------- */
@@ -464,7 +464,7 @@ function gAfter() {
   if (spark) { var on = app.querySelector('.gabc.spark'); if (on) gBurst(on, on.closest('.gcard') ? getComputedStyle(on.closest('.gcard')).getPropertyValue('--tc') || '#FFC940' : '#FFC940', 12); }
   if (just) { var jc = app.querySelector('.gcard.just-done'); if (jc) gBurst(jc.querySelector('.ghead .e'), getComputedStyle(jc).getPropertyValue('--tc') || '#FFC940', 12); }
   var cnt = app.querySelectorAll('.gcard.just-added .gcnt'); for (var k = 0; k < cnt.length; k++) gCountUp(cnt[k], 0, +cnt[k].getAttribute('data-to'), 650);
-  if (UI.gFinFx) { UI.gFinFx = false; gConfetti(46); }
+  if (UI.gFinFx) { UI.gFinFx = false; gPrintFx(); }
   if (UI.screen === 'guestForm' && UI.guestMode !== 'master') gkBtnPatch();
 }
 function gRender() { render(); gAfter(); }
@@ -594,18 +594,22 @@ function gHead(p, from) {
   return banner + '<div class="ghud" id="gpass">' + gPassInner(p, from) + '</div>';
 }
 function gFinale(head) {
-  var f = UI.gFinal || { pts: gScore(), n: 1, no: 1, stickers: gStickers() }, lv = gLevel(f.pts);
-  var stk = f.stickers.map(function (id, k) { var s = gSticker(id); return s ? '<span class="gt-s" style="animation-delay:' + (0.5 + k * 0.12).toFixed(2) + 's" title="' + esc(s[2]) + '"><span aria-hidden="true">' + emb(s[1], 22) + '</span><small>' + esc(s[2]) + '</small></span>' : ''; }).join('');
+  var f = UI.gFinal || { pts: gScore(), n: 1, no: 1, stickers: gStickers() }, lv = gLevel(f.pts), e = E(), ev = e ? e.name || ('Abend von ' + focusNames()) : 'Party';
+  var stk = f.stickers.map(function (id, k) { var s = gSticker(id); return s ? '<span class="gt-s" style="animation-delay:' + (1.5 + k * 0.12).toFixed(2) + 's" title="' + esc(s[2]) + '"><span aria-hidden="true">' + emb(s[1], 22) + '</span><small>' + esc(s[2]) + '</small></span>' : ''; }).join('');
   var kinds = f.types ? Object.keys(f.types).map(function (t) { return '<span class="gt-k"><span aria-hidden="true">' + emb(GQ_STYLE[t].e, 18) + '</span>' + f.types[t] + '× ' + esc(qTypeLabel(t)) + '</span>'; }).join('') : '';
+  /* the pass comes out of a slot like a receipt, then the stamp lands */
   var body = '<div class="gbrand">' + guestHeader('Mitmachen') + '</div><div class="gstage" id="gstage">' + gStage(true) + '</div>' +
-    '<div class="gtk-wrap mt18"><div class="gticket" data-act="gFlip" role="button" aria-label="Ticket umdrehen">' +
-    '<div class="gt-face gt-front"><div class="gt-holo" aria-hidden="true"></div><div class="gt-top"><span>Party-Pass</span><span>' + esc(E() ? E().name || ('Abend von ' + focusNames()) : 'Party') + '</span></div>' +
-    '<div class="gt-main"><span class="gt-lbl">Gast Nr. ' + f.no + '</span><b class="gt-name">' + esc(UI.qSent) + '</b><span class="gt-lvl">' + emb(lv.l[2], 20) + ' ' + esc(lv.l[1]) + ' · ' + f.pts + ' Punkte</span></div>' +
+    '<div class="gtk-wrap"><div class="gticket" data-act="gFlip" role="button" aria-label="Ticket umdrehen">' +
+    '<div class="gt-face gt-front"><div class="gt-holo" aria-hidden="true"></div>' +
+    '<div class="gt-top"><span>Party-Pass</span><span>Gast Nr. ' + f.no + '</span></div>' +
+    '<div class="gt-main"><span class="gt-lbl">' + esc(ev) + '</span><b class="gt-name">' + esc(UI.qSent) + '</b>' +
+    '<div class="gt-row"><span class="gt-lvl">' + emb(lv.l[2], 20) + ' ' + esc(lv.l[1]) + '</span><b class="gt-pts"><span class="num">' + f.pts + '</span><small>Punkte</small></b></div></div>' +
     (stk ? '<div class="gt-stk">' + stk + '</div>' : '') +
     '<div class="gt-perf" aria-hidden="true"></div>' +
-    '<div class="gt-foot"><b>' + (f.n === 1 ? 'Dein Beitrag ist' : 'Deine ' + f.n + ' Beiträge sind') + ' angekommen.</b> Der Spielleiter gibt sie frei. Ob und wann sie drankommen, vielleicht sogar in einem Gästespiel, siehst du heute Abend.<span class="gt-turn">Antippen zum Umdrehen</span></div></div>' +
+    '<div class="gt-foot"><b>' + (f.n === 1 ? 'Dein Beitrag ist' : 'Deine ' + f.n + ' Beiträge sind') + ' angekommen.</b> Der Spielleiter gibt sie frei. Ob und wann sie drankommen, vielleicht sogar in einem Gästespiel, siehst du heute Abend.<span class="gt-turn">Antippen zum Umdrehen</span></div>' +
+    '<span class="gt-stamp" aria-hidden="true">Angekommen</span></div>' +
     '<div class="gt-face gt-back"><div class="gt-top"><span>Rückseite</span><span>' + esc(UI.qSent) + '</span></div><div class="gt-main"><span class="gt-lbl">Das hast du eingereicht</span><div class="gt-kinds">' + kinds + '</div><span class="gt-lvl mt14">Heute Abend gilt: Augen auf! Vielleicht erkennst du deinen Beitrag wieder.</span></div><div class="gt-foot">Antippen zum Zurückdrehen</div></div>' +
-    '</div></div>';
+    '</div></div><div class="gt-slot" aria-hidden="true"></div>';
   var more = '<button type="button" class="btn-ghost gfin-more" data-act="qAnother">' + icon('i-plus', 16) + 'Noch etwas beitragen</button>';
   var foot = UI.guestMode === 'test' ? '<div class="cta-row"><button type="button" class="btn-dark gfin-done" data-act="go" data-to="' + UI.guestFrom + '">Fertig</button>' + more + '</div>' : more;
   return scr(head, body, foot, 'gscr gfin' + (UI.guestMode === 'test' ? ' gtest' : ''));

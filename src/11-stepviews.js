@@ -107,7 +107,7 @@ function resultView(P) {
     if (r.alt) txt += '<span class="sub block" style="color:var(--sun)">' + esc(r.alt) + '</span>';
     if (r.pilot) txt += '<span class="sub block" style="color:var(--violet-text)">' + esc(r.pilot) + '</span>';
     var bi = r.pid && !r.group && P.budInfo ? P.budInfo[r.pid] : null;
-    if (bi && bi.along && r.n > 0 && !r.water && !r.freed) txt += '<span class="sub block bd-along">' + emb('cheers', 16) + 'Trinkbuddy ' + esc(bi.name) + ' trinkt mit' + (bi.end ? '. Danach ist die Verbindung vorbei' : bi.left ? '. Verbunden für noch ' + budGames(bi.left) : '') + '</span>';
+    if (bi && bi.along && r.n > 0 && !r.water && !r.freed) txt += '<span class="sub block bd-along">' + emb('cheers', 16) + (budAnon(bi.name) ? 'Der Trinkbuddy trinkt mit' : 'Trinkbuddy ' + esc(bi.name) + ' trinkt mit') + (bi.end ? '. Danach ist die Verbindung vorbei' : bi.left ? '. Verbunden für noch ' + budGames(bi.left) : '') + '</span>';
     var ctrl = '';
     if (!r.group && !r.water && r.pid && r.n > 0) {
       ctrl = (jokersLeft(r.pid) > 0 && isFocus(r.pid) ? '<button type="button" class="tag plain" data-act="stepJoker" data-i="' + i + '" style="height:32px;color:var(--mint)">' + icon('i-drop', 14) + 'Joker</button>' : '') +

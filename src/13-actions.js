@@ -288,8 +288,10 @@ A.gSubmit = function () {
   var types = {}; out.forEach(function (q) { types[q.type] = (types[q.type] || 0) + 1; });
   UI.gFinal = { pts: pts, n: out.length, no: Object.keys(names).length, stickers: stickers, types: types };
   UI.qSent = author; UI.gSentN = out.length; UI.gForm = { author: author, items: [], cards: [] }; UI.gDrawSeen = false;
-  gSay('sent'); UI.gFinFx = true; gVibe([30, 60, 30, 60, 120]);
-  gRender(); var b = app.querySelector('.body'); if (b) b.scrollTop = 0;
+  gSay('sent'); UI.gFinFx = true; gkAudioUnlock();
+  var show = function () { gRender(); var b = app.querySelector('.body'); if (b) b.scrollTop = 0; };
+  /* the moment: contributions into the envelope, envelope off to the hosts, then the pass prints */
+  if (!gSendFx(out.length, show)) { gVibe([30, 60, 30, 60, 120]); show(); }
 };
 A.qAnother = function () { UI.qSent = ''; UI.gRare = null; UI.gPts = null; UI.gHudFx = null; UI.gFinal = null; gSay('name'); gRender(); };
 A.qFilter = function (d) { UI.qFilter = d.v; UI.qOpen = null; render(); };
@@ -312,7 +314,7 @@ A.qrBig = function (d) { UI.qrBig = { code: d.code, title: d.title }; render(); 
 A.qrClose = function () { UI.qrBig = null; render(); };
 
 /* counter */
-A.drinkPlus = function (d) { addDrink(d.id, 1, 'manuell'); budStart(d.id); var bd = budOf(d.id); commit(); setToast('+1 ' + U() + ' für ' + person(d.id).name + (bd ? ', ' + bd + ' trinkt mit' : '')); };
+A.drinkPlus = function (d) { addDrink(d.id, 1, 'manuell'); budStart(d.id); var bd = budOf(d.id); commit(); setToast('+1 ' + U() + ' für ' + person(d.id).name + (bd ? ', ' + budName(bd) + ' trinkt mit' : '')); };
 A.drinkMinus = function (d) { if (drinksOf(d.id) <= 0) return; addDrink(d.id, -1, 'manuell', 'Korrektur'); commit(); };
 A.addCounterPerson = function () { var id = addPersonByName(UI.counterName); UI.counterName = ''; commit(); if (id) setToast(person(id).name + ' ist im Zähler'); var i = document.getElementById('cName'); if (i) i.focus(); };
 A.undoDrink = function () { S.drinks.pop(); commit(); setToast('Letzter Eintrag gelöscht'); };
