@@ -12105,6 +12105,11 @@ function autoEventName() {
   var t = evType(), w = t.fam === 'kranz' ? 'Kranz-Abend' : t.id === 'klinke' ? 'Klinken-Abend' : t.fam === 'zeit' ? 'Treppen-Abend' : t.id === 'jga' ? 'JGA' : t.id === 'hochzeit' ? 'Polterabend' : t.id === 'geburtstag' ? 'Geburtstag' : 'Party';
   return w + ' ' + focusNames();
 }
+/* a name the app gave, also from an older saved party without the flag */
+function nameIsAuto(e) {
+  var n = String(e.name || '').trim(); if (!n || e.nameAuto) return true;
+  return /^(Kranz-Abend|Klinken-Abend|Treppen-Abend|JGA|Polterabend|Geburtstag|Party) /.test(n) && n.slice(n.indexOf(' ') + 1) === focusNames();
+}
 A.loadDemo = function () { demoEvent(); S.demo = true; save(); UI.confirm = null; go('home'); };
 A.setupBack = function () { if (UI.step > 1) { UI.step -= 1; UI.setupErr = ''; render(); } else { S.event = null; go('welcome'); } };
 A.setupNext = function () {
@@ -12122,7 +12127,7 @@ A.setEventAnlass = function (d) {
   var t = evType();
   e.focus.forEach(function (p) { p.anlass = t.person; if (FA[t.person].kind === 'kranz') p.count = p.count || FA[t.person].count; if (p.av) avTheme(p.av, p.anlass); });
   /* a name the app gave follows the occasion: no Kranz-Abend at a JGA */
-  if (e.nameAuto || !String(e.name || '').trim()) { e.name = autoEventName(); e.nameAuto = true; }
+  if (nameIsAuto(e)) { e.name = autoEventName(); e.nameAuto = true; }
   if (!S.run || S.run.finished) S.runCfg = null;
   commit();
 };
