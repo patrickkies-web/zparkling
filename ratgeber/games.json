@@ -178,5 +178,261 @@
   "mat": "10 Becher",
   "solo": "Aus 10 Bechern eine Pyramide bauen (4, 3, 2, 1) und sie danach wieder zu einem Stapel zusammenschieben. Geschafft, wenn beides in 30 Sekunden klappt.",
   "duell": "Beide bauen gleichzeitig aus je 10 Bechern eine Pyramide (4, 3, 2, 1) und schieben sie danach wieder zu einem Stapel zusammen. Gewonnen hat, wer zuerst wieder einen Stapel in der Hand hat."
+ },
+ "pantomime": {
+  "name": "Pantomime",
+  "mat": "",
+  "solo": "Der Spielleiter flüstert drei Begriffe. Sie nur mit Gesten darstellen, ohne Worte und ohne Geräusche. Alle anderen raten. Geschafft, wenn alle drei in 60 Sekunden erraten sind.",
+  "duell": "Abwechselnd stellt jeder einen Begriff vom Spielleiter dar, alle anderen raten. Der Spielleiter stoppt die Zeit. Gewonnen hat, wessen Begriff schneller erraten wird."
+ },
+ "summen": {
+  "name": "Lied-Summen",
+  "mat": "",
+  "solo": "Ein Lied summen, ohne Text. Alle anderen raten den Titel. Geschafft, wenn es in 30 Sekunden jemand errät.",
+  "duell": "Abwechselnd summt einer ein Lied, der andere rät. Drei Lieder pro Person. Gewonnen hat, wer mehr Lieder errät."
+ },
+ "aufzaehlen": {
+  "name": "Aufzählen",
+  "mat": "",
+  "solo": "Automarken aufzählen, keine doppelt. Geschafft, wenn in 30 Sekunden 15 Marken zusammenkommen.",
+  "duell": "Abwechselnd je eine Automarke nennen, höchstens 3 Sekunden Bedenkzeit. Gewonnen hat, wer nicht als Erster stockt oder eine Marke wiederholt."
+ },
+ "erklaeren": {
+  "name": "Begriffe erklären",
+  "mat": "",
+  "solo": "Der Spielleiter flüstert Begriffe. Jeden umschreiben, ohne das Wort oder Teile davon zu sagen. Alle anderen raten. Geschafft, wenn in 60 Sekunden 4 Begriffe erraten sind.",
+  "duell": "Abwechselnd 60 Sekunden lang Begriffe vom Spielleiter umschreiben, alle anderen raten. Gewonnen hat, wer mehr Begriffe erraten lässt."
+ },
+ "reime": {
+  "name": "Reim-Pflicht",
+  "mat": "",
+  "solo": "Bis zur nächsten Aufgabe nur in Reimen sprechen. Die Gäste dürfen Fragen stellen. Geschafft, wenn bis dahin jede Antwort reimt.",
+  "duell": "Abwechselnd ein Wort sagen, das sich auf „Haus“ reimt. Gewonnen hat, wer nicht als Erster stockt oder ein Wort wiederholt."
+ },
+ "imitieren": {
+  "name": "Wer bin ich?",
+  "mat": "",
+  "solo": "Einen Gast nachmachen: Stimme, Sprüche, Gesten. Wen, flüstert man vorher dem Spielleiter. Geschafft, wenn die Runde in 30 Sekunden errät, wer gemeint ist.",
+  "duell": "Abwechselnd macht jeder zweimal einen Gast nach, die Runde rät. Gewonnen hat, wer öfter erraten wird."
+ },
+ "flamingo": {
+  "name": "Flamingo",
+  "mat": "",
+  "solo": "Auf einem Bein stehen, Augen zu. Geschafft, wenn es 30 Sekunden ohne Absetzen klappt.",
+  "duell": "Beide stehen gleichzeitig auf einem Bein, Augen zu. Gewonnen hat, wer länger durchhält."
+ },
+ "gefuehlsminute": {
+  "name": "Gefühlte Minute",
+  "mat": "",
+  "solo": "Augen zu, der Spielleiter startet die Stoppuhr. Nach Gefühl nach genau einer Minute „Stopp“ rufen. Geschafft, wenn es höchstens 3 Sekunden daneben ist.",
+  "duell": "Augen zu, der Spielleiter startet die Stoppuhr. Beide rufen nach Gefühl „Stopp“, wenn eine Minute um ist. Gewonnen hat, wer näher an 60 Sekunden liegt."
+ },
+ "wortkette": {
+  "name": "Wort-Kette",
+  "mat": "",
+  "solo": "Wörter sagen, die jeweils mit dem letzten Buchstaben des vorigen anfangen, zum Beispiel Socke, Ente, Esel. Geschafft, wenn in 30 Sekunden 8 Wörter kommen.",
+  "duell": "Abwechselnd je ein Wort, das mit dem letzten Buchstaben des vorigen anfängt. Gewonnen hat, wer nicht als Erster länger als 3 Sekunden braucht."
+ },
+ "alphabet": {
+  "name": "Alphabet rückwärts",
+  "mat": "",
+  "solo": "Das Alphabet rückwärts aufsagen, von Z bis A. Geschafft, wenn es in 30 Sekunden ohne Fehler klappt.",
+  "duell": "Nacheinander das Alphabet rückwärts aufsagen, der Spielleiter stoppt die Zeit. Bei einem Fehler geht es wieder bei Z los. Gewonnen hat, wer schneller bei A ist."
+ },
+ "staendchen": {
+  "name": "Ständchen international",
+  "mat": "",
+  "solo": "Eine Zeile „Happy Birthday“ in drei verschiedenen Sprachen singen. Geschafft, wenn alle drei Sprachen erkennbar sind.",
+  "duell": "Abwechselnd „Happy Birthday“ in einer neuen Sprache anstimmen. Gewonnen hat, wem nicht als Erstem eine Sprache fehlt."
+ },
+ "kennstdu": {
+  "name": "Kennst du mich?",
+  "mat": "",
+  "solo": "Der Spielleiter stellt drei Fragen über den Partner oder die Partnerin: Lieblingsessen, erstes Date, Schuhgröße. Der Partner bestätigt. Geschafft, wenn mindestens 2 Antworten stimmen.",
+  "duell": ""
+ },
+ "liebesgedicht": {
+  "name": "Gedicht in 60 Sekunden",
+  "mat": "",
+  "solo": "In 60 Sekunden ein vierzeiliges Gedicht für den Partner oder die Partnerin reimen und vortragen. Geschafft, wenn es sich reimt und die Gäste klatschen.",
+  "duell": "Beide dichten gleichzeitig 60 Sekunden lang vier Zeilen und tragen vor. Gewonnen hat das Gedicht mit mehr Applaus."
+ },
+ "jaichwill": {
+  "name": "Ja, ich will!",
+  "mat": "",
+  "solo": "„Ja, ich will“ in fünf Stimmungen sagen, die die Gäste zurufen, zum Beispiel wütend, flüsternd oder wie ein Opernsänger. Geschafft, wenn alle fünf überzeugen. Die Gäste entscheiden per Applaus.",
+  "duell": "Abwechselnd „Ja, ich will“ in einer neuen Stimmung sagen. Gewonnen hat, wem nicht als Erstem eine Stimmung fehlt."
+ },
+ "spiegel": {
+  "name": "Spiegelbild",
+  "mat": "",
+  "solo": "Der Spielleiter macht 30 Sekunden lang Bewegungen vor, alles wird spiegelverkehrt nachgemacht. Die Gäste zählen Fehler. Geschafft, wenn es höchstens 2 Fehler sind.",
+  "duell": "Einer macht 30 Sekunden vor, der andere spiegelt, dann wird getauscht. Die Gäste zählen Fehler. Gewonnen hat, wer weniger Fehler macht."
+ },
+ "rueckenmalen": {
+  "name": "Rücken-Malen",
+  "mat": "",
+  "solo": "Der Spielleiter malt mit dem Finger ein einfaches Bild auf den Rücken, zum Beispiel ein Haus oder einen Fisch. Geschafft, wenn es mit höchstens 3 Tipps erraten wird.",
+  "duell": "Der Spielleiter malt beiden dasselbe Bild auf den Rücken. Gewonnen hat, wer es zuerst errät."
+ },
+ "mumie": {
+  "name": "Mumie wickeln",
+  "mat": "Klopapier",
+  "solo": "Einen Gast nach Wahl in 60 Sekunden mit Klopapier einwickeln. Nur das Gesicht bleibt frei. Geschafft, wenn die Gäste per Applaus sagen: echte Mumie.",
+  "duell": "Beide wickeln gleichzeitig je einen Gast ihrer Wahl ein, 60 Sekunden. Gewonnen hat die Mumie mit mehr Applaus."
+ },
+ "zeitungstanz": {
+  "name": "Zeitungstanz",
+  "mat": "Zeitungen",
+  "solo": "Mit einem Gast nach Wahl auf einer Zeitung tanzen. Immer wenn der Spielleiter „Stopp“ ruft, wird sie halbiert, dreimal. Geschafft, wenn keiner von beiden danebentritt.",
+  "duell": "Beide tanzen mit je einem Gast ihrer Wahl auf einer eigenen Zeitung, die immer wieder halbiert wird. Gewonnen hat, wer nicht als Erster danebentritt."
+ },
+ "blindfuettern": {
+  "name": "Blind füttern",
+  "mat": "Augenbinde, Gummibärchen",
+  "solo": "Ein Gast nach Wahl bekommt die Augen verbunden und füttert mit Gummibärchen. Lotsen nur mit Worten. Geschafft, wenn in 30 Sekunden 5 Gummibärchen gegessen sind.",
+  "duell": "Beide werden gleichzeitig von je einem blinden Gast ihrer Wahl gefüttert. Gewonnen hat, wer zuerst 5 Gummibärchen gegessen hat."
+ },
+ "becherflip": {
+  "name": "Becher-Flip",
+  "mat": "Plastikbecher",
+  "solo": "Einen leeren Becher mit der Öffnung nach oben halb über die Tischkante schieben. Von unten so anschnippen, dass er sich dreht und mit der Öffnung nach unten auf dem Tisch landet. Fünf Versuche. Geschafft, wenn er einmal richtig landet.",
+  "duell": "Beide schieben abwechselnd einen leeren Becher halb über die Tischkante und schnippen ihn von unten so an, dass er sich dreht und mit der Öffnung nach unten landet. Gewonnen hat, wer zuerst drei Becher richtig gelandet hat."
+ },
+ "keks": {
+  "name": "Keks-Akrobatik",
+  "mat": "Kekse",
+  "solo": "Kopf in den Nacken, einen Keks auf die Stirn legen. Nur mit Grimassen über das Gesicht in den Mund bugsieren, ohne Hände. Geschafft, wenn der Keks in 60 Sekunden im Mund landet.",
+  "duell": "Beide starten gleichzeitig mit einem Keks auf der Stirn, ohne Hände. Gewonnen hat, wer den Keks zuerst im Mund hat."
+ },
+ "selfie": {
+  "name": "Kranz-Selfie",
+  "mat": "Handy",
+  "solo": "Drei Gäste nach Wahl schnappen, jeder bekommt eine {U} vom Kranz in die Hand, dann ein Selfie. Geschafft, wenn das Foto nach 30 Sekunden im Kasten ist und alle eine {U} halten.",
+  "duell": ""
+ },
+ "zwiebel": {
+  "name": "Zwiebel-Look",
+  "mat": "",
+  "solo": "Leih dir Kleidungsstücke von den Gästen und zieh sie übereinander an: Jacke, Schal, Mütze, alles zählt. Die Gäste dürfen helfen. Geschafft, wenn nach 60 Sekunden fünf geliehene Teile sitzen.",
+  "duell": "Beide leihen sich gleichzeitig Kleidungsstücke von den Gästen und ziehen sie übereinander an. Gewonnen hat, wer nach 60 Sekunden mehr geliehene Teile trägt."
+ },
+ "stirnzettel": {
+  "name": "Stirn-Zettel",
+  "mat": "Klebezettel, Stift",
+  "solo": "Der Spielleiter schreibt eine berühmte Person auf einen Zettel und klebt ihn auf die Stirn. Mit Fragen, auf die man mit Ja oder Nein antwortet, herausfinden, wer es ist. Geschafft, wenn der Name in 60 Sekunden fällt.",
+  "duell": "Beide bekommen einen Zettel auf die Stirn. Abwechselnd je eine Ja-Nein-Frage. Gewonnen hat, wer zuerst richtig rät."
+ },
+ "montagsmaler": {
+  "name": "Montagsmaler",
+  "mat": "Papier, Stifte",
+  "solo": "Der Spielleiter flüstert einen Begriff. Ihn zeichnen, ohne Worte, Zahlen oder Buchstaben. Alle anderen raten. Geschafft, wenn der Begriff in 60 Sekunden erraten wird.",
+  "duell": "Beide zeichnen gleichzeitig denselben Begriff vom Spielleiter, die Runde rät. Gewonnen hat, wessen Bild zuerst erraten wird."
+ },
+ "freeze": {
+  "name": "Freeze-Tanz",
+  "mat": "Musik vom Handy",
+  "solo": "Der Spielleiter spielt Musik und stoppt sie immer wieder. Tanzen und beim Stopp sofort einfrieren. Drei Runden. Geschafft, wenn es dreimal ohne Wackler klappt.",
+  "duell": "Beide tanzen gleichzeitig, der Spielleiter stoppt die Musik. Gewonnen hat, wer sich nach dem Stopp nicht als Erster bewegt."
+ },
+ "wuerfelglueck": {
+  "name": "Würfel-Glück",
+  "mat": "3 Würfel",
+  "solo": "Einmal mit drei Würfeln würfeln. Geschafft, wenn zusammen mindestens 11 Augen fallen.",
+  "duell": "Jeder würfelt einmal mit drei Würfeln. Gewonnen hat die höhere Summe. Bei Gleichstand wird nochmal gewürfelt."
+ },
+ "witz": {
+  "name": "Nicht lachen",
+  "mat": "",
+  "solo": "Abwechselnd erzählt jeder dem anderen einen Witz. Zuhören mit ernstem Gesicht. Gewonnen hat, wer nicht als Erster lacht.",
+  "duell": "Abwechselnd erzählt jeder dem anderen einen Witz. Zuhören mit ernstem Gesicht. Gewonnen hat, wer nicht als Erster lacht."
+ },
+ "koffer": {
+  "name": "Koffer packen",
+  "mat": "",
+  "solo": "„Ich packe meinen Koffer und nehme mit …“ Abwechselnd alles Bisherige in der richtigen Reihenfolge aufsagen und ein neues Ding dazupacken. Gewonnen hat, wer sich nicht als Erster vertut.",
+  "duell": "„Ich packe meinen Koffer und nehme mit …“ Abwechselnd alles Bisherige in der richtigen Reihenfolge aufsagen und ein neues Ding dazupacken. Gewonnen hat, wer sich nicht als Erster vertut."
+ },
+ "schuhspiel": {
+  "name": "Das Schuhspiel",
+  "mat": "Schuhe",
+  "solo": "",
+  "duell": ""
+ },
+ "ketchup": {
+  "name": "Ketchup-Montagsmaler",
+  "mat": "Ketchup, zwei Teller",
+  "solo": "Zwei Zweierteams. Einer malt mit Ketchup auf einen Teller, der andere rät. Die App zeigt dem Maler die Begriffe. Jedes Team hat 90 Sekunden. Gewonnen hat das Team mit mehr erratenen Begriffen. Das andere Team trinkt.",
+  "duell": "Zwei Zweierteams. Einer malt mit Ketchup auf einen Teller, der andere rät. Die App zeigt dem Maler die Begriffe. Jedes Team hat 90 Sekunden. Gewonnen hat das Team mit mehr erratenen Begriffen. Das andere Team trinkt."
+ },
+ "jga_j1": {
+  "name": "Uhrzeit mit Charme",
+  "k": "Mission",
+  "mat": "",
+  "solo": "Die Braut fragt drei Fremde nach der Uhrzeit und bedankt sich jedes Mal mit einem ehrlichen Kompliment. Geschafft, wenn drei Komplimente verteilt sind.",
+  "duell": ""
+ },
+ "jga_j2": {
+  "name": "Glückwunsch-Sammler",
+  "k": "Mission",
+  "mat": "Stift",
+  "solo": "Die Braut sammelt auf einem Bierdeckel oder Zettel fünf Unterschriften von Fremden, jede mit einem kurzen Glückwunsch zur Hochzeit. Geschafft bei fünf Unterschriften in 10 Minuten.",
+  "duell": ""
+ },
+ "jga_j7": {
+  "name": "Redenschreiber",
+  "k": "Mission",
+  "mat": "Stift",
+  "solo": "Die Braut lässt sich von einem Fremden einen Satz für die Hochzeitsrede schenken und schreibt ihn auf. Geschafft, wenn der Satz notiert ist.",
+  "duell": ""
+ },
+ "jga_j11": {
+  "name": "Wie alles begann",
+  "k": "Mission",
+  "mat": "",
+  "solo": "Die Braut spricht ein Paar an und fragt, wie die beiden sich kennengelernt haben. Geschafft, wenn die Geschichte erzählt ist.",
+  "duell": ""
+ },
+ "jga_j18": {
+  "name": "Blick in die Zukunft",
+  "k": "Mission",
+  "mat": "",
+  "solo": "Die Braut bittet einen Fremden um eine Vorhersage: Wie viele Kinder, wo wird geheiratet, wer kocht? Geschafft mit mindestens zwei Vorhersagen.",
+  "duell": ""
+ },
+ "jga_j20": {
+  "name": "Wie lange schon?",
+  "k": "Mission",
+  "mat": "",
+  "solo": "Die Braut lässt einen Fremden schätzen, wie lange die Braut und der Partner schon zusammen sind. Er hat drei Versuche. Geschafft, wenn er innerhalb der drei Versuche auf ein Jahr genau liegt.",
+  "duell": ""
+ },
+ "jga_j28": {
+  "name": "Alt, neu, geliehen, blau",
+  "k": "Mission",
+  "mat": "",
+  "solo": "Die Braut besorgt in 10 Minuten etwas Altes, etwas Neues, etwas Geliehenes und etwas Blaues. Geschafft, wenn alle vier Sachen da sind.",
+  "duell": ""
+ },
+ "jga_j31": {
+  "name": "Schere, Stein, Papier",
+  "k": "Mission",
+  "mat": "",
+  "solo": "Die Braut spielt gegen einen Fremden eine Runde Schere, Stein, Papier. Verloren: die Braut macht ihm ein Kompliment. Gewonnen: die Braut bekommt eins. Geschafft, wenn ein Kompliment den Besitzer gewechselt hat.",
+  "duell": ""
+ },
+ "jga_j36": {
+  "name": "Ehe-Profis",
+  "k": "Mission",
+  "mat": "",
+  "solo": "Die Braut findet jemanden, der schon länger als zehn Jahre verheiratet ist, und fragt nach dem Geheimnis. Geschafft mit Geheimnis.",
+  "duell": ""
+ },
+ "jga_j26": {
+  "name": "Wer ist gemeint?",
+  "k": "Mission",
+  "mat": "",
+  "solo": "Die Braut liest einem Fremden vor, wie die Gäste die Braut beschreiben: „herzlich, chaotisch“, und großer Fan von Harry Potter. Der Fremde soll raten, wer aus der Truppe gemeint ist. Geschafft, wenn er auf die Braut zeigt.",
+  "duell": ""
  }
 }

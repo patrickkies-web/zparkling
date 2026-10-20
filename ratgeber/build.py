@@ -30,7 +30,7 @@ def garland(colors, shape='sock'):
 
 def game_card(gid, unit='Socke', units='Socken'):
     g = GAMES[gid]; txt = g['solo'].replace('{UN}', units).replace('{U}', unit)
-    return ('<article class="rg-game"><div class="rg-game-top"><span class="rg-game-k">Minispiel</span><b>%s</b></div><p>%s</p>' % (esc(g['name']), esc(txt)) +
+    return ('<article class="rg-game"><div class="rg-game-top"><span class="rg-game-k">%s</span><b>%s</b></div><p>%s</p>' % (esc(g.get('k', 'Minispiel')), esc(g['name']), esc(txt)) +
             ('<small>Material: %s</small>' % esc(g['mat']) if g['mat'] else '<small>Ohne Material</small>') + '</article>')
 
 def render_blocks(blocks, unit, units):
