@@ -106,8 +106,8 @@ function resultView(P) {
     if (r.freed) left = '<span class="jk-face">' + left + '<i>' + emb('joker', 20) + '</i></span>';
     if (r.alt) txt += '<span class="sub block" style="color:var(--sun)">' + esc(r.alt) + '</span>';
     if (r.pilot) txt += '<span class="sub block" style="color:var(--violet-text)">' + esc(r.pilot) + '</span>';
-    var bd = r.pid && r.n > 0 && !r.water && !r.freed && !r.group ? budOf(r.pid) : '';
-    if (bd) txt += '<span class="sub block bd-along">' + emb('cheers', 16) + 'Trinkbuddy ' + esc(bd) + ' trinkt mit</span>';
+    var bi = r.pid && !r.group && P.budInfo ? P.budInfo[r.pid] : null;
+    if (bi && bi.along && r.n > 0 && !r.water && !r.freed) txt += '<span class="sub block bd-along">' + emb('cheers', 16) + 'Trinkbuddy ' + esc(bi.name) + ' trinkt mit' + (bi.end ? '. Danach ist die Verbindung vorbei' : bi.left ? '. Verbunden für noch ' + budGames(bi.left) : '') + '</span>';
     var ctrl = '';
     if (!r.group && !r.water && r.pid && r.n > 0) {
       ctrl = (jokersLeft(r.pid) > 0 && isFocus(r.pid) ? '<button type="button" class="tag plain" data-act="stepJoker" data-i="' + i + '" style="height:32px;color:var(--mint)">' + icon('i-drop', 14) + 'Joker</button>' : '') +
@@ -532,11 +532,11 @@ function prepHint(P) {
 }
 V.step = function () {
   var r = R(); if (budDue(r)) return V.buddy();
-  ruleSweep(); if (r && r.pending && r.pending.result) accSettle(r.pending);
+  ruleSweep(); if (r && r.pending && r.pending.result) { accSettle(r.pending); budSettle(r.pending); }
   var h = renderStepScreen(r && r.pending, false), st = ruleStrip() + accTaskHtml(r && r.pending);
   return st ? h.replace('<div class="body">', '<div class="body">' + st) : h;
 };
-V.free = function () { return renderStepScreen(S.free && S.free.step, true); };
+V.free = function () { var fs = S.free && S.free.step; if (fs && fs.result) budSettle(fs); return renderStepScreen(fs, true); };
 
 /* =========================================================
    Live link (master view + guest view)

@@ -331,7 +331,7 @@ function startRun() {
   /* Trinkbuddys (on unless switched off in the setup) and the rules of the Regel-Karte */
   /* accessories only when sweeping or cleaning: the count from the setup, from the hardest to the easiest */
   r.acc = c.fam === 'zeit' ? { items: accItems(accJob(), accN(c)), swaps: 0 } : { items: [], swaps: 0 }; r.accAt = r.t0;
-  r.bud = { on: c.buddy !== false, at: 0, map: {}, prev: {}, next: {}, fwd: {}, due: false, n: 0 }; r.rules = [];
+  r.bud = { on: c.buddy !== false, map: {}, prev: {}, next: {}, fwd: {}, bond: {}, due: false, n: 0 }; r.rules = [];
   /* Junggesellenabschied: missions out in the city (or in the bar), crew jobs in between */
   if (evType().id === 'jga') { r.jga = { mode: c.jgaMode === 'drinnen' ? 'drinnen' : 'stadt' }; r.jcrew = { n: 0, last: -9, used: [], by: {} }; }
   var mk = function (ids, total) { return { id: uid('t'), ids: ids, total: total, pos: 0, done: false, checks: [], accIdx: 0, accDone: 0 }; };

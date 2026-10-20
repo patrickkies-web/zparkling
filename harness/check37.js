@@ -28,36 +28,43 @@ for (const [t, rar, pv] of [['weiter', 'wei', 'GK_WEITER_P'], ['regel', 'reg', '
   ok(q && q.status === 'offen' && q.author === 'Paula' && c.gPass()[t] === true, t + ': reaches the master, the pass remembers it');
   ok(c.questionSlots(Object.assign({}, q, { status: 'ok' })) === 0, t + ': never content for a game');
 }
-/* 2. Trinkbuddys: from minute five, at the change of task, then every five minutes */
+/* 2. Trinkbuddys: picked at the first task; from the first shared drink a random 1-3 further games */
 {
   const c = party(3); const r = run(c);
   ok(r.bud && r.bud.on && !r.bud.due, 'A new run has Trinkbuddys switched on');
-  next(c); ok(!r.bud.due && !/Trinkbuddys/.test(c.V.step().slice(0, 4000).replace(/Karten und Timer[\s\S]*/, '')) || !r.bud.due, 'Before minute five no buddy');
-  c.advance(5.2); next(c);
-  ok(r.bud.due && c.budDue(r), 'After five minutes, at the next task, the buddies are due');
+  next(c);
+  ok(r.bud.due && c.budDue(r), 'At the first task the buddies are picked');
   let h = c.V.step();
-  ok(/Zeit für Trinkbuddys!/.test(h) && /data-act="budPick"/.test(h) && /Erst alle Buddys wählen/.test(h) && !holes(h), 'The step waits: everyone in the focus picks first');
+  ok(/Zeit für Trinkbuddys!/.test(h) && /ein bis drei Spiele/.test(h) && /data-act="budPick"/.test(h) && !holes(h), 'The step waits: everyone in the focus picks first');
   const who = r.who.slice();
   c.A.budPick({ id: who[0], v: 'Tom' });
   if (who[1]) { h = c.V.step(); ok(!new RegExp('data-id="' + who[1] + '" data-v="Tom"').test(h), 'Someone already picked is not offered twice'); c.A.budPick({ id: who[1], v: 'Max' }); }
   c.A.budGo();
-  ok(!r.bud.due && r.bud.map[who[0]] === 'Tom' && c.budOf(who[0]) === 'Tom', 'Buddies set, the step goes on');
-  ok(c.UI.screen === 'step' && !/Zeit für Trinkbuddys/.test(c.V.step()), 'Back on the task');
-  /* the buddy drinks along */
-  c.A.drinkPlus({ id: who[0] }); ok(/Tom trinkt mit/.test(c.UI.toast || c.app.innerHTML || '') || true, 'The counter says the buddy drinks along');
-  next(c); ok(!r.bud.due, 'Within five minutes: no change');
-  c.advance(5.1); next(c);
-  ok(r.bud.due, 'Five minutes later: change at the next task');
-  h = c.V.step();
-  ok(/Trinkbuddys wechseln!/.test(h) && /Bisher: Tom/.test(h) && !new RegExp('data-id="' + who[0] + '" data-v="Tom"').test(h), 'The previous buddy is not offered again');
-  ok(/Trinkbuddys/.test(c.V.run()) && /Karten und Timer/.test(c.V.run()), 'The cockpit shows buddies and timers');
+  const x = r.bud.bond[who[0]];
+  ok(!r.bud.due && x && x.state === 'wait' && x.left >= 1 && x.left <= 3 && c.budOf(who[0]) === 'Tom', 'Buddies set, the app drew ' + x.left + ' games, the bond waits for the first drink');
+  r.pending.result = { rows: who.map(id => ({ pid: id, name: 'x', n: 0 })) }; c.V.step();
+  ok(x.state === 'wait' && x.left === x.total, 'A game without a drink: the bond has not started');
+  next(c); const Q = r.pending; Q.result = { rows: [{ pid: who[0], name: 'x', n: 1 }] }; const hq = c.V.step();
+  ok(x.state === 'on' && Q.budInfo[who[0]].along && Q.budInfo[who[0]].start && /Trinkbuddy Tom trinkt mit/.test(hq), 'The first drink: Tom drinks along, the bond starts');
+  const total = x.total; let g = 0, along = 0;
+  while (x.state === 'on' && g < 6) { next(c); const G = r.pending; G.result = { rows: [{ pid: who[0], name: 'x', n: g % 2 ? 0 : 1 }] }; c.V.step(); if (G.budInfo && G.budInfo[who[0]] && G.budInfo[who[0]].along) along++; g++; }
+  ok(g === total && x.state === 'end', 'Then it holds exactly ' + total + ' more games');
+  ok(along === Math.ceil(total / 2), 'In those games Tom drinks along exactly when ' + c.person(who[0]).name + ' drinks');
+  ok(c.budOf(who[0]) === '', 'After that no buddy');
+  next(c); h = c.V.step();
+  ok(r.bud.due && /Neuer Trinkbuddy!/.test(h) && /Bisher: Tom/.test(h) && !new RegExp('data-id="' + who[0] + '" data-v="Tom"').test(h), 'At the next task a new buddy, not the same one again');
+  if (who[1]) ok(!new RegExp('data-act="budPick" data-id="' + who[1] + '"').test(h), 'Only who needs a new buddy picks');
+  c.A.budPick({ id: who[0], v: 'Nina' }); c.A.budGo();
+  ok(c.budOf(who[0]) === 'Nina' && r.bud.bond[who[0]].state === 'wait', 'New bond, waiting again');
+  if (who[1]) { c.A.drinkPlus({ id: who[1] }); ok(r.bud.bond[who[1]].state === 'on', 'A drink from the counter starts a waiting bond too'); }
+  ok(/Trinkbuddys/.test(c.V.run()) && /Karten und Timer/.test(c.V.run()) && /wartet aufs erste|noch \d Spiel/.test(c.V.run()), 'The cockpit shows each bond');
 }
 /* 3. Weiterleiten when picked */
 {
   const c = party(4); const r = run(c);
   c.S.questions = c.S.questions.filter(q => q.type !== 'weiter');
   c.S.questions.push({ id: 'qw1', t: 1, author: 'Lea', forId: '', type: 'weiter', text: '', status: 'ok', used: false, options: [], correct: 0, rar: 'wei' });
-  c.advance(5.2); next(c);
+  next(c);
   const pid = r.who[0];
   c.A.budPick({ id: pid, v: 'Lea' });
   let h = c.V.step();
@@ -120,7 +127,7 @@ for (const [t, rar, pv] of [['weiter', 'wei', 'GK_WEITER_P'], ['regel', 'reg', '
 {
   const c = party(7); c.cfgDefaults(); c.A.cfgBuddy();
   ok(c.cfgDefaults().buddy === false, 'Trinkbuddys can be switched off in the setup');
-  const r = run(c); c.advance(6); next(c);
+  const r = run(c); next(c);
   ok(!r.bud.on && !r.bud.due && !c.budDue(r), 'Switched off: no buddies');
   const d = load({ seed: 8, demo: true }); d.DEMO_LIMITS = true; d.A.loadDemo();
   ok(d.pcAll('weiter').length === 0 && /Game Pass/.test(d.V.cards()), 'Example evening: the cards stay behind the Game Pass');

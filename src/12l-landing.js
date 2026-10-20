@@ -31,12 +31,12 @@ function lpOcc(t) {
 }
 V.landing = function () {
   var top = '<header class="lp-top" data-tint="#0C0A1A"><span class="lp-brand">' + lpLogo(32) + '<b>zparkling</b></span><nav class="lp-nav" aria-label="Start">' +
-    '<button type="button" class="lp-link" data-act="loadDemo">Beispiel-Abend</button>' + lpBtn('lpIntro', 'Intro starten', 'sm', 'i-play') + '</nav></header>';
+    '<button type="button" class="lp-link" data-act="openDemoPick">Beispiel-Abend</button>' + lpBtn('lpIntro', 'Intro starten', 'sm', 'i-play') + '</nav></header>';
   var hero = '<section class="lp-hero">' + lpGarland() +
     '<h1 class="lp-h1">Euer Abend, gespielt statt geplant.</h1>' +
     '<p class="lp-lead">zparkling ist das Partyspiel für Sockenkranz, Treppe fegen, Geburtstag und JGA. Eure Gäste schicken vorab per Link ein paar Kleinigkeiten über die Hauptperson, und die App baut daraus Spiele, die es nur auf eurer Party gibt.</p>' +
-    '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('loadDemo', 'Beispiel-Abend ansehen', 'ghost') + '</div>' +
-    '<p class="lp-note">Das Intro dauert eine Minute. Ausprobieren kostet nichts.</p></section>';
+    '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('openDemoPick', 'Beispiel-Abend ansehen', 'ghost') + '</div>' +
+    '<p class="lp-note">Das Intro dauert gut eine Minute. Ausprobieren kostet nichts.</p></section>';
   var steps = '<section class="lp-sec"><h2 class="lp-h2">So läuft’s</h2><ol class="lp-steps">' +
     '<li class="lp-step" style="--c:#FF7A45;--rot:-1.2deg"><span class="lp-n">1</span><div class="lp-step-art lp-faces">' + lpFace('Jonas', 74) + lpFace('Mia', 74) + '</div>' +
     '<h3>Party anlegen</h3><p>Wer wird gefeiert und was ist der Anlass? Zwei Fragen, dann steht euer Abend.</p></li>' +
@@ -64,12 +64,12 @@ V.landing = function () {
   var pass = '<section class="lp-sec"><div class="lp-pass"><div class="lp-copy"><h2 class="lp-h2">Ausprobieren kostet nichts.</h2>' +
     '<p class="lp-p">Der Beispiel-Abend zeigt euch, wie alles funktioniert. Für eure eigene Party gibt es den Game Pass: einmal zahlen, kein Abo, alle Spiele und Gäste-Links bis zwei Tage nach dem Fest.</p>' +
     '<div class="lp-prices">' + plans + '</div></div>' +
-    '<div class="lp-ctas lp-ctas-col">' + lpBtn('loadDemo', 'Beispiel-Abend ansehen', 'ink') + lpBtn('go', 'Game Pass ansehen', 'ghost ink-ghost').replace('data-act="go"', 'data-act="go" data-to="pass"') + '</div></div></section>';
-  var end = '<section class="lp-end"><h2 class="lp-h2">Bereit für eure Party?</h2><p class="lp-p">Das Intro zeigt in einer Minute, was zparkling aus eurem Abend macht.</p>' +
+    '<div class="lp-ctas lp-ctas-col">' + lpBtn('openDemoPick', 'Beispiel-Abend ansehen', 'ink') + lpBtn('go', 'Game Pass ansehen', 'ghost ink-ghost').replace('data-act="go"', 'data-act="go" data-to="pass"') + '</div></div></section>';
+  var end = '<section class="lp-end"><h2 class="lp-h2">Bereit für eure Party?</h2><p class="lp-p">Das Intro zeigt in gut einer Minute, was zparkling aus eurem Abend macht.</p>' +
     '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('newEvent', 'Gleich eure Party anlegen', 'ghost') + '</div></section>' +
     '<footer class="lp-foot"><span class="lp-brand">' + lpLogo(24) + '<b>zparkling</b></span><span>Das Partyspiel für euren Abend</span></footer>';
   return scr('', top + lpSlot() + hero + steps + guests + occ + fair + pass + end, '', 'lp');
 };
 A.lpIntro = function () { A.openTour(); };
 /* an occasion on the landing page: the example evening, switched to it */
-A.lpTry = function (d) { A.loadDemo(); A.setEventAnlass({ v: d.v }); };
+A.lpTry = function (d) { A.openDemoPick({ from: 'landing', v: d.v }); };

@@ -6,7 +6,7 @@ var toastTimer = null;
 function render() {
   if (UI.guestMode !== 'link') {
     if (UI.screen === 'welcome') UI.screen = 'landing';
-    if (!E() && ['landing', 'setup', 'person', 'tour', 'pass'].indexOf(UI.screen) < 0) UI.screen = 'landing';
+    if (!E() && ['landing', 'setup', 'person', 'tour', 'pass', 'demoPick'].indexOf(UI.screen) < 0) UI.screen = 'landing';
   }
   var body = app.querySelector('.body');
   var keep = body && app.getAttribute('data-screen') === UI.screen ? body.scrollTop : 0;
@@ -282,7 +282,7 @@ A.qrBig = function (d) { UI.qrBig = { code: d.code, title: d.title }; render(); 
 A.qrClose = function () { UI.qrBig = null; render(); };
 
 /* counter */
-A.drinkPlus = function (d) { var bd = budOf(d.id); addDrink(d.id, 1, 'manuell'); commit(); setToast('+1 ' + U() + ' für ' + person(d.id).name + (bd ? ', ' + bd + ' trinkt mit' : '')); };
+A.drinkPlus = function (d) { addDrink(d.id, 1, 'manuell'); budStart(d.id); var bd = budOf(d.id); commit(); setToast('+1 ' + U() + ' für ' + person(d.id).name + (bd ? ', ' + bd + ' trinkt mit' : '')); };
 A.drinkMinus = function (d) { if (drinksOf(d.id) <= 0) return; addDrink(d.id, -1, 'manuell', 'Korrektur'); commit(); };
 A.addCounterPerson = function () { var id = addPersonByName(UI.counterName); UI.counterName = ''; commit(); if (id) setToast(person(id).name + ' ist im Zähler'); var i = document.getElementById('cName'); if (i) i.focus(); };
 A.undoDrink = function () { S.drinks.pop(); commit(); setToast('Letzter Eintrag gelöscht'); };
@@ -396,6 +396,8 @@ A.startRun = function () { if (needPass('Das Spiel starten geht mit dem Game Pas
   if (isJga() && crewList().length < 2) { UI.cfgErr = 'Tragt zuerst die Truppe ein, mindestens zwei Namen. Beim Junggesellenabschied spielt sie mit.'; UI.cfgStep = 1; render(); return; }
   if (!startRun()) { UI.cfgErr = 'Wähl mindestens eine Person aus.'; UI.cfgStep = 1; render(); return; } UI.confirm = null; UI.ckLog = false; commit(); go('run'); runKickoff(); };
 /* jump to a part of a long page, below the sticky chips */
+/* from the home page into a part of another page */
+A.homeJump = function (d) { go(d.v); if (d.j) setTimeout(function () { A.jump({ v: d.j }); }, 60); };
 A.jump = function (d) {
   var b = app.querySelector('.body'), el = document.getElementById(d.v); if (!b || !el || !el.getBoundingClientRect) return;
   var sc = typeof gScale === 'function' ? gScale() : 1, bar = app.querySelector('.qx-jump');

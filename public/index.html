@@ -2151,7 +2151,6 @@ body.desk .tab:hover { color: var(--text); background: var(--surface); }
 body.desk .tab.on { background: var(--surface-2); color: var(--white); }
 body.desk .tab.on .ic { color: var(--accent); }
 body.desk .tb-set { display: flex; margin-left: 6px; }
-body.desk .scr.dw .head .iconbtn[data-to="settings"] { display: none; }
 /* two columns */
 body.desk .dk { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 0 32px; align-items: start; }
 body.desk .dk-a, body.desk .dk-b { display: block; min-width: 0; }
@@ -2408,6 +2407,80 @@ body.desk .dk-master { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr)
 @keyframes accwin { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
 .acc-ic { color: var(--mint); }
 @media (prefers-reduced-motion: reduce) { .acc-res.won { animation: none; } }
+
+.zc-st { display: block; font-size: 12px; font-weight: 700; color: var(--sun); }
+/* ---------- v39: the home page leads everywhere, no bar at the bottom ---------- */
+.hm-list { display: flex; flex-direction: column; gap: 8px; }
+.hm-row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 62px; padding: 10px 14px 10px 10px; box-sizing: border-box; border-radius: 20px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font: inherit; text-align: left; }
+.hm-row b { font-size: 15.5px; color: var(--white); }
+.hm-row small { font-size: 13px; color: var(--muted); line-height: 1.35; }
+.hm-row > .ic { color: var(--muted); }
+.hm-ic { width: 42px; height: 42px; border-radius: 14px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; color: var(--ink); box-shadow: inset 0 -3px 0 rgba(0,0,0,.14); }
+.hm-badge { min-width: 26px; height: 26px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; background: var(--accent); color: var(--ink); font: 800 13px var(--display); display: inline-flex; align-items: center; justify-content: center; }
+.hm-row:active { transform: scale(.985); }
+@media (hover: hover) { .hm-row:hover { border-color: var(--line-2); background: var(--surface-2); } }
+/* ---------- v39: choosing the example evening, cards like the bonus cards ---------- */
+.dp-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 14px; }
+.dp-card { position: relative; padding: 5px; border: 0; border-radius: 22px; background: linear-gradient(140deg, #FFFFFF 0%, var(--c) 30%, var(--c) 70%, #15122B 140%); color: var(--white); font: inherit; text-align: center; transform: rotate(calc((var(--i) - 3.5) * .6deg)); transition: transform .3s cubic-bezier(.3,1.4,.5,1), opacity .25s ease, filter .25s ease; box-shadow: 0 10px 24px rgba(0,0,0,.35); animation: dpCardIn .55s cubic-bezier(.2,1.3,.4,1) both; animation-delay: calc(var(--i) * .05s); }
+@keyframes dpCardIn { from { transform: translateY(18px) scale(.94); opacity: 0; } }
+.dp-in { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; min-height: 176px; box-sizing: border-box; padding: 16px 10px 14px; border-radius: 18px; overflow: hidden; background: radial-gradient(120% 70% at 50% 0%, #3E3488, #1D1A40 62%, #141130); }
+.dp-in::before { content: ''; position: absolute; inset: 0; background: radial-gradient(rgba(255,255,255,.08) 1px, transparent 1.4px) 0 0 / 12px 12px; pointer-events: none; }
+.dp-art { position: relative; width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--ink); background: radial-gradient(circle at 35% 30%, #FFFFFF, var(--c) 78%); box-shadow: 0 0 22px rgba(255,255,255,.18); margin-bottom: 4px; }
+.dp-ring { position: absolute; inset: -6px; border-radius: 50%; border: 2px dashed var(--c); opacity: .7; }
+.dp-in b { position: relative; font: 800 15px/1.15 var(--display); letter-spacing: -0.01em; }
+.dp-in small { position: relative; font-size: 12px; color: var(--muted); font-weight: 600; line-height: 1.3; }
+.dp-card.on { transform: translateY(-4px) scale(1.03); box-shadow: 0 0 0 3px var(--c), 0 18px 36px rgba(0,0,0,.45); z-index: 1; }
+.dp-card.dim { opacity: .55; filter: saturate(.7); }
+.dp-det { grid-column: 1 / -1; padding: 16px; border-radius: 22px; background: var(--surface); border: 2px solid var(--c); animation: dpDetIn .35s cubic-bezier(.2,1.2,.4,1) both; }
+@keyframes dpDetIn { from { transform: translateY(-8px) scale(.98); opacity: 0; } }
+.dp-det-h { display: flex; align-items: center; gap: 10px; }
+.dp-det-h b { font: 800 19px var(--display); color: var(--white); }
+.dp-det-ic { width: 36px; height: 36px; border-radius: 12px; background: var(--c); color: var(--ink); display: flex; align-items: center; justify-content: center; }
+.dp-det p { margin: 10px 0 0; font-size: 15px; line-height: 1.45; color: var(--text); }
+.dp-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.dp-chips span { padding: 6px 12px; border-radius: 999px; background: var(--surface-2); font-size: 13px; font-weight: 700; color: var(--white); }
+.dp-go { margin-top: 14px; }
+@media (min-width: 700px) { .dp-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } .dp-go { max-width: 360px; } }
+@media (hover: hover) { .dp-card:not(.on):hover { transform: translateY(-3px) rotate(0deg); } }
+@media (prefers-reduced-motion: reduce) { .dp-card, .dp-det { animation: none; transition: none; } }
+/* ---------- v39: intro, prepared for everything ---------- */
+.t-ready { position: relative; width: 300px; height: 300px; display: flex; flex-direction: column; gap: 7px; }
+.t-rd-card { position: relative; padding: 12px 14px; border-radius: 20px; background: #15122B; color: #FFFFFF; box-shadow: 0 8px 0 rgba(21,18,43,.25); animation: tPhone .7s .1s cubic-bezier(.2,1.3,.4,1) both; }
+.t-rd-k { display: inline-block; padding: 3px 10px; border-radius: 999px; background: #FFC940; color: #15122B; font: 800 11px var(--display); }
+.t-rd-names { position: relative; display: block; height: 24px; margin-top: 6px; }
+.t-rd-names b { position: absolute; left: 0; top: 0; font: 800 18px var(--display); white-space: nowrap; }
+.t-rd-names .a { animation: tRdOut .35s 3.9s ease forwards; }
+.t-rd-names .b { opacity: 0; transform: translateY(10px); animation: tRdIn .45s 4.1s cubic-bezier(.2,1.3,.4,1) forwards; }
+@keyframes tRdOut { to { opacity: 0; transform: translateY(-10px); } }
+@keyframes tRdIn { to { opacity: 1; transform: none; } }
+.t-rd-vs { position: absolute; right: 12px; top: 12px; display: flex; align-items: center; gap: 4px; }
+.t-rd-vs i { font: 800 11px var(--display); font-style: normal; color: #FF7A45; }
+.t-rd-q { position: relative; padding: 9px 36px 9px 12px; border-radius: 14px; background: #FFFFFF; border: 2.5px solid #15122B; color: #15122B; font-size: 13px; font-weight: 800; animation: tPhone .6s cubic-bezier(.2,1.3,.4,1) both; animation-delay: calc(.35s + var(--k) * .15s); }
+.t-rd-q > i { position: absolute; right: 12px; top: 6px; font: 800 18px var(--display); font-style: normal; }
+.t-rd-q p { margin: 0; max-height: 0; overflow: hidden; font-size: 12.5px; font-weight: 600; color: #3A3463; animation: tRdOpen .5s 1.3s ease forwards; }
+@keyframes tRdOpen { to { max-height: 60px; margin-top: 6px; } }
+.t-rd-btns { display: flex; gap: 8px; margin-top: auto; }
+.t-rd-b { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; height: 40px; border-radius: 14px; background: #15122B; color: #FFFFFF; font-size: 13px; font-weight: 800; }
+.t-rd-b.one { animation: tPhone .6s .9s cubic-bezier(.2,1.3,.4,1) both, tRdPress .3s 3.6s ease; }
+.t-rd-b.two { animation: tPhone .6s 1s cubic-bezier(.2,1.3,.4,1) both, tRdPress .3s 6.4s ease; }
+@keyframes tRdPress { 50% { transform: scale(.94); background: #FF7A45; color: #15122B; } }
+/* relaxed, no compulsion */
+.t-easy { position: relative; width: 310px; height: 300px; }
+.t-ez-av { position: absolute; left: 50%; top: 92px; width: 124px; height: 124px; margin-left: -62px; border-radius: 50%; overflow: hidden; border: 4px solid #15122B; background: #F4F1FF; box-sizing: border-box; animation: tPhone .8s .1s cubic-bezier(.2,1.3,.4,1) both; }
+.t-ez-av svg { display: block; width: 100%; height: 100%; }
+.t-pr { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 14px; background: var(--c); color: #15122B; border: 2.5px solid #15122B; box-shadow: 3px 3px 0 #15122B; font-size: 13px; font-weight: 800; white-space: nowrap; transform: rotate(var(--rot)); animation: tEzPop .55s cubic-bezier(.3,1.6,.5,1) both; animation-delay: calc(1s + var(--k) * .7s); }
+.t-pr:nth-of-type(2) { left: 0; top: 6px; } .t-pr:nth-of-type(3) { right: 0; top: 50px; } .t-pr:nth-of-type(4) { left: 2px; bottom: 50px; } .t-pr:nth-of-type(5) { right: 4px; bottom: 4px; }
+@keyframes tEzPop { from { opacity: 0; transform: scale(.4) rotate(var(--rot)); } to { opacity: 1; transform: rotate(var(--rot)); } }
+/* paper instead of screens */
+.t-cards { position: relative; width: 310px; height: 300px; }
+.t-card { position: absolute; left: 50%; top: 22px; margin-left: -60px; transform-origin: 50% 120%; animation: tCardDeal .7s cubic-bezier(.2,1.2,.4,1) both; animation-delay: calc(.4s + var(--k) * .45s); }
+.t-card:nth-of-type(2) { --r: -15deg; --x: -64px; } .t-card:nth-of-type(3) { --r: 0deg; --x: 0px; } .t-card:nth-of-type(4) { --r: 15deg; --x: 64px; }
+@keyframes tCardDeal { from { opacity: 0; transform: translate(0, 160px) rotate(0deg) scale(.7); } to { opacity: 1; transform: translate(var(--x), 0) rotate(var(--r)); } }
+.t-cards .pc { width: 120px; height: 168px; font-size: 5px; box-shadow: 0 8px 18px rgba(21,18,43,.35); }
+.t-phone-down { position: absolute; left: 4px; bottom: 6px; width: 116px; height: 56px; padding-left: 12px; box-sizing: border-box; border-radius: 14px; background: #15122B; transform: rotate(-8deg); display: flex; align-items: center; justify-content: center; animation: tPhone .6s .1s cubic-bezier(.2,1.3,.4,1) both; }
+.t-phone-down i { position: absolute; left: 8px; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; border-radius: 50%; background: #3A3463; }
+.t-phone-down b { color: #FFFFFF; font-size: 12px; font-weight: 800; }
+@media (prefers-reduced-motion: reduce) { .t-rd-names .a, .t-rd-names .b, .t-rd-q p, .t-pr, .t-card, .t-rd-b { animation: none !important; opacity: 1; } .t-rd-names .b { display: none; } .t-rd-q p { max-height: none; margin-top: 6px; } .t-card { transform: translate(var(--x), 0) rotate(var(--r)); } }
 </style>
 
 <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
@@ -4472,7 +4545,7 @@ function startRun() {
   /* Trinkbuddys (on unless switched off in the setup) and the rules of the Regel-Karte */
   /* accessories only when sweeping or cleaning: the count from the setup, from the hardest to the easiest */
   r.acc = c.fam === 'zeit' ? { items: accItems(accJob(), accN(c)), swaps: 0 } : { items: [], swaps: 0 }; r.accAt = r.t0;
-  r.bud = { on: c.buddy !== false, at: 0, map: {}, prev: {}, next: {}, fwd: {}, due: false, n: 0 }; r.rules = [];
+  r.bud = { on: c.buddy !== false, map: {}, prev: {}, next: {}, fwd: {}, bond: {}, due: false, n: 0 }; r.rules = [];
   /* Junggesellenabschied: missions out in the city (or in the bar), crew jobs in between */
   if (evType().id === 'jga') { r.jga = { mode: c.jgaMode === 'drinnen' ? 'drinnen' : 'stadt' }; r.jcrew = { n: 0, last: -9, used: [], by: {} }; }
   var mk = function (ids, total) { return { id: uid('t'), ids: ids, total: total, pos: 0, done: false, checks: [], accIdx: 0, accDone: 0 }; };
@@ -5922,7 +5995,7 @@ function face(p, size, style, mood) {
 }
 function groupFace(size) { return '<span class="ini" style="width:' + size + 'px;height:' + size + 'px;background:#F4F1FF">' + icon('i-users', Math.round(size * 0.5)) + '</span>'; }
 /* navigation says where it goes: an arrow and a word, never a bare symbol */
-var BACK_LABEL = { home: 'Party', run: 'Übersicht', cards: 'Karten', questions: 'Fragen', games: 'Spiele', counter: 'Zähler', runSetup: 'Einrichten', crew: 'Gäste' };
+var BACK_LABEL = { landing: 'Start', pass: 'Game Pass', home: 'Party', run: 'Übersicht', cards: 'Karten', questions: 'Fragen', games: 'Spiele', counter: 'Zähler', runSetup: 'Einrichten', crew: 'Gäste' };
 function navBtn(attrs, ic, label, cls) { return '<button type="button" class="navbtn' + (cls ? ' ' + cls : '') + '" ' + attrs + '>' + icon(ic, 18) + '<span>' + esc(label) + '</span></button>'; }
 function topbar(back, title, right) {
   return '<div class="topbar tb3">' +
@@ -5982,7 +6055,7 @@ function garland(width, fills, shape) {
   return out + '</svg>';
 }
 /* the example evening: a golden banner on every screen of the master, it leads to the Game Pass */
-var DEMO_HIDE = ['pass', 'tour', 'welcome', 'guestForm', 'guestLive', 'landing'];
+var DEMO_HIDE = ['pass', 'tour', 'welcome', 'guestForm', 'guestLive', 'landing', 'demoPick'];
 function demoBanner() {
   if (!S || !S.demo || UI.guestMode === 'link' || DEMO_HIDE.indexOf(UI.screen) >= 0) return '';
   var bub = ''; for (var i = 0; i < 10; i++) bub += '<i style="--x:' + (6 + i * 9.5).toFixed(1) + '%;--d:' + ((i * 0.53) % 2.4).toFixed(2) + 's;--s:' + (3 + (i * 7) % 5) + 'px"></i>';
@@ -6265,6 +6338,18 @@ function runLabel() {
   return 'Kranz abgehen';
 }
 /* the heart of the app on the home screen: what the guests sent and what it turns into */
+/* the way to everything about the guests, as a section of the home page (no bar at the bottom) */
+function homeQSection() {
+  var open = S.questions.filter(function (q) { return q.status === 'offen'; }).length, ok = S.questions.filter(questionPlayable).length;
+  var cards = 0; if (typeof PC_KINDS !== 'undefined') PC_KINDS.forEach(function (t) { cards += pcFree(t).length; });
+  var row = function (act, extra, bg, ic, title, sub, badge) { return '<button type="button" class="hm-row" data-act="' + act + '"' + extra + '><span class="hm-ic" style="background:' + bg + '">' + ic + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>' + title + '</b><small>' + sub + '</small></span>' + (badge ? '<span class="hm-badge">' + badge + '</span>' : '') + icon('i-next', 16) + '</button>'; };
+  return '<h3 class="sec" id="hm-fragen">Fragen und Beiträge</h3><div class="hm-list mt10">' +
+    row('homeJump', ' data-v="questions" data-j="qs-neu"', 'var(--orange)', icon('i-bubble', 20), 'Neu eingegangen', open ? (open === 1 ? 'Ein Beitrag wartet auf deine Freigabe' : open + ' Beiträge warten auf deine Freigabe') : 'Alles geprüft, ' + ok + ' freigegeben', open || '') +
+    row('homeJump', ' data-v="questions" data-j="qs-link"', 'var(--mint)', icon('i-link', 20), 'Gäste einladen', 'Link, QR-Code und Text für die Gruppe') +
+    row('openMasterForm', '', 'var(--sun)', icon('i-pencil', 20), 'Selbst Fragen eintragen', 'Geführt, mit eigenen Leveln') +
+    row('openCards', ' data-from="home"', 'linear-gradient(120deg,#FDFEFF,#C6CFDA 45%,#8C98A8)', icon('i-star', 20), 'Karten für die Party', cards ? cards + ' im Umlauf: Joker, Weiterleiten, Regel' : 'Joker, Weiterleiten und Regel-Karte') +
+    row('homeJump', ' data-v="questions" data-j="qs-alle"', 'var(--violet)', icon('i-users', 20), 'Alle Beiträge und Runden', 'Was die App daraus baut') + '</div>';
+}
 function homeGuestCard() {
   var e = E(), n = S.questions.filter(function (q) { return q.status === 'ok' && isGuestAuthor(q.author); }).length;
   var inv = roundInventory('', e.focus.map(function (p) { return p.id; })), rounds = 0;
@@ -6288,12 +6373,9 @@ V.home = function () {
     '<button type="button" class="play' + (running ? '' : ready ? ' ready' + (fx === 'unlock' ? ' unlocked' : '') : ' locked') + '" data-act="heroGo"' + (!running && !ready ? ' aria-label="' + esc(runLabel()) + ', erst den Abend einstellen"' : '') + '><span>' + icon(!running && !ready ? 'i-lock' : 'i-play', 18) + '</span>' + runLabel() + (ready && !running ? '<i class="play-glint" aria-hidden="true"></i>' : '') + '</button>' +
     (running ? '' : '<button type="button" class="hero-hint plain" data-act="go" data-to="questions">' + icon('i-users', 16) + '<span class="grow">' + (homeGuestN() ? 'Mehr Gäste, mehr Spiele: ladet noch mehr ein.' : 'Ladet eure Gäste ein, sie bauen die Spiele mit.') + '</span><b>Einladen</b></button>') + '</div>' +
     (running ? '' : homeSetBar(ready)) +
-    homeGuestCard() + '\u0001' + demoHomeHtml() +
-    '<div class="mt14" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">' +
-    '<button type="button" class="stat plain" data-act="go" data-to="questions"><b class="num">' + openQ + '</b><span>' + (openQ === 1 ? 'Frage wartet' : 'Fragen warten') + ' auf Freigabe</span><small>' + okQ + ' freigegeben</small></button>' +
-    '<button type="button" class="stat plain" data-act="go" data-to="counter"><b class="num">' + drinksTotal + '</b><span>' + esc(U()) + ' eingetragen</span><small>Antippen zum Eintragen</small></button></div>' +
+    homeGuestCard() + homeQSection() + '\u0001' + demoHomeHtml() +
     factCard('home') + '\u0002' +
-    '<h3 class="sec">Schnell spielen</h3><div class="games mt10">' +
+    '<h3 class="sec" id="hm-spiele">Spiele</h3><p class="small mt6">Zwischendurch spielen, auch ohne Kranz. Welche Spiele im Abend drankommen, bleibt geheim.</p><div class="games mt10">' +
     '<button type="button" class="gtile" data-act="freeQuick" data-v="wwe" style="background:var(--sun)"' + (e.focus.length < 2 ? ' disabled' : '') + '><svg class="art" aria-hidden="true" width="86" height="70" style="top:12px;right:8px"><use href="#i-bubbles"></use></svg><b>Wer würde eher?</b><small>' + (e.focus.length < 2 ? 'Ab zwei Fokus-Personen' : 'Gruppe stimmt per Link ab') + '</small></button>' +
     '<button type="button" class="gtile" data-act="freeQuick" data-v="schaetzen" style="background:var(--violet)"><span class="art" aria-hidden="true" style="top:10px;right:14px;font:900 64px/1 var(--display)">≈</span><b>Schätzen gegen die Gruppe</b><small>Schieberegler per Link</small></button>' +
     '<button type="button" class="gtile' + (demoFreeOk('partner') ? '' : ' dlk') + '" data-act="freeQuick" data-v="partner" style="background:var(--mint)">' + (demoFreeOk('partner') ? '' : '<span class="dl-badge">' + icon('i-lock', 14) + '</span>') + '<span class="art" aria-hidden="true" style="top:14px;right:14px">' + icon('i-users', 50) + '</span><b>Mein Partner kann</b><small>' + (S.used && S.used.partnerGame ? 'Heute schon gespielt' : 'Mehrere Runden, ein Sieger') + '</small></button>' +
@@ -6304,7 +6386,8 @@ V.home = function () {
   body = dk(body.slice(0, cut1), body.slice(cut1 + 1, cut2), 'dk-home') + body.slice(cut2 + 1);
   body = passStatusHtml(true) + body;
   var hin = UI.homeIn; UI.homeIn = false;
-  return scr(head, body, tabbar('home'), hin ? 'hin' : '');
+  body += '<button type="button" class="hm-row mt10" data-act="go" data-to="games"><span class="hm-ic" style="background:var(--violet)">' + icon('i-pad', 20) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>Alle Spiele und euer Material</b><small>Was im Haus ist, entscheidet, was drankommt</small></span>' + icon('i-next', 16) + '</button>';
+  return scr(head, body, '', hin ? 'hin' : '');
 };
 
 /* =========================================================
@@ -6358,8 +6441,8 @@ V.counter = function () {
     dk('<span class="eyebrow mt18 block">Im Fokus</span><div class="mt10">' + focusCards + '</div>',
     '<span class="eyebrow mt22 block">Zuletzt</span><div class="card padrows mt10">' + log + '</div>' +
     (S.drinks.length ? '<button type="button" class="btn-ghost mt10" data-act="undoDrink">' + icon('i-undo', 18) + 'Letzten Eintrag löschen</button>' : ''));
-  var head = UI.counterFrom ? topbar(UI.counterFrom, esc(e.unit) + '-Zähler') : topbar(null, esc(e.unit) + '-Zähler');
-  return scr(head, body, UI.counterFrom ? '' : tabbar('counter'));
+  var head = topbar(UI.counterFrom || (S.run && !S.run.finished ? 'run' : 'home'), esc(e.unit) + '-Zähler');
+  return scr(head, body, '');
 };
 
 /* =========================================================
@@ -6545,7 +6628,7 @@ V.questions = function () {
     factCard('questions') + '</div>';
   var c1 = body.indexOf('\u0001'), c2 = body.indexOf('\u0002'), c3 = body.indexOf('\u0003');
   body = body.slice(0, c1) + dk(body.slice(c1 + 1, c2), body.slice(c2 + 1, c3)) + body.slice(c3 + 1);
-  return scr(topbar(null, 'Beiträge der Gäste'), body, tabbar('questions'));
+  return scr(topbar('home', 'Beiträge der Gäste'), body, '');
 };
 /* the QR code, big enough to scan from the master's phone */
 function qrBigHtml() {
@@ -6643,7 +6726,7 @@ V.games = function () {
     '<button type="button" class="card pad row plain mt14" data-act="openMaterial" data-from="games" style="width:100%"><span class="tile-ic" style="width:44px;height:44px;border-radius:14px;background:var(--sun)">' + icon('i-box', 22) + '</span><span class="stack grow" style="text-align:left;gap:2px"><span class="name">Euer Material</span><span class="sub">' + esc(matSummary()) + '</span></span><span class="linkbtn">Ändern</span></button>' +
     '<span class="eyebrow mt22 block">Zwischendurch spielen</span><p class="small mt6">Antippen und los. Was ihr hier spielt, ist für den Abend verbraucht und kommt ' + (kr ? 'im Kranz' : 'später') + ' nicht noch einmal.</p>' +
     '<div class="games mt14">' + tiles + '</div>' + factCard('games');
-  return scr(topbar(null, 'Spiele'), body, tabbar('games'));
+  return scr(topbar('home', 'Spiele'), body, '');
 };
 /* =========================================================
    Run setup
@@ -6844,7 +6927,7 @@ function cfgStep3(c) {
   }).join('') +
     (shortPlan ? '<p class="small" style="padding:4px 0 10px">Pro Spiel fällt höchstens 1 ' + esc(e.unit) + '. Bei so wenigen Aufgaben wird das Ziel deshalb nicht ganz erreicht. Mehr ' + (fam === 'frei' ? (c.variant === 'wuerfel' ? 'Felder' : 'Runden') : fam === 'kranz' ? (c.variant === 'meter' ? 'Meter' : 'Stationen am Kranz') : 'Spielzeit') + ' oder ein kleineres Maximum helfen.</p>' : '');
   var link = '<label class="row mt14 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Gäste per Link einbinden</span><span class="sub">Bei Schätz- und Abstimmfragen</span></span><button type="button" class="switch" role="switch" aria-checked="' + !!c.link + '" data-act="cfgLink" aria-label="Gäste per Link einbinden"><span></span></button></label>';
-  var buddy = '<label class="row mt10 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Trinkbuddys</span><span class="sub">Ab Minute ' + BUD_MIN + ' wählt jede Hauptperson jemanden, der mittrinkt. Alle ' + BUD_MIN + ' Minuten wird getauscht.</span></span><button type="button" class="switch" role="switch" aria-checked="' + (c.buddy !== false) + '" data-act="cfgBuddy" aria-label="Trinkbuddys"><span></span></button></label>';
+  var buddy = '<label class="row mt10 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Trinkbuddys</span><span class="sub">Jede Hauptperson wählt jemanden, der mittrinkt. Ab dem ersten gemeinsamen ' + esc(E().unit) + ' hält die Verbindung 1 bis 3 Spiele, das entscheidet die App. Dann wird neu gewählt.</span></span><button type="button" class="switch" role="switch" aria-checked="' + (c.buddy !== false) + '" data-act="cfgBuddy" aria-label="Trinkbuddys"><span></span></button></label>';
   return '<h1 class="h1 mt18">Alles bereit?</h1><p class="small mt6">Tipp eine Zeile an, um sie zu ändern.</p>' + sum +
     '<span class="eyebrow mt22 block">Plan des Piloten</span><div class="card padrows mt10">' + plan + '<div class="row" style="min-height:44px;border-top:1px solid var(--line)"><span class="grow small">So viel ' + esc(e.unit) + ' ist für heute eingeplant</span><button type="button" class="linkbtn" data-act="go" data-to="settings">Regeln</button></div></div>' +
     '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (isJga() ? '' : crewSetupHtml(c)) + link + buddy +
@@ -8873,16 +8956,16 @@ function jokerRunCard() {
    - Two more bonus cards next to the Joker: Weiterleiten (silver) and
      the Regel-Karte. Guests draw them in the guest link, the master
      approves them, the guest keeps them for the party.
-   - Trinkbuddys, in every mode: from minute five on, at the next change
-     of task, everyone in the focus picks a buddy who drinks along.
-     Every five minutes, again at a change of task, the buddies swap.
+   - Trinkbuddys, in every mode: at the first task everyone in the focus
+     picks a buddy who drinks along. From the first shared drink the bond
+     holds a random one to three further games, then a new buddy.
      Whoever is picked and holds Weiterleiten can pass the job on.
    - The Regel-Karte: its holder names a rule, everyone in the focus
      keeps it for five minutes. Breaking it costs one drink, once.
    - The card area: every card in circulation, the timers, and, once the
      guest round is closed, the cards to print with the holders' names.
    ========================================================= */
-var BUD_MIN = 5, RULE_MIN = 5;
+var RULE_MIN = 5;
 var PC_KINDS = ['regel', 'weiter', 'joker'];
 QTYPES.push(
   ['weiter', 'Weiterleiten', 'Bonuskarte: wer sie hat und als Trinkbuddy gewählt wird, gibt den Job an jemand anderen weiter.', 'karte'],
@@ -8918,19 +9001,55 @@ function pcText(t) {
 }
 function runLive() { var r = R(); return r && !r.finished ? r : null; }
 
-/* ---------- Trinkbuddys ---------- */
-function bud(r) { if (!r.bud) r.bud = { on: true, at: 0, map: {}, prev: {}, next: {}, fwd: {}, due: false, n: 0 }; if (!r.bud.next) r.bud.next = {}; if (!r.bud.fwd) r.bud.fwd = {}; return r.bud; }
-function budNextAt(r) { var b = bud(r); return (b.at || r.t0) + BUD_MIN * 60000; }
-/* called when the next task is drawn: after five minutes the buddies are due */
-function budCheck(r) { if (!r || r.finished) return; var b = bud(r); if (b.on && !b.due && now() >= budNextAt(r)) { b.due = true; b.next = {}; b.fwd = {}; } }
+/* ---------- Trinkbuddys ----------
+   Picked at the first task. The bond starts with the first drink of the person in the focus
+   (the buddy drinks along), then holds a random one to three further games, decided by the app.
+   After that, a new buddy is picked at the next task. */
+function bud(r) {
+  if (!r.bud) r.bud = { on: true, map: {}, prev: {}, next: {}, fwd: {}, bond: {}, due: false, n: 0 };
+  ['map', 'prev', 'next', 'fwd', 'bond'].forEach(function (k) { if (!r.bud[k]) r.bud[k] = {}; });
+  return r.bud;
+}
+/* this person needs a (new) buddy: none yet, or the bond is over */
+function budNeeds(r, pid) { var b = bud(r), x = b.bond[pid]; return !b.map[pid] || !x || x.state === 'end'; }
+/* called when the next task is drawn */
+function budCheck(r) { if (!r || r.finished) return; var b = bud(r); if (b.on && !b.due && r.who.some(function (id) { return budNeeds(r, id); })) { b.due = true; b.next = {}; b.fwd = {}; } }
 function budDue(r) { return !!(r && !r.finished && r.pending && bud(r).on && bud(r).due); }
 /* who drinks along with this person right now */
-function budOf(pid) { var r = runLive(); if (!r || !bud(r).on || !isFocus(pid)) return ''; return bud(r).map[pid] || ''; }
+function budOf(pid) { var r = runLive(); if (!r || !bud(r).on || !isFocus(pid)) return ''; var b = bud(r), x = b.bond[pid]; return b.map[pid] && x && x.state !== 'end' ? b.map[pid] : ''; }
+function budRand() { return 1 + Math.floor(Math.random() * 3); }
+function budGames(n) { return n === 1 ? '1 Spiel' : n + ' Spiele'; }
+/* a drink outside a game (the counter, a broken rule): the first one starts the bond */
+function budStart(pid) {
+  var r = runLive(); if (!r || !bud(r).on) return;
+  var b = bud(r), x = b.bond[pid]; if (!x || x.state !== 'wait' || !b.map[pid]) return;
+  x.state = 'on'; logRun('info', person(pid).name + ' trinkt, ' + b.map[pid] + ' trinkt mit. Verbunden für noch ' + budGames(x.left));
+}
+/* after a game: does the buddy drink along, how long the bond still holds */
+function budSettle(P) {
+  var r = runLive(); if (!r || !P || !P.result || P.budDone || !bud(r).on) return;
+  var b = bud(r); P.budDone = true; P.budInfo = {};
+  r.who.forEach(function (pid) {
+    var x = b.bond[pid], name = b.map[pid]; if (!x || !name || x.state === 'end') return;
+    var row = (P.result.rows || []).filter(function (y) { return y.pid === pid && !y.group; })[0];
+    var drinks = !!(row && row.n > 0 && !row.freed && !row.water), info = { name: name, along: false, left: x.left, end: false, start: false };
+    if (x.state === 'on') {
+      info.along = drinks; x.left -= 1; info.left = Math.max(0, x.left);
+      if (x.left <= 0) { x.state = 'end'; info.end = true; logRun('info', person(pid).name + ' und ' + name + ': die Verbindung ist vorbei'); }
+    } else if (drinks) {
+      x.state = 'on'; info.along = true; info.start = true; info.left = x.left;
+      logRun('info', person(pid).name + ' trinkt, ' + name + ' trinkt mit. Verbunden für noch ' + budGames(x.left));
+    }
+    P.budInfo[pid] = info;
+  });
+  save();
+}
 function budCard(name) { return pcFree('weiter').filter(function (q) { return pcSame(q.author, name); })[0] || null; }
 /* names to pick from: who is there tonight, not the previous buddy, not someone another focus person already took, not who just passed it on */
 function budPool(r, pid, picks) {
   var b = bud(r), taken = {};
   Object.keys(picks).forEach(function (k) { if (k !== pid && picks[k]) taken[pcKey(picks[k])] = 1; });
+  r.who.forEach(function (k) { if (k !== pid && !budNeeds(r, k) && b.map[k]) taken[pcKey(b.map[k])] = 1; });
   var all = presentNames().filter(function (n) { return !taken[pcKey(n)] && !pcSame(n, b.fwd[pid]); });
   var fresh = all.filter(function (n) { return !pcSame(n, b.map[pid]); });
   return fresh.length ? fresh : all;
@@ -8939,11 +9058,13 @@ function budMode() { var r = runLive(); if (!r) return ''; if (budDue(r)) return
 V.buddy = function () {
   var r = runLive(), mode = budMode();
   if (!mode) { UI.budFwd = null; return V.run(); }
-  var b = bud(r), picks = mode === 'swap' ? b.next : {}, ids = mode === 'swap' ? r.who : [UI.budFwd];
+  var b = bud(r), picks = mode === 'swap' ? b.next : {}, ids = mode === 'swap' ? r.who.filter(function (id) { return budNeeds(r, id); }) : [UI.budFwd];
   var first = mode === 'swap' && !b.n, all = ids.every(function (id) { return picks[id]; });
   var hero = '<div class="bd-hero' + (first ? ' first' : '') + '"><span class="bd-glasses" aria-hidden="true">' + emb('cheers', 92) + '</span>' +
-    '<h1>' + (mode === 'fwd' ? 'Weitergeleitet!' : first ? 'Zeit für Trinkbuddys!' : 'Trinkbuddys wechseln!') + '</h1>' +
-    '<p>' + (mode === 'fwd' ? esc(b.fwd[UI.budFwd] || '') + ' hat die Weiterleiten-Karte gezogen. Wer übernimmt den Job?' : first ? 'Jede Hauptperson sucht sich jemanden aus. Muss sie trinken, trinkt ihr Buddy mit. In fünf Minuten wird getauscht.' : 'Fünf Minuten sind um. Jede Hauptperson wählt jemand Neues, der ab jetzt mittrinkt.') + '</p></div>';
+    '<h1>' + (mode === 'fwd' ? 'Weitergeleitet!' : first ? 'Zeit für Trinkbuddys!' : 'Neuer Trinkbuddy!') + '</h1>' +
+    '<p>' + (mode === 'fwd' ? esc(b.fwd[UI.budFwd] || '') + ' hat die Weiterleiten-Karte gezogen. Wer übernimmt den Job?'
+      : first ? 'Jede Hauptperson sucht sich jemanden aus. Muss sie trinken, trinkt ihr Buddy mit. Wie lange ihr verbunden bleibt, entscheidet die App: ab dem ersten gemeinsamen ' + esc(U()) + ' noch ein bis drei Spiele.'
+      : 'Die Verbindung ist vorbei. Wer trinkt als Nächstes mit? Ab dem ersten gemeinsamen ' + esc(U()) + ' hält sie wieder ein bis drei Spiele.') + '</p></div>';
   var rows = ids.map(function (id) {
     var p = person(id), pick = picks[id], pool = budPool(r, id, picks), card = pick ? budCard(pick) : null;
     var head = '<div class="bd-who">' + face(p, 46, '', 'jubel') + '<span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(p.name) + ' wählt</b><span>' + (b.fwd[id] ? esc(b.fwd[id]) + ' hat weitergeleitet' : b.map[id] && mode === 'swap' ? 'Bisher: ' + esc(b.map[id]) : 'Wer trinkt mit?') + '</span></span></div>';
@@ -8958,7 +9079,7 @@ V.buddy = function () {
     return '<div class="bd-row">' + head + (pool.length ? '' : '<p class="small mt8">Noch niemand von heute eingetragen. Tipp den Namen einfach ein.</p>') + '<div class="bd-chips">' + chips + type + '</div></div>';
   }).join('');
   var body = hero + '<div class="bd-rows">' + rows + '</div>';
-  var foot = mode === 'swap' ? '<button type="button" class="cta mint" data-act="budGo"' + (all ? '' : ' disabled') + '>' + icon('i-check', 18) + (all ? 'Prost, weiter zur Aufgabe' : 'Erst alle Buddys wählen') + '</button>' : '';
+  var foot = mode === 'swap' ? '<button type="button" class="cta mint" data-act="budGo"' + (all ? '' : ' disabled') + '>' + icon('i-check', 18) + (all ? 'Prost, weiter zur Aufgabe' : ids.length > 1 ? 'Erst alle Buddys wählen' : 'Erst den Buddy wählen') + '</button>' : '';
   return scr(topbar(mode === 'fwd' ? (UI.budFrom || 'run') : 'run', mode === 'fwd' ? 'Weiterleiten' : 'Trinkbuddys'), body, foot, 'bdscr');
 };
 A.budPick = function (d) {
@@ -8974,10 +9095,10 @@ A.budPick = function (d) {
 A.budClear = function (d) { var r = runLive(); if (!r) return; delete bud(r).next[d.id]; commit(); };
 A.budTypeOpen = function (d) { UI.budType = d.id; UI.budTxt = ''; render(); var el = document.getElementById('budIn'); if (el && el.focus) try { el.focus(); } catch (e) {} };
 A.budTypeOk = function (d) { var v = String(UI.budTxt || '').trim(); if (v.length < 2) { setToast('Bitte einen Namen eintippen'); return; } A.budPick({ id: d.id, v: v }); };
-/* the picked buddy plays Weiterleiten: the card is used, someone else has to be chosen */
+/* the picked buddy plays Weiterleiten: the card is used, someone else has to be chosen; the bond goes on */
 A.budFwd = function (d) {
   var r = runLive(); if (!r) return;
-  var b = bud(r), swap = budDue(r), name = swap ? b.next[d.id] : b.map[d.id], q = budCard(name);
+  var b = bud(r), swap = budDue(r) && budNeeds(r, d.id), name = swap ? b.next[d.id] : b.map[d.id], q = budCard(name);
   if (!name || !q) return;
   q.used = true; q.usedAt = now(); q.usedFor = person(d.id).name;
   b.fwd[d.id] = name;
@@ -8988,10 +9109,11 @@ A.budFwd = function (d) {
   commit(); if (!swap) go('buddy'); setToast(name + ' leitet weiter!');
 };
 A.budGo = function () {
-  var r = runLive(); if (!r) return; var b = bud(r);
-  if (!b.due || !r.who.every(function (id) { return b.next[id]; })) return;
-  b.prev = b.map; b.map = b.next; b.next = {}; b.fwd = {}; b.at = now(); b.due = false; b.n += 1;
-  logRun('info', (b.n === 1 ? 'Trinkbuddys: ' : 'Neue Trinkbuddys: ') + r.who.map(function (id) { return person(id).name + ' mit ' + b.map[id]; }).join(', '));
+  var r = runLive(); if (!r) return; var b = bud(r), ids = r.who.filter(function (id) { return budNeeds(r, id); });
+  if (!b.due || !ids.every(function (id) { return b.next[id]; })) return;
+  ids.forEach(function (id) { b.prev[id] = b.map[id]; b.map[id] = b.next[id]; var n = budRand(); b.bond[id] = { state: 'wait', left: n, total: n }; });
+  b.next = {}; b.fwd = {}; b.due = false; b.n += 1;
+  logRun('info', (b.n === 1 ? 'Trinkbuddys: ' : 'Neuer Trinkbuddy: ') + ids.map(function (id) { return person(id).name + ' mit ' + b.map[id]; }).join(', '));
   commit(); go('step');
 };
 
@@ -9034,7 +9156,7 @@ A.ruleBroke = function (d) {
   if (!x || !ruleLive(x) || x.broke[d.pid] || x.who.indexOf(d.pid) < 0) return;
   x.broke[d.pid] = true;
   var p = person(d.pid), bg = budget(d.pid), bd = budOf(d.pid);
-  if (bg.C < bg.M) { addDrink(d.pid, 1, 'regel', 'Regel gebrochen: ' + x.text); setToast(p.name + ' trinkt ein ' + U() + (bd ? ', ' + bd + ' trinkt mit' : '')); x.water = x.water || {}; }
+  if (bg.C < bg.M) { addDrink(d.pid, 1, 'regel', 'Regel gebrochen: ' + x.text); budStart(d.pid); bd = budOf(d.pid); setToast(p.name + ' trinkt ein ' + U() + (bd ? ', ' + bd + ' trinkt mit' : '')); x.water = x.water || {}; }
   else { x.water = x.water || {}; x.water[d.pid] = true; setToast(p.name + ' ist am Maximum, es gibt Wasser'); }
   logRun('fail', p.name + ' hat die Regel gebrochen' + (bg.C < bg.M ? ' und trinkt ein ' + U() : ', am Maximum gibt es Wasser'));
   commit();
@@ -9077,15 +9199,13 @@ function ruleStrip() {
 function partyRunHtml(r, full) {
   var b = bud(r), out = accRunHtml(r);
   if (b.on) {
-    var pairs = r.who.filter(function (id) { return b.map[id]; });
-    if (!pairs.length) out += '<div class="zc-row"><span class="zc-e">' + emb('cheers', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Trinkbuddys</b><span>Erste Wahl bei der Aufgabe nach Minute ' + BUD_MIN + '</span></span><span class="zc-t">' + zt(budNextAt(r), 'fällig') + '</span></div>';
-    else {
-      out += '<div class="zc-row"><span class="zc-e">' + emb('cheers', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Trinkbuddys</b><span>Wechsel bei der nächsten Aufgabe nach</span></span><span class="zc-t">' + zt(budNextAt(r), 'fällig') + '</span></div>' +
-        '<div class="zc-pairs">' + pairs.map(function (id) {
-          var n = b.map[id], card = budCard(n);
-          return '<div class="zc-pair">' + face(person(id), 30) + '<span class="zc-amp">' + icon('i-cup', 14) + '</span>' + guestFace(n, 30) + '<span class="grow"><b>' + esc(person(id).name) + '</b> mit <b>' + esc(n) + '</b></span>' + (card ? '<button type="button" class="zc-fwd" data-act="budFwd" data-id="' + id + '">' + emb('forward', 18) + 'Weiterleiten</button>' : '') + '</div>';
-        }).join('') + '</div>';
-    }
+    var pairs = r.who.filter(function (id) { return budOf(id); });
+    out += '<div class="zc-row"><span class="zc-e">' + emb('cheers', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Trinkbuddys</b><span>' + (pairs.length ? 'Ab dem ersten gemeinsamen ' + esc(U()) + ' noch 1 bis 3 Spiele verbunden' : 'Gewählt wird bei der nächsten Aufgabe') + '</span></span></div>';
+    if (pairs.length) out += '<div class="zc-pairs">' + pairs.map(function (id) {
+      var n = b.map[id], x = b.bond[id], card = budCard(n);
+      var st = x.state === 'wait' ? 'wartet aufs erste ' + U() : 'noch ' + budGames(x.left);
+      return '<div class="zc-pair">' + face(person(id), 30) + '<span class="zc-amp">' + icon('i-cup', 14) + '</span>' + guestFace(n, 30) + '<span class="grow"><b>' + esc(person(id).name) + '</b> mit <b>' + esc(n) + '</b><small class="zc-st">' + esc(st) + '</small></span>' + (card ? '<button type="button" class="zc-fwd" data-act="budFwd" data-id="' + id + '">' + emb('forward', 18) + 'Weiterleiten</button>' : '') + '</div>';
+    }).join('') + '</div>';
   }
   var rules = rulesOf(r).filter(function (x) { return ruleLive(x) || (full && x.done); });
   out += rules.map(function (x) { return ruleHtml(x, false); }).join('');
@@ -9568,8 +9688,8 @@ function resultView(P) {
     if (r.freed) left = '<span class="jk-face">' + left + '<i>' + emb('joker', 20) + '</i></span>';
     if (r.alt) txt += '<span class="sub block" style="color:var(--sun)">' + esc(r.alt) + '</span>';
     if (r.pilot) txt += '<span class="sub block" style="color:var(--violet-text)">' + esc(r.pilot) + '</span>';
-    var bd = r.pid && r.n > 0 && !r.water && !r.freed && !r.group ? budOf(r.pid) : '';
-    if (bd) txt += '<span class="sub block bd-along">' + emb('cheers', 16) + 'Trinkbuddy ' + esc(bd) + ' trinkt mit</span>';
+    var bi = r.pid && !r.group && P.budInfo ? P.budInfo[r.pid] : null;
+    if (bi && bi.along && r.n > 0 && !r.water && !r.freed) txt += '<span class="sub block bd-along">' + emb('cheers', 16) + 'Trinkbuddy ' + esc(bi.name) + ' trinkt mit' + (bi.end ? '. Danach ist die Verbindung vorbei' : bi.left ? '. Verbunden für noch ' + budGames(bi.left) : '') + '</span>';
     var ctrl = '';
     if (!r.group && !r.water && r.pid && r.n > 0) {
       ctrl = (jokersLeft(r.pid) > 0 && isFocus(r.pid) ? '<button type="button" class="tag plain" data-act="stepJoker" data-i="' + i + '" style="height:32px;color:var(--mint)">' + icon('i-drop', 14) + 'Joker</button>' : '') +
@@ -9994,11 +10114,11 @@ function prepHint(P) {
 }
 V.step = function () {
   var r = R(); if (budDue(r)) return V.buddy();
-  ruleSweep(); if (r && r.pending && r.pending.result) accSettle(r.pending);
+  ruleSweep(); if (r && r.pending && r.pending.result) { accSettle(r.pending); budSettle(r.pending); }
   var h = renderStepScreen(r && r.pending, false), st = ruleStrip() + accTaskHtml(r && r.pending);
   return st ? h.replace('<div class="body">', '<div class="body">' + st) : h;
 };
-V.free = function () { return renderStepScreen(S.free && S.free.step, true); };
+V.free = function () { var fs = S.free && S.free.step; if (fs && fs.result) budSettle(fs); return renderStepScreen(fs, true); };
 
 /* =========================================================
    Live link (master view + guest view)
@@ -11076,21 +11196,25 @@ function kin(text) {
 /* ---------- the scenes ---------- */
 var TOUR = [
   { id: 'name', c: '#FFC940', d: 0 },
-  { id: 'stage', c: '#FF7A45', d: 7000 },
+  { id: 'modes', c: '#9886FF', d: 9000 },
   { id: 'link', c: '#48D9A6', d: 10000 },
   { id: 'games', c: '#FF8FC4', d: 10000 },
-  { id: 'modes', c: '#9886FF', d: 9000 },
   { id: 'dials', c: '#7FA8FF', d: 9000 },
+  { id: 'ready', c: '#6FE3FF', d: 9500 },
+  { id: 'easy', c: '#B6F07C', d: 9500 },
+  { id: 'cards', c: '#E2D6FF', d: 9500 },
   { id: 'roles', c: '#FF9A73', d: 8500 },
   { id: 'ticket', c: '#15122B', d: 0, dark: true }
 ];
 var TOUR_TX = {
   name: function () { return { h: 'Für wen steigt die Party?', t: 'Gib einen Namen ein und schau zu, was daraus wird.' }; },
-  stage: function () { return { h: tn('{Ns} Party.\nWie keine andere.', 'Eure Party.\nWie keine andere.'), t: tn('Kein Programm von der Stange: Jede Runde wird um {N} herum gebaut, aus dem, was eure Gäste über {N} wissen.', 'Kein Programm von der Stange: Jede Runde wird um eure Hauptperson herum gebaut, aus dem, was eure Gäste wissen.') }; },
-  link: function () { return { h: 'Die Gäste erzählen mit.', t: tn('Ein Link in die Gruppe genügt. Jeder schickt, worauf er Lust hat: Erinnerungen, Lügen, Fragen über {N}. Freiwillig und in zwei Minuten.', 'Ein Link in die Gruppe genügt. Jeder schickt, worauf er Lust hat: Erinnerungen, Lügen, Fragen. Freiwillig und in zwei Minuten.') }; },
-  games: function () { return { h: tn('Daraus werden Spiele, die es nur bei {N} gibt.', 'Daraus werden Spiele, die es nur bei euch gibt.'), t: 'Viele Runden entstehen direkt aus den Beiträgen der Gäste. Je mehr sie schicken, desto mehr davon. Dazu über 140 Minispiele, Herausforderungen gegen Gäste deiner Wahl und eine Handicap-Station, alles geheim bis zum Moment.' }; },
-  modes: function () { return { h: 'Gespielt wird, wie ihr feiert.', t: 'Sockenkranz, Treppe fegen oder Spielabend. Stück für Stück, mit Würfel oder nach Zeit. Zusammen oder gegeneinander.' }; },
-  dials: function () { return { h: 'Und ihr dreht an den Reglern.', t: 'Wie lange, wie wild, mit welchem Material: Ihr stellt ein, die App plant den Rest und achtet darauf, dass es lustig bleibt.' }; },
+  modes: function () { return { h: 'Für jeden Anlass gemacht.', t: 'Sockenkranz, Schachtelkranz, Treppe fegen, Klinken putzen, Geburtstag, Polterabend, JGA oder einfach ein Spielabend. Die App kennt die Bräuche und baut den Abend passend dazu.' }; },
+  link: function () { return { h: 'Schritt 1: Die Gäste machen mit.', t: tn('Ein Link in die Gruppe genügt. Jeder bekommt eine Einladung und schickt in zwei Minuten, was er über {N} weiß: Erinnerungen, Lügen, Fragen. Mit Punkten, Leveln und Bonuskarten. Freiwillig.', 'Ein Link in die Gruppe genügt. Jeder bekommt eine Einladung und schickt in zwei Minuten, was er über die Hauptperson weiß: Erinnerungen, Lügen, Fragen. Mit Punkten, Leveln und Bonuskarten. Freiwillig.') }; },
+  games: function () { return { h: tn('Schritt 2: Ein Abend, der nur zu {N} passt.', 'Schritt 2: Ein Abend, der nur zu euch passt.'), t: tn('Aus den Beiträgen baut die App eigene Runden: Wer kennt {N} am längsten, welche Geschichte ist gelogen, von wem stammt die Erinnerung. Genau das macht den Abend aus.', 'Aus den Beiträgen baut die App eigene Runden: Wer kennt die Hauptperson am längsten, welche Geschichte ist gelogen, von wem stammt die Erinnerung. Genau das macht den Abend aus.') }; },
+  dials: function () { return { h: 'Du stellst ein, die App plant.', t: 'Wer spielt, wie lange, wie wild, mit welchem Material, eigene Fragen, Trinkbuddys an oder aus: Als Spielleiter passt du alles an. Den Rest übernimmt die App.' }; },
+  ready: function () { return { h: 'Auf alles vorbereitet.', t: 'Gleichstand, Streit, keiner will anfangen? Zu jedem Spiel steht die Antwort schon bereit. Passt ein Spiel nicht, ziehst du ein anderes. Ein Tipp daneben, dann machst du ihn rückgängig.' }; },
+  easy: function () { return { h: 'Entspannt feiern. Ohne Zwang.', t: 'Du gibst die Verantwortung ab und feierst mit. Nichts ist Pflicht: Spiele lassen sich überspringen, Gäste machen freiwillig mit, und jede Aufgabe sorgt für ein Schmunzeln, ohne jemanden bloßzustellen.' }; },
+  cards: function () { return { h: 'Handys weg, Karten raus.', t: 'Gespielt wird miteinander, nicht am Bildschirm. Nur der Spielleiter tippt. Wer beim Gäste-Link mitgemacht hat, bekommt seine Karte auf Papier: den Joker, Weiterleiten in Silber oder die Regel-Karte.' }; },
   roles: function () { return { h: 'Wer mitmacht, bekommt seinen Auftritt.', t: tn('Wer {N} am längsten kennt, wird zum Urgestein. Wer das letzte Spiel errät, zum Hellseher. Kleine Rollen, charmant statt peinlich.', 'Wer die Hauptperson am längsten kennt, wird zum Urgestein. Wer das letzte Spiel errät, zum Hellseher. Kleine Rollen, charmant statt peinlich.') }; },
   ticket: function () { return { h: tn('{Ns} Party\nkann kommen.', 'Eure Party\nkann kommen.'), t: 'Mit dem Game Pass ist alles drin, vom ersten Gäste-Link bis zwei Tage nach dem Fest.' }; }
 };
@@ -11180,7 +11304,29 @@ function artRoles() {
 function artTicket() {
   return '<div class="t-final">' + confetti(24, 3) + '<div class="t-tix"><div class="t-tix-main"><span class="t-tix-av">' + avatarSVG(tourAv(), { mood: 'jubel' }) + '</span><span class="stack" style="gap:3px;min-width:0"><small>Game Pass für</small><b>' + esc(tn('{Ns} Party', 'Eure Party')) + '</b><span class="t-tix-l">Gäste-Links, alle Spielarten, über 140 Spiele</span></span></div><div class="t-tix-stub"><span>Für alle Gäste</span><i class="t-bars"></i></div><i class="t-shine"></i></div></div>';
 }
-var TOUR_ART = { name: artName, stage: artStage, link: artLink, games: artGames, modes: artModes, dials: artDials, roles: artRoles, ticket: artTicket };
+/* prepared for everything: the answers are there, another game, undo */
+function artReady() {
+  var g = tourCast();
+  var q = [['Was gilt bei Gleichstand?', 'Noch ein Versuch für beide. Wer trifft, gewinnt.'], ['Wer fängt an?', 'Wer zuletzt Geburtstag hatte.'], ['Wer entscheidet bei Streit?', 'Der Spielleiter, und das Geburtstagskind darf protestieren.']];
+  return '<div class="t-ready"><div class="t-rd-card"><span class="t-rd-k">Duell</span><span class="t-rd-names"><b class="a">Kronkorken-Schnippen</b><b class="b">Löffel-Balance</b></span><span class="t-rd-vs">' + castFace(g[0], 30) + '<i>vs</i>' + castFace(g[1], 30) + '</span></div>' +
+    q.map(function (x, k) { return '<div class="t-rd-q' + (k ? '' : ' open') + '" style="--k:' + k + '"><span>' + esc(x[0]) + '</span><i>' + (k ? '+' : '–') + '</i>' + (k ? '' : '<p>' + esc(x[1]) + '</p>') + '</div>'; }).join('') +
+    '<div class="t-rd-btns"><span class="t-rd-b one">' + icon('i-shuffle', 15) + 'Anderes Spiel</span><span class="t-rd-b two">' + icon('i-undo', 15) + 'Rückgängig</span></div>' +
+    '<i class="t-tap" style="left:78px;top:262px;animation-delay:3.6s"></i><i class="t-tap" style="left:222px;top:262px;animation-delay:6.4s"></i></div>';
+}
+/* relaxed, no compulsion */
+function artEasy() {
+  var p = [['i-next', 'Überspringen? Jederzeit.', '#FFFFFF'], ['i-users', 'Gäste müssen nichts', '#FFC940'], ['i-star', 'Lustig, nie peinlich', '#FF8FC4'], ['i-clock', 'Mit Tempobremse', '#9886FF']];
+  return '<div class="t-easy"><span class="t-ez-av">' + avatarSVG(tourAv(), { mood: 'jubel' }) + '</span>' +
+    p.map(function (x, k) { return '<span class="t-pr" style="--k:' + k + ';--c:' + x[2] + ';--rot:' + [-5, 4, -3, 5][k] + 'deg">' + icon(x[0], 16) + esc(x[1]) + '</span>'; }).join('') + '</div>';
+}
+/* paper instead of screens: the cards in the hand */
+function artCards() {
+  var g = tourCast(), kinds = [['joker', g[0][0]], ['weiter', g[1][0]], ['regel', g[2][0]]];
+  var card = function (t, name) { return '<div class="pc pc-' + t + '"><div class="pc-in"><div class="pc-top"><span class="pc-chip">' + (t === 'weiter' ? 'Silber' : t === 'regel' ? 'Regel' : 'Joker') + '</span></div><div class="pc-art"><span class="pc-ring"></span>' + emb(GQ_STYLE[t].e, 60) + '</div><span class="pc-k">Bonuskarte</span><b class="pc-t">' + esc(pcTitle(t)) + '</b><div class="pc-for"><span>Für</span><b>' + esc(name) + '</b></div></div></div>'; };
+  return '<div class="t-cards"><span class="t-phone-down" aria-hidden="true"><i></i><b>Handy-Pause</b></span>' +
+    kinds.map(function (k, i) { return '<span class="t-card" style="--k:' + i + '">' + card(k[0], k[1]) + '</span>'; }).join('') + '</div>';
+}
+var TOUR_ART = { name: artName, stage: artStage, link: artLink, games: artGames, modes: artModes, dials: artDials, ready: artReady, easy: artEasy, cards: artCards, roles: artRoles, ticket: artTicket };
 
 V.tour = function () {
   var i = Math.max(0, Math.min(TOUR.length - 1, UI.tourAt || 0)), s = TOUR[i], last = i === TOUR.length - 1, tx = TOUR_TX[s.id]();
@@ -11224,7 +11370,7 @@ A.tourPrev = function () {
 A.tourRoll = function () { UI.tourRoll = tourRollNow() + 1; tourPatch(); };
 A.tourSkip = function () { clearTimeout(UI.tourT); tourStore(1); go(E() ? 'home' : 'pass'); };
 A.tourPass = function () { clearTimeout(UI.tourT); tourStore(1); go('pass'); };
-A.tourDemo = function () { clearTimeout(UI.tourT); tourStore(1); A.loadDemo(); };
+A.tourDemo = function () { clearTimeout(UI.tourT); tourStore(1); A.openDemoPick({ from: UI.screen === 'tour' ? 'landing' : UI.screen }); };
 A.openTour = function () { UI.tourAt = 0; UI.tourFrom = ''; UI.tourName = null; UI.tourLen = tourName().length; go('tour'); };
 /* the name from the intro becomes the first person */
 function tourSeedDraft(draft, an) {
@@ -11444,12 +11590,12 @@ function lpOcc(t) {
 }
 V.landing = function () {
   var top = '<header class="lp-top" data-tint="#0C0A1A"><span class="lp-brand">' + lpLogo(32) + '<b>zparkling</b></span><nav class="lp-nav" aria-label="Start">' +
-    '<button type="button" class="lp-link" data-act="loadDemo">Beispiel-Abend</button>' + lpBtn('lpIntro', 'Intro starten', 'sm', 'i-play') + '</nav></header>';
+    '<button type="button" class="lp-link" data-act="openDemoPick">Beispiel-Abend</button>' + lpBtn('lpIntro', 'Intro starten', 'sm', 'i-play') + '</nav></header>';
   var hero = '<section class="lp-hero">' + lpGarland() +
     '<h1 class="lp-h1">Euer Abend, gespielt statt geplant.</h1>' +
     '<p class="lp-lead">zparkling ist das Partyspiel für Sockenkranz, Treppe fegen, Geburtstag und JGA. Eure Gäste schicken vorab per Link ein paar Kleinigkeiten über die Hauptperson, und die App baut daraus Spiele, die es nur auf eurer Party gibt.</p>' +
-    '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('loadDemo', 'Beispiel-Abend ansehen', 'ghost') + '</div>' +
-    '<p class="lp-note">Das Intro dauert eine Minute. Ausprobieren kostet nichts.</p></section>';
+    '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('openDemoPick', 'Beispiel-Abend ansehen', 'ghost') + '</div>' +
+    '<p class="lp-note">Das Intro dauert gut eine Minute. Ausprobieren kostet nichts.</p></section>';
   var steps = '<section class="lp-sec"><h2 class="lp-h2">So läuft’s</h2><ol class="lp-steps">' +
     '<li class="lp-step" style="--c:#FF7A45;--rot:-1.2deg"><span class="lp-n">1</span><div class="lp-step-art lp-faces">' + lpFace('Jonas', 74) + lpFace('Mia', 74) + '</div>' +
     '<h3>Party anlegen</h3><p>Wer wird gefeiert und was ist der Anlass? Zwei Fragen, dann steht euer Abend.</p></li>' +
@@ -11477,15 +11623,15 @@ V.landing = function () {
   var pass = '<section class="lp-sec"><div class="lp-pass"><div class="lp-copy"><h2 class="lp-h2">Ausprobieren kostet nichts.</h2>' +
     '<p class="lp-p">Der Beispiel-Abend zeigt euch, wie alles funktioniert. Für eure eigene Party gibt es den Game Pass: einmal zahlen, kein Abo, alle Spiele und Gäste-Links bis zwei Tage nach dem Fest.</p>' +
     '<div class="lp-prices">' + plans + '</div></div>' +
-    '<div class="lp-ctas lp-ctas-col">' + lpBtn('loadDemo', 'Beispiel-Abend ansehen', 'ink') + lpBtn('go', 'Game Pass ansehen', 'ghost ink-ghost').replace('data-act="go"', 'data-act="go" data-to="pass"') + '</div></div></section>';
-  var end = '<section class="lp-end"><h2 class="lp-h2">Bereit für eure Party?</h2><p class="lp-p">Das Intro zeigt in einer Minute, was zparkling aus eurem Abend macht.</p>' +
+    '<div class="lp-ctas lp-ctas-col">' + lpBtn('openDemoPick', 'Beispiel-Abend ansehen', 'ink') + lpBtn('go', 'Game Pass ansehen', 'ghost ink-ghost').replace('data-act="go"', 'data-act="go" data-to="pass"') + '</div></div></section>';
+  var end = '<section class="lp-end"><h2 class="lp-h2">Bereit für eure Party?</h2><p class="lp-p">Das Intro zeigt in gut einer Minute, was zparkling aus eurem Abend macht.</p>' +
     '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('newEvent', 'Gleich eure Party anlegen', 'ghost') + '</div></section>' +
     '<footer class="lp-foot"><span class="lp-brand">' + lpLogo(24) + '<b>zparkling</b></span><span>Das Partyspiel für euren Abend</span></footer>';
   return scr('', top + lpSlot() + hero + steps + guests + occ + fair + pass + end, '', 'lp');
 };
 A.lpIntro = function () { A.openTour(); };
 /* an occasion on the landing page: the example evening, switched to it */
-A.lpTry = function (d) { A.loadDemo(); A.setEventAnlass({ v: d.v }); };
+A.lpTry = function (d) { A.openDemoPick({ from: 'landing', v: d.v }); };
 /* =========================================================
    The Game Pass reveal. Gold dust gathers and spins faster, a bang,
    the golden pass spins in and shimmers. Then it comes alive: it
@@ -11701,6 +11847,43 @@ function demoHomeHtml() {
     '<button type="button" class="dm-go" data-act="openGuestForm">' + icon('i-play', 16) + 'Einladung als Gast ansehen</button></div>' +
     '<span class="eyebrow mt22 block">Jeden Anlass ausprobieren</span><p class="small mt6">Tipp an, was gefeiert wird. Der Beispiel-Abend stellt sich sofort um.</p><div class="dm-types mt10">' + types + '</div>';
 }
+/* ---------- the example evening starts with a choice: which occasion ----------
+   Cards like the bonus cards. A tap opens a short note under the row, one more tap starts. */
+var DP_INFO = {
+  socken: ['Mit 25 noch ledig? Am Kranz hängen 25 Socken, jede ist eine kleine Aufgabe.', ['Socke für Socke', 'Würfel möglich', 'Gäste-Runden']],
+  schachtel: ['Die Variante mit Schachteln: 25 Stück am Kranz, eine nach der anderen kommt ab.', ['Schachtel für Schachtel', 'Allein oder zu zweit', 'Gäste-Runden']],
+  treppe: ['Mit 30 noch ledig: Die Treppe wird gefegt, dazwischen gibt es Einlagen. Erst mit der Zahnbürste, mit Glück bald mit dem Besen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen']],
+  klinke: ['Mit 30 noch ledig: Klinken putzen, dazwischen Einlagen. Erst mit dem Wattestäbchen, mit Glück bald mit dem Lappen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen']],
+  geburtstag: ['Geburtstag ohne Kranz und Besen: Runde für Runde Spiele rund um das Geburtstagskind.', ['Runde für Runde', 'Würfel möglich', 'Gäste-Runden']],
+  hochzeit: ['Für Polterabend und Hochzeit: Spiele über das Brautpaar, mit den Geschichten der Gäste.', ['Für das Paar', 'Paar-Duelle', 'Gäste-Runden']],
+  jga: ['Der Junggesellenabschied: Missionen in der Stadt oder drinnen, die Truppe spielt mit.', ['Missionen', 'Mit der Truppe', 'Drinnen oder draußen']],
+  party: ['Einfach ein Spielabend: Runden, Duelle und Gäste-Runden, ganz ohne Brauch.', ['Runde für Runde', 'Duelle', 'Gäste-Runden']]
+};
+A.openDemoPick = function (d) {
+  var from = (d && d.from) || (UI.screen === 'demoPick' ? UI.dpFrom : UI.screen) || 'landing';
+  UI.dpFrom = ['landing', 'pass', 'tour', 'home'].indexOf(from) >= 0 ? from : 'landing';
+  UI.dpSel = d && d.v ? d.v : null; go('demoPick');
+  if (UI.dpSel) setTimeout(dpScroll, 80);
+};
+function dpScroll() { var el = document.getElementById('dpdet'), b = app.querySelector('.body'); if (!el || !b || !el.getBoundingClientRect) return; var y = el.getBoundingClientRect().bottom - b.getBoundingClientRect().bottom; if (y > -12) try { b.scrollBy({ top: y + 24, behavior: 'smooth' }); } catch (e) { b.scrollTop += y + 24; } }
+A.dpSel = function (d) { UI.dpSel = UI.dpSel === d.v ? null : d.v; render(); if (UI.dpSel) setTimeout(dpScroll, 40); };
+A.dpStart = function () { var v = UI.dpSel || 'socken'; UI.homeIn = true; A.loadDemo(); A.setEventAnlass({ v: v }); };
+function dpDetail(t) {
+  var x = DP_INFO[t.id] || ['', []];
+  return '<div class="dp-det" id="dpdet" style="--c:' + t.bg + '"><div class="dp-det-h"><span class="dp-det-ic">' + (t.ic === 'sock' ? sockIc('#15122B', 16) : icon(t.ic, 20)) + '</span><b>' + esc(t.label) + '</b></div><p>' + esc(x[0]) + '</p>' +
+    '<div class="dp-chips">' + x[1].map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('') + '</div>' +
+    '<button type="button" class="cta dp-go" data-act="dpStart">' + icon('i-play', 18) + 'Diesen Abend ausprobieren</button></div>';
+}
+V.demoPick = function () {
+  var sel = UI.dpSel, cards = '';
+  EVENT_TYPES.forEach(function (t, i) {
+    var on = sel === t.id;
+    cards += '<button type="button" class="dp-card' + (on ? ' on' : '') + (sel && !on ? ' dim' : '') + '" data-act="dpSel" data-v="' + t.id + '" aria-expanded="' + on + '" style="--c:' + t.bg + ';--i:' + i + '"><span class="dp-in"><span class="dp-art"><span class="dp-ring"></span>' + (t.ic === 'sock' ? sockIc('#15122B', 28) : icon(t.ic, 34)) + '</span><b>' + esc(t.label) + '</b><small>' + esc(t.sub) + '</small></span></button>';
+    if (on) cards += dpDetail(t);
+  });
+  var body = '<h1 class="h1 mt10">Welchen Abend wollt ihr ausprobieren?</h1><p class="lead mt8">Tippt einen Anlass an. Der Beispiel-Abend ist schon mit Gästen und ihren Beiträgen gefüllt, ihr könnt sofort losspielen.</p><div class="dp-grid mt18">' + cards + '</div>';
+  return scr(topbar(UI.dpFrom || 'landing', 'Beispiel-Abend'), body, '', 'dpscr');
+};
 /* =========================================================
    The website around the app.
    - The browser bar (Safari on the iPhone, Chrome on Android, Safari on
@@ -11793,7 +11976,7 @@ var toastTimer = null;
 function render() {
   if (UI.guestMode !== 'link') {
     if (UI.screen === 'welcome') UI.screen = 'landing';
-    if (!E() && ['landing', 'setup', 'person', 'tour', 'pass'].indexOf(UI.screen) < 0) UI.screen = 'landing';
+    if (!E() && ['landing', 'setup', 'person', 'tour', 'pass', 'demoPick'].indexOf(UI.screen) < 0) UI.screen = 'landing';
   }
   var body = app.querySelector('.body');
   var keep = body && app.getAttribute('data-screen') === UI.screen ? body.scrollTop : 0;
@@ -12069,7 +12252,7 @@ A.qrBig = function (d) { UI.qrBig = { code: d.code, title: d.title }; render(); 
 A.qrClose = function () { UI.qrBig = null; render(); };
 
 /* counter */
-A.drinkPlus = function (d) { var bd = budOf(d.id); addDrink(d.id, 1, 'manuell'); commit(); setToast('+1 ' + U() + ' für ' + person(d.id).name + (bd ? ', ' + bd + ' trinkt mit' : '')); };
+A.drinkPlus = function (d) { addDrink(d.id, 1, 'manuell'); budStart(d.id); var bd = budOf(d.id); commit(); setToast('+1 ' + U() + ' für ' + person(d.id).name + (bd ? ', ' + bd + ' trinkt mit' : '')); };
 A.drinkMinus = function (d) { if (drinksOf(d.id) <= 0) return; addDrink(d.id, -1, 'manuell', 'Korrektur'); commit(); };
 A.addCounterPerson = function () { var id = addPersonByName(UI.counterName); UI.counterName = ''; commit(); if (id) setToast(person(id).name + ' ist im Zähler'); var i = document.getElementById('cName'); if (i) i.focus(); };
 A.undoDrink = function () { S.drinks.pop(); commit(); setToast('Letzter Eintrag gelöscht'); };
@@ -12183,6 +12366,8 @@ A.startRun = function () { if (needPass('Das Spiel starten geht mit dem Game Pas
   if (isJga() && crewList().length < 2) { UI.cfgErr = 'Tragt zuerst die Truppe ein, mindestens zwei Namen. Beim Junggesellenabschied spielt sie mit.'; UI.cfgStep = 1; render(); return; }
   if (!startRun()) { UI.cfgErr = 'Wähl mindestens eine Person aus.'; UI.cfgStep = 1; render(); return; } UI.confirm = null; UI.ckLog = false; commit(); go('run'); runKickoff(); };
 /* jump to a part of a long page, below the sticky chips */
+/* from the home page into a part of another page */
+A.homeJump = function (d) { go(d.v); if (d.j) setTimeout(function () { A.jump({ v: d.j }); }, 60); };
 A.jump = function (d) {
   var b = app.querySelector('.body'), el = document.getElementById(d.v); if (!b || !el || !el.getBoundingClientRect) return;
   var sc = typeof gScale === 'function' ? gScale() : 1, bar = app.querySelector('.qx-jump');

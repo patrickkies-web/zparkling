@@ -32,3 +32,40 @@ function demoHomeHtml() {
     '<button type="button" class="dm-go" data-act="openGuestForm">' + icon('i-play', 16) + 'Einladung als Gast ansehen</button></div>' +
     '<span class="eyebrow mt22 block">Jeden Anlass ausprobieren</span><p class="small mt6">Tipp an, was gefeiert wird. Der Beispiel-Abend stellt sich sofort um.</p><div class="dm-types mt10">' + types + '</div>';
 }
+/* ---------- the example evening starts with a choice: which occasion ----------
+   Cards like the bonus cards. A tap opens a short note under the row, one more tap starts. */
+var DP_INFO = {
+  socken: ['Mit 25 noch ledig? Am Kranz hängen 25 Socken, jede ist eine kleine Aufgabe.', ['Socke für Socke', 'Würfel möglich', 'Gäste-Runden']],
+  schachtel: ['Die Variante mit Schachteln: 25 Stück am Kranz, eine nach der anderen kommt ab.', ['Schachtel für Schachtel', 'Allein oder zu zweit', 'Gäste-Runden']],
+  treppe: ['Mit 30 noch ledig: Die Treppe wird gefegt, dazwischen gibt es Einlagen. Erst mit der Zahnbürste, mit Glück bald mit dem Besen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen']],
+  klinke: ['Mit 30 noch ledig: Klinken putzen, dazwischen Einlagen. Erst mit dem Wattestäbchen, mit Glück bald mit dem Lappen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen']],
+  geburtstag: ['Geburtstag ohne Kranz und Besen: Runde für Runde Spiele rund um das Geburtstagskind.', ['Runde für Runde', 'Würfel möglich', 'Gäste-Runden']],
+  hochzeit: ['Für Polterabend und Hochzeit: Spiele über das Brautpaar, mit den Geschichten der Gäste.', ['Für das Paar', 'Paar-Duelle', 'Gäste-Runden']],
+  jga: ['Der Junggesellenabschied: Missionen in der Stadt oder drinnen, die Truppe spielt mit.', ['Missionen', 'Mit der Truppe', 'Drinnen oder draußen']],
+  party: ['Einfach ein Spielabend: Runden, Duelle und Gäste-Runden, ganz ohne Brauch.', ['Runde für Runde', 'Duelle', 'Gäste-Runden']]
+};
+A.openDemoPick = function (d) {
+  var from = (d && d.from) || (UI.screen === 'demoPick' ? UI.dpFrom : UI.screen) || 'landing';
+  UI.dpFrom = ['landing', 'pass', 'tour', 'home'].indexOf(from) >= 0 ? from : 'landing';
+  UI.dpSel = d && d.v ? d.v : null; go('demoPick');
+  if (UI.dpSel) setTimeout(dpScroll, 80);
+};
+function dpScroll() { var el = document.getElementById('dpdet'), b = app.querySelector('.body'); if (!el || !b || !el.getBoundingClientRect) return; var y = el.getBoundingClientRect().bottom - b.getBoundingClientRect().bottom; if (y > -12) try { b.scrollBy({ top: y + 24, behavior: 'smooth' }); } catch (e) { b.scrollTop += y + 24; } }
+A.dpSel = function (d) { UI.dpSel = UI.dpSel === d.v ? null : d.v; render(); if (UI.dpSel) setTimeout(dpScroll, 40); };
+A.dpStart = function () { var v = UI.dpSel || 'socken'; UI.homeIn = true; A.loadDemo(); A.setEventAnlass({ v: v }); };
+function dpDetail(t) {
+  var x = DP_INFO[t.id] || ['', []];
+  return '<div class="dp-det" id="dpdet" style="--c:' + t.bg + '"><div class="dp-det-h"><span class="dp-det-ic">' + (t.ic === 'sock' ? sockIc('#15122B', 16) : icon(t.ic, 20)) + '</span><b>' + esc(t.label) + '</b></div><p>' + esc(x[0]) + '</p>' +
+    '<div class="dp-chips">' + x[1].map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('') + '</div>' +
+    '<button type="button" class="cta dp-go" data-act="dpStart">' + icon('i-play', 18) + 'Diesen Abend ausprobieren</button></div>';
+}
+V.demoPick = function () {
+  var sel = UI.dpSel, cards = '';
+  EVENT_TYPES.forEach(function (t, i) {
+    var on = sel === t.id;
+    cards += '<button type="button" class="dp-card' + (on ? ' on' : '') + (sel && !on ? ' dim' : '') + '" data-act="dpSel" data-v="' + t.id + '" aria-expanded="' + on + '" style="--c:' + t.bg + ';--i:' + i + '"><span class="dp-in"><span class="dp-art"><span class="dp-ring"></span>' + (t.ic === 'sock' ? sockIc('#15122B', 28) : icon(t.ic, 34)) + '</span><b>' + esc(t.label) + '</b><small>' + esc(t.sub) + '</small></span></button>';
+    if (on) cards += dpDetail(t);
+  });
+  var body = '<h1 class="h1 mt10">Welchen Abend wollt ihr ausprobieren?</h1><p class="lead mt8">Tippt einen Anlass an. Der Beispiel-Abend ist schon mit Gästen und ihren Beiträgen gefüllt, ihr könnt sofort losspielen.</p><div class="dp-grid mt18">' + cards + '</div>';
+  return scr(topbar(UI.dpFrom || 'landing', 'Beispiel-Abend'), body, '', 'dpscr');
+};

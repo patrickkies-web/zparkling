@@ -83,21 +83,25 @@ function kin(text) {
 /* ---------- the scenes ---------- */
 var TOUR = [
   { id: 'name', c: '#FFC940', d: 0 },
-  { id: 'stage', c: '#FF7A45', d: 7000 },
+  { id: 'modes', c: '#9886FF', d: 9000 },
   { id: 'link', c: '#48D9A6', d: 10000 },
   { id: 'games', c: '#FF8FC4', d: 10000 },
-  { id: 'modes', c: '#9886FF', d: 9000 },
   { id: 'dials', c: '#7FA8FF', d: 9000 },
+  { id: 'ready', c: '#6FE3FF', d: 9500 },
+  { id: 'easy', c: '#B6F07C', d: 9500 },
+  { id: 'cards', c: '#E2D6FF', d: 9500 },
   { id: 'roles', c: '#FF9A73', d: 8500 },
   { id: 'ticket', c: '#15122B', d: 0, dark: true }
 ];
 var TOUR_TX = {
   name: function () { return { h: 'Für wen steigt die Party?', t: 'Gib einen Namen ein und schau zu, was daraus wird.' }; },
-  stage: function () { return { h: tn('{Ns} Party.\nWie keine andere.', 'Eure Party.\nWie keine andere.'), t: tn('Kein Programm von der Stange: Jede Runde wird um {N} herum gebaut, aus dem, was eure Gäste über {N} wissen.', 'Kein Programm von der Stange: Jede Runde wird um eure Hauptperson herum gebaut, aus dem, was eure Gäste wissen.') }; },
-  link: function () { return { h: 'Die Gäste erzählen mit.', t: tn('Ein Link in die Gruppe genügt. Jeder schickt, worauf er Lust hat: Erinnerungen, Lügen, Fragen über {N}. Freiwillig und in zwei Minuten.', 'Ein Link in die Gruppe genügt. Jeder schickt, worauf er Lust hat: Erinnerungen, Lügen, Fragen. Freiwillig und in zwei Minuten.') }; },
-  games: function () { return { h: tn('Daraus werden Spiele, die es nur bei {N} gibt.', 'Daraus werden Spiele, die es nur bei euch gibt.'), t: 'Viele Runden entstehen direkt aus den Beiträgen der Gäste. Je mehr sie schicken, desto mehr davon. Dazu über 140 Minispiele, Herausforderungen gegen Gäste deiner Wahl und eine Handicap-Station, alles geheim bis zum Moment.' }; },
-  modes: function () { return { h: 'Gespielt wird, wie ihr feiert.', t: 'Sockenkranz, Treppe fegen oder Spielabend. Stück für Stück, mit Würfel oder nach Zeit. Zusammen oder gegeneinander.' }; },
-  dials: function () { return { h: 'Und ihr dreht an den Reglern.', t: 'Wie lange, wie wild, mit welchem Material: Ihr stellt ein, die App plant den Rest und achtet darauf, dass es lustig bleibt.' }; },
+  modes: function () { return { h: 'Für jeden Anlass gemacht.', t: 'Sockenkranz, Schachtelkranz, Treppe fegen, Klinken putzen, Geburtstag, Polterabend, JGA oder einfach ein Spielabend. Die App kennt die Bräuche und baut den Abend passend dazu.' }; },
+  link: function () { return { h: 'Schritt 1: Die Gäste machen mit.', t: tn('Ein Link in die Gruppe genügt. Jeder bekommt eine Einladung und schickt in zwei Minuten, was er über {N} weiß: Erinnerungen, Lügen, Fragen. Mit Punkten, Leveln und Bonuskarten. Freiwillig.', 'Ein Link in die Gruppe genügt. Jeder bekommt eine Einladung und schickt in zwei Minuten, was er über die Hauptperson weiß: Erinnerungen, Lügen, Fragen. Mit Punkten, Leveln und Bonuskarten. Freiwillig.') }; },
+  games: function () { return { h: tn('Schritt 2: Ein Abend, der nur zu {N} passt.', 'Schritt 2: Ein Abend, der nur zu euch passt.'), t: tn('Aus den Beiträgen baut die App eigene Runden: Wer kennt {N} am längsten, welche Geschichte ist gelogen, von wem stammt die Erinnerung. Genau das macht den Abend aus.', 'Aus den Beiträgen baut die App eigene Runden: Wer kennt die Hauptperson am längsten, welche Geschichte ist gelogen, von wem stammt die Erinnerung. Genau das macht den Abend aus.') }; },
+  dials: function () { return { h: 'Du stellst ein, die App plant.', t: 'Wer spielt, wie lange, wie wild, mit welchem Material, eigene Fragen, Trinkbuddys an oder aus: Als Spielleiter passt du alles an. Den Rest übernimmt die App.' }; },
+  ready: function () { return { h: 'Auf alles vorbereitet.', t: 'Gleichstand, Streit, keiner will anfangen? Zu jedem Spiel steht die Antwort schon bereit. Passt ein Spiel nicht, ziehst du ein anderes. Ein Tipp daneben, dann machst du ihn rückgängig.' }; },
+  easy: function () { return { h: 'Entspannt feiern. Ohne Zwang.', t: 'Du gibst die Verantwortung ab und feierst mit. Nichts ist Pflicht: Spiele lassen sich überspringen, Gäste machen freiwillig mit, und jede Aufgabe sorgt für ein Schmunzeln, ohne jemanden bloßzustellen.' }; },
+  cards: function () { return { h: 'Handys weg, Karten raus.', t: 'Gespielt wird miteinander, nicht am Bildschirm. Nur der Spielleiter tippt. Wer beim Gäste-Link mitgemacht hat, bekommt seine Karte auf Papier: den Joker, Weiterleiten in Silber oder die Regel-Karte.' }; },
   roles: function () { return { h: 'Wer mitmacht, bekommt seinen Auftritt.', t: tn('Wer {N} am längsten kennt, wird zum Urgestein. Wer das letzte Spiel errät, zum Hellseher. Kleine Rollen, charmant statt peinlich.', 'Wer die Hauptperson am längsten kennt, wird zum Urgestein. Wer das letzte Spiel errät, zum Hellseher. Kleine Rollen, charmant statt peinlich.') }; },
   ticket: function () { return { h: tn('{Ns} Party\nkann kommen.', 'Eure Party\nkann kommen.'), t: 'Mit dem Game Pass ist alles drin, vom ersten Gäste-Link bis zwei Tage nach dem Fest.' }; }
 };
@@ -187,7 +191,29 @@ function artRoles() {
 function artTicket() {
   return '<div class="t-final">' + confetti(24, 3) + '<div class="t-tix"><div class="t-tix-main"><span class="t-tix-av">' + avatarSVG(tourAv(), { mood: 'jubel' }) + '</span><span class="stack" style="gap:3px;min-width:0"><small>Game Pass für</small><b>' + esc(tn('{Ns} Party', 'Eure Party')) + '</b><span class="t-tix-l">Gäste-Links, alle Spielarten, über 140 Spiele</span></span></div><div class="t-tix-stub"><span>Für alle Gäste</span><i class="t-bars"></i></div><i class="t-shine"></i></div></div>';
 }
-var TOUR_ART = { name: artName, stage: artStage, link: artLink, games: artGames, modes: artModes, dials: artDials, roles: artRoles, ticket: artTicket };
+/* prepared for everything: the answers are there, another game, undo */
+function artReady() {
+  var g = tourCast();
+  var q = [['Was gilt bei Gleichstand?', 'Noch ein Versuch für beide. Wer trifft, gewinnt.'], ['Wer fängt an?', 'Wer zuletzt Geburtstag hatte.'], ['Wer entscheidet bei Streit?', 'Der Spielleiter, und das Geburtstagskind darf protestieren.']];
+  return '<div class="t-ready"><div class="t-rd-card"><span class="t-rd-k">Duell</span><span class="t-rd-names"><b class="a">Kronkorken-Schnippen</b><b class="b">Löffel-Balance</b></span><span class="t-rd-vs">' + castFace(g[0], 30) + '<i>vs</i>' + castFace(g[1], 30) + '</span></div>' +
+    q.map(function (x, k) { return '<div class="t-rd-q' + (k ? '' : ' open') + '" style="--k:' + k + '"><span>' + esc(x[0]) + '</span><i>' + (k ? '+' : '–') + '</i>' + (k ? '' : '<p>' + esc(x[1]) + '</p>') + '</div>'; }).join('') +
+    '<div class="t-rd-btns"><span class="t-rd-b one">' + icon('i-shuffle', 15) + 'Anderes Spiel</span><span class="t-rd-b two">' + icon('i-undo', 15) + 'Rückgängig</span></div>' +
+    '<i class="t-tap" style="left:78px;top:262px;animation-delay:3.6s"></i><i class="t-tap" style="left:222px;top:262px;animation-delay:6.4s"></i></div>';
+}
+/* relaxed, no compulsion */
+function artEasy() {
+  var p = [['i-next', 'Überspringen? Jederzeit.', '#FFFFFF'], ['i-users', 'Gäste müssen nichts', '#FFC940'], ['i-star', 'Lustig, nie peinlich', '#FF8FC4'], ['i-clock', 'Mit Tempobremse', '#9886FF']];
+  return '<div class="t-easy"><span class="t-ez-av">' + avatarSVG(tourAv(), { mood: 'jubel' }) + '</span>' +
+    p.map(function (x, k) { return '<span class="t-pr" style="--k:' + k + ';--c:' + x[2] + ';--rot:' + [-5, 4, -3, 5][k] + 'deg">' + icon(x[0], 16) + esc(x[1]) + '</span>'; }).join('') + '</div>';
+}
+/* paper instead of screens: the cards in the hand */
+function artCards() {
+  var g = tourCast(), kinds = [['joker', g[0][0]], ['weiter', g[1][0]], ['regel', g[2][0]]];
+  var card = function (t, name) { return '<div class="pc pc-' + t + '"><div class="pc-in"><div class="pc-top"><span class="pc-chip">' + (t === 'weiter' ? 'Silber' : t === 'regel' ? 'Regel' : 'Joker') + '</span></div><div class="pc-art"><span class="pc-ring"></span>' + emb(GQ_STYLE[t].e, 60) + '</div><span class="pc-k">Bonuskarte</span><b class="pc-t">' + esc(pcTitle(t)) + '</b><div class="pc-for"><span>Für</span><b>' + esc(name) + '</b></div></div></div>'; };
+  return '<div class="t-cards"><span class="t-phone-down" aria-hidden="true"><i></i><b>Handy-Pause</b></span>' +
+    kinds.map(function (k, i) { return '<span class="t-card" style="--k:' + i + '">' + card(k[0], k[1]) + '</span>'; }).join('') + '</div>';
+}
+var TOUR_ART = { name: artName, stage: artStage, link: artLink, games: artGames, modes: artModes, dials: artDials, ready: artReady, easy: artEasy, cards: artCards, roles: artRoles, ticket: artTicket };
 
 V.tour = function () {
   var i = Math.max(0, Math.min(TOUR.length - 1, UI.tourAt || 0)), s = TOUR[i], last = i === TOUR.length - 1, tx = TOUR_TX[s.id]();
@@ -231,7 +257,7 @@ A.tourPrev = function () {
 A.tourRoll = function () { UI.tourRoll = tourRollNow() + 1; tourPatch(); };
 A.tourSkip = function () { clearTimeout(UI.tourT); tourStore(1); go(E() ? 'home' : 'pass'); };
 A.tourPass = function () { clearTimeout(UI.tourT); tourStore(1); go('pass'); };
-A.tourDemo = function () { clearTimeout(UI.tourT); tourStore(1); A.loadDemo(); };
+A.tourDemo = function () { clearTimeout(UI.tourT); tourStore(1); A.openDemoPick({ from: UI.screen === 'tour' ? 'landing' : UI.screen }); };
 A.openTour = function () { UI.tourAt = 0; UI.tourFrom = ''; UI.tourName = null; UI.tourLen = tourName().length; go('tour'); };
 /* the name from the intro becomes the first person */
 function tourSeedDraft(draft, an) {

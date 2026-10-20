@@ -3,16 +3,16 @@
    - Two more bonus cards next to the Joker: Weiterleiten (silver) and
      the Regel-Karte. Guests draw them in the guest link, the master
      approves them, the guest keeps them for the party.
-   - Trinkbuddys, in every mode: from minute five on, at the next change
-     of task, everyone in the focus picks a buddy who drinks along.
-     Every five minutes, again at a change of task, the buddies swap.
+   - Trinkbuddys, in every mode: at the first task everyone in the focus
+     picks a buddy who drinks along. From the first shared drink the bond
+     holds a random one to three further games, then a new buddy.
      Whoever is picked and holds Weiterleiten can pass the job on.
    - The Regel-Karte: its holder names a rule, everyone in the focus
      keeps it for five minutes. Breaking it costs one drink, once.
    - The card area: every card in circulation, the timers, and, once the
      guest round is closed, the cards to print with the holders' names.
    ========================================================= */
-var BUD_MIN = 5, RULE_MIN = 5;
+var RULE_MIN = 5;
 var PC_KINDS = ['regel', 'weiter', 'joker'];
 QTYPES.push(
   ['weiter', 'Weiterleiten', 'Bonuskarte: wer sie hat und als Trinkbuddy gewählt wird, gibt den Job an jemand anderen weiter.', 'karte'],
@@ -48,19 +48,55 @@ function pcText(t) {
 }
 function runLive() { var r = R(); return r && !r.finished ? r : null; }
 
-/* ---------- Trinkbuddys ---------- */
-function bud(r) { if (!r.bud) r.bud = { on: true, at: 0, map: {}, prev: {}, next: {}, fwd: {}, due: false, n: 0 }; if (!r.bud.next) r.bud.next = {}; if (!r.bud.fwd) r.bud.fwd = {}; return r.bud; }
-function budNextAt(r) { var b = bud(r); return (b.at || r.t0) + BUD_MIN * 60000; }
-/* called when the next task is drawn: after five minutes the buddies are due */
-function budCheck(r) { if (!r || r.finished) return; var b = bud(r); if (b.on && !b.due && now() >= budNextAt(r)) { b.due = true; b.next = {}; b.fwd = {}; } }
+/* ---------- Trinkbuddys ----------
+   Picked at the first task. The bond starts with the first drink of the person in the focus
+   (the buddy drinks along), then holds a random one to three further games, decided by the app.
+   After that, a new buddy is picked at the next task. */
+function bud(r) {
+  if (!r.bud) r.bud = { on: true, map: {}, prev: {}, next: {}, fwd: {}, bond: {}, due: false, n: 0 };
+  ['map', 'prev', 'next', 'fwd', 'bond'].forEach(function (k) { if (!r.bud[k]) r.bud[k] = {}; });
+  return r.bud;
+}
+/* this person needs a (new) buddy: none yet, or the bond is over */
+function budNeeds(r, pid) { var b = bud(r), x = b.bond[pid]; return !b.map[pid] || !x || x.state === 'end'; }
+/* called when the next task is drawn */
+function budCheck(r) { if (!r || r.finished) return; var b = bud(r); if (b.on && !b.due && r.who.some(function (id) { return budNeeds(r, id); })) { b.due = true; b.next = {}; b.fwd = {}; } }
 function budDue(r) { return !!(r && !r.finished && r.pending && bud(r).on && bud(r).due); }
 /* who drinks along with this person right now */
-function budOf(pid) { var r = runLive(); if (!r || !bud(r).on || !isFocus(pid)) return ''; return bud(r).map[pid] || ''; }
+function budOf(pid) { var r = runLive(); if (!r || !bud(r).on || !isFocus(pid)) return ''; var b = bud(r), x = b.bond[pid]; return b.map[pid] && x && x.state !== 'end' ? b.map[pid] : ''; }
+function budRand() { return 1 + Math.floor(Math.random() * 3); }
+function budGames(n) { return n === 1 ? '1 Spiel' : n + ' Spiele'; }
+/* a drink outside a game (the counter, a broken rule): the first one starts the bond */
+function budStart(pid) {
+  var r = runLive(); if (!r || !bud(r).on) return;
+  var b = bud(r), x = b.bond[pid]; if (!x || x.state !== 'wait' || !b.map[pid]) return;
+  x.state = 'on'; logRun('info', person(pid).name + ' trinkt, ' + b.map[pid] + ' trinkt mit. Verbunden für noch ' + budGames(x.left));
+}
+/* after a game: does the buddy drink along, how long the bond still holds */
+function budSettle(P) {
+  var r = runLive(); if (!r || !P || !P.result || P.budDone || !bud(r).on) return;
+  var b = bud(r); P.budDone = true; P.budInfo = {};
+  r.who.forEach(function (pid) {
+    var x = b.bond[pid], name = b.map[pid]; if (!x || !name || x.state === 'end') return;
+    var row = (P.result.rows || []).filter(function (y) { return y.pid === pid && !y.group; })[0];
+    var drinks = !!(row && row.n > 0 && !row.freed && !row.water), info = { name: name, along: false, left: x.left, end: false, start: false };
+    if (x.state === 'on') {
+      info.along = drinks; x.left -= 1; info.left = Math.max(0, x.left);
+      if (x.left <= 0) { x.state = 'end'; info.end = true; logRun('info', person(pid).name + ' und ' + name + ': die Verbindung ist vorbei'); }
+    } else if (drinks) {
+      x.state = 'on'; info.along = true; info.start = true; info.left = x.left;
+      logRun('info', person(pid).name + ' trinkt, ' + name + ' trinkt mit. Verbunden für noch ' + budGames(x.left));
+    }
+    P.budInfo[pid] = info;
+  });
+  save();
+}
 function budCard(name) { return pcFree('weiter').filter(function (q) { return pcSame(q.author, name); })[0] || null; }
 /* names to pick from: who is there tonight, not the previous buddy, not someone another focus person already took, not who just passed it on */
 function budPool(r, pid, picks) {
   var b = bud(r), taken = {};
   Object.keys(picks).forEach(function (k) { if (k !== pid && picks[k]) taken[pcKey(picks[k])] = 1; });
+  r.who.forEach(function (k) { if (k !== pid && !budNeeds(r, k) && b.map[k]) taken[pcKey(b.map[k])] = 1; });
   var all = presentNames().filter(function (n) { return !taken[pcKey(n)] && !pcSame(n, b.fwd[pid]); });
   var fresh = all.filter(function (n) { return !pcSame(n, b.map[pid]); });
   return fresh.length ? fresh : all;
@@ -69,11 +105,13 @@ function budMode() { var r = runLive(); if (!r) return ''; if (budDue(r)) return
 V.buddy = function () {
   var r = runLive(), mode = budMode();
   if (!mode) { UI.budFwd = null; return V.run(); }
-  var b = bud(r), picks = mode === 'swap' ? b.next : {}, ids = mode === 'swap' ? r.who : [UI.budFwd];
+  var b = bud(r), picks = mode === 'swap' ? b.next : {}, ids = mode === 'swap' ? r.who.filter(function (id) { return budNeeds(r, id); }) : [UI.budFwd];
   var first = mode === 'swap' && !b.n, all = ids.every(function (id) { return picks[id]; });
   var hero = '<div class="bd-hero' + (first ? ' first' : '') + '"><span class="bd-glasses" aria-hidden="true">' + emb('cheers', 92) + '</span>' +
-    '<h1>' + (mode === 'fwd' ? 'Weitergeleitet!' : first ? 'Zeit für Trinkbuddys!' : 'Trinkbuddys wechseln!') + '</h1>' +
-    '<p>' + (mode === 'fwd' ? esc(b.fwd[UI.budFwd] || '') + ' hat die Weiterleiten-Karte gezogen. Wer übernimmt den Job?' : first ? 'Jede Hauptperson sucht sich jemanden aus. Muss sie trinken, trinkt ihr Buddy mit. In fünf Minuten wird getauscht.' : 'Fünf Minuten sind um. Jede Hauptperson wählt jemand Neues, der ab jetzt mittrinkt.') + '</p></div>';
+    '<h1>' + (mode === 'fwd' ? 'Weitergeleitet!' : first ? 'Zeit für Trinkbuddys!' : 'Neuer Trinkbuddy!') + '</h1>' +
+    '<p>' + (mode === 'fwd' ? esc(b.fwd[UI.budFwd] || '') + ' hat die Weiterleiten-Karte gezogen. Wer übernimmt den Job?'
+      : first ? 'Jede Hauptperson sucht sich jemanden aus. Muss sie trinken, trinkt ihr Buddy mit. Wie lange ihr verbunden bleibt, entscheidet die App: ab dem ersten gemeinsamen ' + esc(U()) + ' noch ein bis drei Spiele.'
+      : 'Die Verbindung ist vorbei. Wer trinkt als Nächstes mit? Ab dem ersten gemeinsamen ' + esc(U()) + ' hält sie wieder ein bis drei Spiele.') + '</p></div>';
   var rows = ids.map(function (id) {
     var p = person(id), pick = picks[id], pool = budPool(r, id, picks), card = pick ? budCard(pick) : null;
     var head = '<div class="bd-who">' + face(p, 46, '', 'jubel') + '<span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(p.name) + ' wählt</b><span>' + (b.fwd[id] ? esc(b.fwd[id]) + ' hat weitergeleitet' : b.map[id] && mode === 'swap' ? 'Bisher: ' + esc(b.map[id]) : 'Wer trinkt mit?') + '</span></span></div>';
@@ -88,7 +126,7 @@ V.buddy = function () {
     return '<div class="bd-row">' + head + (pool.length ? '' : '<p class="small mt8">Noch niemand von heute eingetragen. Tipp den Namen einfach ein.</p>') + '<div class="bd-chips">' + chips + type + '</div></div>';
   }).join('');
   var body = hero + '<div class="bd-rows">' + rows + '</div>';
-  var foot = mode === 'swap' ? '<button type="button" class="cta mint" data-act="budGo"' + (all ? '' : ' disabled') + '>' + icon('i-check', 18) + (all ? 'Prost, weiter zur Aufgabe' : 'Erst alle Buddys wählen') + '</button>' : '';
+  var foot = mode === 'swap' ? '<button type="button" class="cta mint" data-act="budGo"' + (all ? '' : ' disabled') + '>' + icon('i-check', 18) + (all ? 'Prost, weiter zur Aufgabe' : ids.length > 1 ? 'Erst alle Buddys wählen' : 'Erst den Buddy wählen') + '</button>' : '';
   return scr(topbar(mode === 'fwd' ? (UI.budFrom || 'run') : 'run', mode === 'fwd' ? 'Weiterleiten' : 'Trinkbuddys'), body, foot, 'bdscr');
 };
 A.budPick = function (d) {
@@ -104,10 +142,10 @@ A.budPick = function (d) {
 A.budClear = function (d) { var r = runLive(); if (!r) return; delete bud(r).next[d.id]; commit(); };
 A.budTypeOpen = function (d) { UI.budType = d.id; UI.budTxt = ''; render(); var el = document.getElementById('budIn'); if (el && el.focus) try { el.focus(); } catch (e) {} };
 A.budTypeOk = function (d) { var v = String(UI.budTxt || '').trim(); if (v.length < 2) { setToast('Bitte einen Namen eintippen'); return; } A.budPick({ id: d.id, v: v }); };
-/* the picked buddy plays Weiterleiten: the card is used, someone else has to be chosen */
+/* the picked buddy plays Weiterleiten: the card is used, someone else has to be chosen; the bond goes on */
 A.budFwd = function (d) {
   var r = runLive(); if (!r) return;
-  var b = bud(r), swap = budDue(r), name = swap ? b.next[d.id] : b.map[d.id], q = budCard(name);
+  var b = bud(r), swap = budDue(r) && budNeeds(r, d.id), name = swap ? b.next[d.id] : b.map[d.id], q = budCard(name);
   if (!name || !q) return;
   q.used = true; q.usedAt = now(); q.usedFor = person(d.id).name;
   b.fwd[d.id] = name;
@@ -118,10 +156,11 @@ A.budFwd = function (d) {
   commit(); if (!swap) go('buddy'); setToast(name + ' leitet weiter!');
 };
 A.budGo = function () {
-  var r = runLive(); if (!r) return; var b = bud(r);
-  if (!b.due || !r.who.every(function (id) { return b.next[id]; })) return;
-  b.prev = b.map; b.map = b.next; b.next = {}; b.fwd = {}; b.at = now(); b.due = false; b.n += 1;
-  logRun('info', (b.n === 1 ? 'Trinkbuddys: ' : 'Neue Trinkbuddys: ') + r.who.map(function (id) { return person(id).name + ' mit ' + b.map[id]; }).join(', '));
+  var r = runLive(); if (!r) return; var b = bud(r), ids = r.who.filter(function (id) { return budNeeds(r, id); });
+  if (!b.due || !ids.every(function (id) { return b.next[id]; })) return;
+  ids.forEach(function (id) { b.prev[id] = b.map[id]; b.map[id] = b.next[id]; var n = budRand(); b.bond[id] = { state: 'wait', left: n, total: n }; });
+  b.next = {}; b.fwd = {}; b.due = false; b.n += 1;
+  logRun('info', (b.n === 1 ? 'Trinkbuddys: ' : 'Neuer Trinkbuddy: ') + ids.map(function (id) { return person(id).name + ' mit ' + b.map[id]; }).join(', '));
   commit(); go('step');
 };
 
@@ -164,7 +203,7 @@ A.ruleBroke = function (d) {
   if (!x || !ruleLive(x) || x.broke[d.pid] || x.who.indexOf(d.pid) < 0) return;
   x.broke[d.pid] = true;
   var p = person(d.pid), bg = budget(d.pid), bd = budOf(d.pid);
-  if (bg.C < bg.M) { addDrink(d.pid, 1, 'regel', 'Regel gebrochen: ' + x.text); setToast(p.name + ' trinkt ein ' + U() + (bd ? ', ' + bd + ' trinkt mit' : '')); x.water = x.water || {}; }
+  if (bg.C < bg.M) { addDrink(d.pid, 1, 'regel', 'Regel gebrochen: ' + x.text); budStart(d.pid); bd = budOf(d.pid); setToast(p.name + ' trinkt ein ' + U() + (bd ? ', ' + bd + ' trinkt mit' : '')); x.water = x.water || {}; }
   else { x.water = x.water || {}; x.water[d.pid] = true; setToast(p.name + ' ist am Maximum, es gibt Wasser'); }
   logRun('fail', p.name + ' hat die Regel gebrochen' + (bg.C < bg.M ? ' und trinkt ein ' + U() : ', am Maximum gibt es Wasser'));
   commit();
@@ -207,15 +246,13 @@ function ruleStrip() {
 function partyRunHtml(r, full) {
   var b = bud(r), out = accRunHtml(r);
   if (b.on) {
-    var pairs = r.who.filter(function (id) { return b.map[id]; });
-    if (!pairs.length) out += '<div class="zc-row"><span class="zc-e">' + emb('cheers', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Trinkbuddys</b><span>Erste Wahl bei der Aufgabe nach Minute ' + BUD_MIN + '</span></span><span class="zc-t">' + zt(budNextAt(r), 'fällig') + '</span></div>';
-    else {
-      out += '<div class="zc-row"><span class="zc-e">' + emb('cheers', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Trinkbuddys</b><span>Wechsel bei der nächsten Aufgabe nach</span></span><span class="zc-t">' + zt(budNextAt(r), 'fällig') + '</span></div>' +
-        '<div class="zc-pairs">' + pairs.map(function (id) {
-          var n = b.map[id], card = budCard(n);
-          return '<div class="zc-pair">' + face(person(id), 30) + '<span class="zc-amp">' + icon('i-cup', 14) + '</span>' + guestFace(n, 30) + '<span class="grow"><b>' + esc(person(id).name) + '</b> mit <b>' + esc(n) + '</b></span>' + (card ? '<button type="button" class="zc-fwd" data-act="budFwd" data-id="' + id + '">' + emb('forward', 18) + 'Weiterleiten</button>' : '') + '</div>';
-        }).join('') + '</div>';
-    }
+    var pairs = r.who.filter(function (id) { return budOf(id); });
+    out += '<div class="zc-row"><span class="zc-e">' + emb('cheers', 30) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Trinkbuddys</b><span>' + (pairs.length ? 'Ab dem ersten gemeinsamen ' + esc(U()) + ' noch 1 bis 3 Spiele verbunden' : 'Gewählt wird bei der nächsten Aufgabe') + '</span></span></div>';
+    if (pairs.length) out += '<div class="zc-pairs">' + pairs.map(function (id) {
+      var n = b.map[id], x = b.bond[id], card = budCard(n);
+      var st = x.state === 'wait' ? 'wartet aufs erste ' + U() : 'noch ' + budGames(x.left);
+      return '<div class="zc-pair">' + face(person(id), 30) + '<span class="zc-amp">' + icon('i-cup', 14) + '</span>' + guestFace(n, 30) + '<span class="grow"><b>' + esc(person(id).name) + '</b> mit <b>' + esc(n) + '</b><small class="zc-st">' + esc(st) + '</small></span>' + (card ? '<button type="button" class="zc-fwd" data-act="budFwd" data-id="' + id + '">' + emb('forward', 18) + 'Weiterleiten</button>' : '') + '</div>';
+    }).join('') + '</div>';
   }
   var rules = rulesOf(r).filter(function (x) { return ruleLive(x) || (full && x.done); });
   out += rules.map(function (x) { return ruleHtml(x, false); }).join('');

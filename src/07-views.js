@@ -12,7 +12,7 @@ function face(p, size, style, mood) {
 }
 function groupFace(size) { return '<span class="ini" style="width:' + size + 'px;height:' + size + 'px;background:#F4F1FF">' + icon('i-users', Math.round(size * 0.5)) + '</span>'; }
 /* navigation says where it goes: an arrow and a word, never a bare symbol */
-var BACK_LABEL = { home: 'Party', run: 'Übersicht', cards: 'Karten', questions: 'Fragen', games: 'Spiele', counter: 'Zähler', runSetup: 'Einrichten', crew: 'Gäste' };
+var BACK_LABEL = { landing: 'Start', pass: 'Game Pass', home: 'Party', run: 'Übersicht', cards: 'Karten', questions: 'Fragen', games: 'Spiele', counter: 'Zähler', runSetup: 'Einrichten', crew: 'Gäste' };
 function navBtn(attrs, ic, label, cls) { return '<button type="button" class="navbtn' + (cls ? ' ' + cls : '') + '" ' + attrs + '>' + icon(ic, 18) + '<span>' + esc(label) + '</span></button>'; }
 function topbar(back, title, right) {
   return '<div class="topbar tb3">' +
@@ -72,7 +72,7 @@ function garland(width, fills, shape) {
   return out + '</svg>';
 }
 /* the example evening: a golden banner on every screen of the master, it leads to the Game Pass */
-var DEMO_HIDE = ['pass', 'tour', 'welcome', 'guestForm', 'guestLive', 'landing'];
+var DEMO_HIDE = ['pass', 'tour', 'welcome', 'guestForm', 'guestLive', 'landing', 'demoPick'];
 function demoBanner() {
   if (!S || !S.demo || UI.guestMode === 'link' || DEMO_HIDE.indexOf(UI.screen) >= 0) return '';
   var bub = ''; for (var i = 0; i < 10; i++) bub += '<i style="--x:' + (6 + i * 9.5).toFixed(1) + '%;--d:' + ((i * 0.53) % 2.4).toFixed(2) + 's;--s:' + (3 + (i * 7) % 5) + 'px"></i>';
@@ -355,6 +355,18 @@ function runLabel() {
   return 'Kranz abgehen';
 }
 /* the heart of the app on the home screen: what the guests sent and what it turns into */
+/* the way to everything about the guests, as a section of the home page (no bar at the bottom) */
+function homeQSection() {
+  var open = S.questions.filter(function (q) { return q.status === 'offen'; }).length, ok = S.questions.filter(questionPlayable).length;
+  var cards = 0; if (typeof PC_KINDS !== 'undefined') PC_KINDS.forEach(function (t) { cards += pcFree(t).length; });
+  var row = function (act, extra, bg, ic, title, sub, badge) { return '<button type="button" class="hm-row" data-act="' + act + '"' + extra + '><span class="hm-ic" style="background:' + bg + '">' + ic + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>' + title + '</b><small>' + sub + '</small></span>' + (badge ? '<span class="hm-badge">' + badge + '</span>' : '') + icon('i-next', 16) + '</button>'; };
+  return '<h3 class="sec" id="hm-fragen">Fragen und Beiträge</h3><div class="hm-list mt10">' +
+    row('homeJump', ' data-v="questions" data-j="qs-neu"', 'var(--orange)', icon('i-bubble', 20), 'Neu eingegangen', open ? (open === 1 ? 'Ein Beitrag wartet auf deine Freigabe' : open + ' Beiträge warten auf deine Freigabe') : 'Alles geprüft, ' + ok + ' freigegeben', open || '') +
+    row('homeJump', ' data-v="questions" data-j="qs-link"', 'var(--mint)', icon('i-link', 20), 'Gäste einladen', 'Link, QR-Code und Text für die Gruppe') +
+    row('openMasterForm', '', 'var(--sun)', icon('i-pencil', 20), 'Selbst Fragen eintragen', 'Geführt, mit eigenen Leveln') +
+    row('openCards', ' data-from="home"', 'linear-gradient(120deg,#FDFEFF,#C6CFDA 45%,#8C98A8)', icon('i-star', 20), 'Karten für die Party', cards ? cards + ' im Umlauf: Joker, Weiterleiten, Regel' : 'Joker, Weiterleiten und Regel-Karte') +
+    row('homeJump', ' data-v="questions" data-j="qs-alle"', 'var(--violet)', icon('i-users', 20), 'Alle Beiträge und Runden', 'Was die App daraus baut') + '</div>';
+}
 function homeGuestCard() {
   var e = E(), n = S.questions.filter(function (q) { return q.status === 'ok' && isGuestAuthor(q.author); }).length;
   var inv = roundInventory('', e.focus.map(function (p) { return p.id; })), rounds = 0;
@@ -378,12 +390,9 @@ V.home = function () {
     '<button type="button" class="play' + (running ? '' : ready ? ' ready' + (fx === 'unlock' ? ' unlocked' : '') : ' locked') + '" data-act="heroGo"' + (!running && !ready ? ' aria-label="' + esc(runLabel()) + ', erst den Abend einstellen"' : '') + '><span>' + icon(!running && !ready ? 'i-lock' : 'i-play', 18) + '</span>' + runLabel() + (ready && !running ? '<i class="play-glint" aria-hidden="true"></i>' : '') + '</button>' +
     (running ? '' : '<button type="button" class="hero-hint plain" data-act="go" data-to="questions">' + icon('i-users', 16) + '<span class="grow">' + (homeGuestN() ? 'Mehr Gäste, mehr Spiele: ladet noch mehr ein.' : 'Ladet eure Gäste ein, sie bauen die Spiele mit.') + '</span><b>Einladen</b></button>') + '</div>' +
     (running ? '' : homeSetBar(ready)) +
-    homeGuestCard() + '\u0001' + demoHomeHtml() +
-    '<div class="mt14" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">' +
-    '<button type="button" class="stat plain" data-act="go" data-to="questions"><b class="num">' + openQ + '</b><span>' + (openQ === 1 ? 'Frage wartet' : 'Fragen warten') + ' auf Freigabe</span><small>' + okQ + ' freigegeben</small></button>' +
-    '<button type="button" class="stat plain" data-act="go" data-to="counter"><b class="num">' + drinksTotal + '</b><span>' + esc(U()) + ' eingetragen</span><small>Antippen zum Eintragen</small></button></div>' +
+    homeGuestCard() + homeQSection() + '\u0001' + demoHomeHtml() +
     factCard('home') + '\u0002' +
-    '<h3 class="sec">Schnell spielen</h3><div class="games mt10">' +
+    '<h3 class="sec" id="hm-spiele">Spiele</h3><p class="small mt6">Zwischendurch spielen, auch ohne Kranz. Welche Spiele im Abend drankommen, bleibt geheim.</p><div class="games mt10">' +
     '<button type="button" class="gtile" data-act="freeQuick" data-v="wwe" style="background:var(--sun)"' + (e.focus.length < 2 ? ' disabled' : '') + '><svg class="art" aria-hidden="true" width="86" height="70" style="top:12px;right:8px"><use href="#i-bubbles"></use></svg><b>Wer würde eher?</b><small>' + (e.focus.length < 2 ? 'Ab zwei Fokus-Personen' : 'Gruppe stimmt per Link ab') + '</small></button>' +
     '<button type="button" class="gtile" data-act="freeQuick" data-v="schaetzen" style="background:var(--violet)"><span class="art" aria-hidden="true" style="top:10px;right:14px;font:900 64px/1 var(--display)">≈</span><b>Schätzen gegen die Gruppe</b><small>Schieberegler per Link</small></button>' +
     '<button type="button" class="gtile' + (demoFreeOk('partner') ? '' : ' dlk') + '" data-act="freeQuick" data-v="partner" style="background:var(--mint)">' + (demoFreeOk('partner') ? '' : '<span class="dl-badge">' + icon('i-lock', 14) + '</span>') + '<span class="art" aria-hidden="true" style="top:14px;right:14px">' + icon('i-users', 50) + '</span><b>Mein Partner kann</b><small>' + (S.used && S.used.partnerGame ? 'Heute schon gespielt' : 'Mehrere Runden, ein Sieger') + '</small></button>' +
@@ -394,7 +403,8 @@ V.home = function () {
   body = dk(body.slice(0, cut1), body.slice(cut1 + 1, cut2), 'dk-home') + body.slice(cut2 + 1);
   body = passStatusHtml(true) + body;
   var hin = UI.homeIn; UI.homeIn = false;
-  return scr(head, body, tabbar('home'), hin ? 'hin' : '');
+  body += '<button type="button" class="hm-row mt10" data-act="go" data-to="games"><span class="hm-ic" style="background:var(--violet)">' + icon('i-pad', 20) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>Alle Spiele und euer Material</b><small>Was im Haus ist, entscheidet, was drankommt</small></span>' + icon('i-next', 16) + '</button>';
+  return scr(head, body, '', hin ? 'hin' : '');
 };
 
 /* =========================================================
@@ -448,8 +458,8 @@ V.counter = function () {
     dk('<span class="eyebrow mt18 block">Im Fokus</span><div class="mt10">' + focusCards + '</div>',
     '<span class="eyebrow mt22 block">Zuletzt</span><div class="card padrows mt10">' + log + '</div>' +
     (S.drinks.length ? '<button type="button" class="btn-ghost mt10" data-act="undoDrink">' + icon('i-undo', 18) + 'Letzten Eintrag löschen</button>' : ''));
-  var head = UI.counterFrom ? topbar(UI.counterFrom, esc(e.unit) + '-Zähler') : topbar(null, esc(e.unit) + '-Zähler');
-  return scr(head, body, UI.counterFrom ? '' : tabbar('counter'));
+  var head = topbar(UI.counterFrom || (S.run && !S.run.finished ? 'run' : 'home'), esc(e.unit) + '-Zähler');
+  return scr(head, body, '');
 };
 
 /* =========================================================
@@ -635,7 +645,7 @@ V.questions = function () {
     factCard('questions') + '</div>';
   var c1 = body.indexOf('\u0001'), c2 = body.indexOf('\u0002'), c3 = body.indexOf('\u0003');
   body = body.slice(0, c1) + dk(body.slice(c1 + 1, c2), body.slice(c2 + 1, c3)) + body.slice(c3 + 1);
-  return scr(topbar(null, 'Beiträge der Gäste'), body, tabbar('questions'));
+  return scr(topbar('home', 'Beiträge der Gäste'), body, '');
 };
 /* the QR code, big enough to scan from the master's phone */
 function qrBigHtml() {
@@ -733,7 +743,7 @@ V.games = function () {
     '<button type="button" class="card pad row plain mt14" data-act="openMaterial" data-from="games" style="width:100%"><span class="tile-ic" style="width:44px;height:44px;border-radius:14px;background:var(--sun)">' + icon('i-box', 22) + '</span><span class="stack grow" style="text-align:left;gap:2px"><span class="name">Euer Material</span><span class="sub">' + esc(matSummary()) + '</span></span><span class="linkbtn">Ändern</span></button>' +
     '<span class="eyebrow mt22 block">Zwischendurch spielen</span><p class="small mt6">Antippen und los. Was ihr hier spielt, ist für den Abend verbraucht und kommt ' + (kr ? 'im Kranz' : 'später') + ' nicht noch einmal.</p>' +
     '<div class="games mt14">' + tiles + '</div>' + factCard('games');
-  return scr(topbar(null, 'Spiele'), body, tabbar('games'));
+  return scr(topbar('home', 'Spiele'), body, '');
 };
 /* =========================================================
    Run setup
