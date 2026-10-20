@@ -5294,6 +5294,9 @@ function personalNext(r, main) {
   if (!pb.remG && !pb.remF) return '';
   var x = (pb.steps + 1) / (pb.steps + pb.left);
   if (pb.done + 1 > pb.B * curveShare(x) + 0.5) return '';
+  /* after a guessing task the personal round waits one task, unless the evening is behind */
+  var lastB = (r.rhythm || []).slice(-1)[0];
+  if (lastB && lastB.b === 'denken' && pb.done + 1 > pb.B * curveShare(x) - 1) return '';
   var canG = pb.remG > 0 && ggReadyFor(main).length > 0, canF = pb.remF > 0 && availableQuestions(main).length > 0;
   if (!canG && !canF) return '';
   /* singles: at most a quarter of the personal part, spread in between */
@@ -5351,6 +5354,11 @@ function pickAction(main, tr) {
   /* the personal part comes in along the curve, the plan holds the rest */
   var pk = personalNext(r, main);
   if (pk) return pk;
+  /* two guessing tasks in a row: the next game comes first, the question later */
+  var lb = (r.rhythm || []).slice(-1)[0];
+  if (lb && lb.b === 'denken' && PLAN_BUCKET[r.plan[r.planPos]] === 'denken') {
+    for (var sw = r.planPos + 1; sw < Math.min(r.plan.length, r.planPos + 4); sw++) if (r.plan[sw] === 'spiel') { r.plan[sw] = r.plan[r.planPos]; r.plan[r.planPos] = 'spiel'; break; }
+  }
   var k = r.plan[r.planPos]; r.planPos += 1;
   if (k === 'frage' || k === 'gast') k = 'spiel';
   if (k === 'mission' && !(r.jga && missionAvailable(main, r))) k = 'spiel';
@@ -5420,17 +5428,56 @@ function gameById(id) { return GAMES.filter(function (g) { return g.id === id; }
 /* the next games of a run are drawn ahead of time, so the app can say what to prepare */
 function runGameCtx(r) { return { focus: r.who.slice(), together: r.together, variant: r.variant, themes: themesOf(r.who) }; }
 function runGameOk(g, ctx) { return !!g && needsOk(g) && fitsTheme(g, ctx.themes) && gameAllowed(g) && safeFor(g, ctx.focus) && gameFormats(g, ctx).length > 0 && !isUsed('games', g); }
+/* =========================================================
+   The rhythm of the evening. Every task asks for one kind of thing:
+   tun (hands and material), reden (talking, remembering), zeigen (performing),
+   denken (guessing, knowing), miteinander (with the guests). The planner keeps
+   them in turns, and it keeps the material in check: a game with things to fetch
+   is followed by tasks without, unless the next one uses what is on the table already.
+   ========================================================= */
+var PLAN_BUCKET = { schaetzen: 'denken', quiz: 'denken', menge: 'denken', glueck: 'denken', gast: 'denken', frage: 'denken', wwe: 'miteinander', partner: 'miteinander', mission: 'tun' };
+function gameBucket(g) { if (!g) return 'denken'; if ((g.needs || []).length || ['Geschick', 'Action', 'Reaktion', 'Kranz'].indexOf(g.cat) >= 0) return 'tun'; return g.cat === 'Party' ? 'zeigen' : 'reden'; }
+function stepBucket(step) { if (!step) return ''; if (step.kind === 'spiel') return gameBucket(gameById(step.game)); return PLAN_BUCKET[step.kind] || ''; }
+function stepMats(step) { if (!step || step.kind !== 'spiel') return []; var g = gameById(step.game); return g ? (g.needs || []).slice() : []; }
+function rhythmNote(r, step) { var b = stepBucket(step); if (!b) return; r.rhythm = (r.rhythm || []).concat([{ b: b, m: stepMats(step) }]).slice(-10); }
+/* how well a game fits after what came before (hist: the last tasks, newest last) */
+function gameFit(g, hist) {
+  var s = 0, mats = g.needs || [], hasMat = mats.length > 0, b = gameBucket(g), n = hist.length, last = n ? hist[n - 1] : null;
+  var lm = -1; for (var i = n - 1; i >= 0; i--) if (hist[i].m.length) { lm = i; break; }
+  if (hasMat && lm >= 0) {
+    var dist = n - 1 - lm, reuse = mats.some(function (x) { return hist[lm].m.indexOf(x) >= 0; });
+    /* the same things are on the table already: fine, even right away. New things: a breather first */
+    if (reuse) s += dist === 0 ? 1.5 : 0.5;
+    else s -= dist === 0 ? 4 : dist === 1 ? 2 : dist === 2 ? 0.5 : 0;
+  }
+  var win = hist.slice(-8), matShare = win.length >= 4 ? win.filter(function (x) { return x.m.length; }).length / win.length : 0.35;
+  if (hasMat && matShare > 0.5) s -= 1; else if (!hasMat && matShare < 0.25 && win.length >= 4) s -= 0.5;
+  /* kinds in turns: not the same kind as just before, never three times */
+  if (last && last.b === b) s -= 1;
+  if (n >= 2 && hist[n - 2].b === b && last && last.b === b) s -= 2;
+  return s;
+}
+/* the best fitting game among the next few of the deck, the deck order breaks ties */
+function pickFit(order, hist, k) {
+  var best = -1, bs = -1e9;
+  for (var j = 0; j < Math.min(k || 8, order.length); j++) { var sc = gameFit(order[j], hist) - j * 0.05; if (sc > bs) { bs = sc; best = j; } }
+  return best;
+}
+/* the games told ahead: chosen so that the evening keeps its rhythm, with the plan's other tasks in between */
 function fillQueue(r, n) {
   var ctx = runGameCtx(r);
   deckOf('games', GAMES);
   r.gameQueue = (r.gameQueue || []).filter(function (id) { return runGameOk(gameById(id), ctx); });
   if (r.gameQueue.length >= n) return r.gameQueue;
   var order = deckOf('games', GAMES).filter(function (id) { return r.gameQueue.indexOf(id) < 0; }).map(gameById).filter(function (g) { return runGameOk(g, ctx); });
-  var last = r.gameQueue.length ? gameById(r.gameQueue[r.gameQueue.length - 1]).cat : (r.lastCats || []).slice(-1)[0];
+  var hist = (r.rhythm || []).slice(-8), plan = (r.plan || []).slice(r.planPos || 0), qi = 0, p = 0;
   while (r.gameQueue.length < n && order.length) {
-    var at = 0;
-    for (var j = 0; j < Math.min(5, order.length); j++) if (order[j].cat !== last) { at = j; break; }
-    var g = order.splice(at, 1)[0]; r.gameQueue.push(g.id); last = g.cat;
+    /* walk the plan to the next game slot; what lies between goes into the history as tasks without material */
+    while (p < plan.length && plan[p] !== 'spiel') { hist.push({ b: PLAN_BUCKET[plan[p]] || 'denken', m: [] }); p++; }
+    p++;
+    if (qi < r.gameQueue.length) { var qg = gameById(r.gameQueue[qi++]); hist.push({ b: gameBucket(qg), m: qg ? (qg.needs || []).slice() : [] }); continue; }
+    var g = order.splice(pickFit(order, hist), 1)[0];
+    r.gameQueue.push(g.id); hist.push({ b: gameBucket(g), m: (g.needs || []).slice() });
   }
   return r.gameQueue;
 }
@@ -5517,7 +5564,18 @@ function makeGameStep(main, ctx, gameId, format, noQueue) {
     if (urg.length) r.gameQueue = urg.map(function (x) { return x.id; }).concat(r.gameQueue.filter(function (id) { return !urg.some(function (x) { return x.id === id; }); }));
     while (!g && r.gameQueue.length) { var qg = gameById(r.gameQueue.shift()); if (qg && !isUsed('games', qg) && fits(qg)) { g = qg; markUsed('games', g); } }
   }
-  if (!g) { var gi = pickFrom(GAMES, 'games', fits, wFn); g = gi >= 0 ? GAMES[gi] : null; }
+  if (!g) {
+    /* free play, or nothing announced: the best fit among the next of the deck */
+    var fh = inRun ? (r.rhythm || []).slice(-8) : (S.rhythmFree || []).slice(-8);
+    var gi = pickFrom(GAMES, 'games', fits, function (c) { return c === GAMES[gi0]; }), gi0 = -1;
+    if (gi >= 0) {
+      var at = {}; GAMES.forEach(function (x, i) { at[x.id] = i; });
+      var cand = deckOf('games', GAMES).map(function (k) { return GAMES[at[k]]; }).filter(function (c) { return c && fits(c) && !isUsed('games', c); });
+      if (cand.length) { var pf = pickFit([GAMES[gi]].concat(cand), fh); if (pf > 0) { var alt = cand[pf - 1]; usedList('games').pop(); markUsed('games', alt); gi = at[alt.id]; } }
+    }
+    g = gi >= 0 ? GAMES[gi] : null;
+    if (g && !inRun) S.rhythmFree = (S.rhythmFree || []).concat([{ b: gameBucket(g), m: (g.needs || []).slice() }]).slice(-10);
+  }
   else if (!isUsed('games', g)) markUsed('games', g);
   if (!g) g = GAMES.filter(function (c) { return !c.needs.length && !c.only && gameFormats(c, ctx).length; })[0] || GAMES[0];
   if (!gameId) { lastCats = lastCats.concat([g.cat]).slice(-3); if (inRun) r.lastCats = lastCats; else S.lastCatsFree = lastCats; }
@@ -5626,6 +5684,7 @@ function nextStep(forcedRoll) {
   step.track = tr.id; step.unitNo = isTimed(r) ? null : target; step.roll = roll;
   r.lastAction = step.kind;
   r.kinds = (r.kinds || []).concat([step.kind]);
+  rhythmNote(r, step);
   return step;
 }
 
