@@ -161,7 +161,8 @@ function gStage(big) {
   var f = E() ? E().focus : [];
   if (!UI.gBubble) gSay(String(gForm().author || '').trim() ? 'name' : 'hello');
   var b = UI.gBubble, sp = f.filter(function (p) { return p.id === b.who; })[0] || f[0];
-  var size = (f.length > 2 ? 76 : f.length === 2 ? 92 : 112) + (big ? 8 : 0);
+  /* after sending, the ticket is the hero: the stage steps back */
+  var size = big ? (f.length > 2 ? 54 : f.length === 2 ? 68 : 84) : (f.length > 2 ? 76 : f.length === 2 ? 92 : 112);
   var avs = f.map(function (p, i) {
     var talk = sp && p.id === sp.id;
     return '<span class="gav' + (talk ? ' talk' : '') + '" style="--d:' + (-i * 1.3) + 's">' + face(p, size, 'border:4px solid var(--ink);box-sizing:border-box', talk ? b.mood : (b.mood === 'jubel' ? 'jubel' : '')) + '</span>';
@@ -605,6 +606,8 @@ function gFinale(head) {
     '<div class="gt-foot"><b>' + (f.n === 1 ? 'Dein Beitrag ist' : 'Deine ' + f.n + ' Beiträge sind') + ' angekommen.</b> Der Spielleiter gibt sie frei. Ob und wann sie drankommen, vielleicht sogar in einem Gästespiel, siehst du heute Abend.<span class="gt-turn">Antippen zum Umdrehen</span></div></div>' +
     '<div class="gt-face gt-back"><div class="gt-top"><span>Rückseite</span><span>' + esc(UI.qSent) + '</span></div><div class="gt-main"><span class="gt-lbl">Das hast du eingereicht</span><div class="gt-kinds">' + kinds + '</div><span class="gt-lvl mt14">Heute Abend gilt: Augen auf! Vielleicht erkennst du deinen Beitrag wieder.</span></div><div class="gt-foot">Antippen zum Zurückdrehen</div></div>' +
     '</div></div>';
-  return scr(head, body, '<button type="button" class="cta" data-act="qAnother">' + icon('i-plus', 18) + 'Noch etwas beitragen</button>' + (UI.guestMode === 'test' ? '<button type="button" class="btn-ghost" data-act="go" data-to="' + UI.guestFrom + '">Fertig</button>' : ''), 'gscr' + (UI.guestMode === 'test' ? ' gtest' : ''));
+  var more = '<button type="button" class="btn-ghost gfin-more" data-act="qAnother">' + icon('i-plus', 16) + 'Noch etwas beitragen</button>';
+  var foot = UI.guestMode === 'test' ? '<div class="cta-row"><button type="button" class="btn-dark gfin-done" data-act="go" data-to="' + UI.guestFrom + '">Fertig</button>' + more + '</div>' : more;
+  return scr(head, body, foot, 'gscr gfin' + (UI.guestMode === 'test' ? ' gtest' : ''));
 }
 

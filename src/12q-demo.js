@@ -37,8 +37,8 @@ function demoHomeHtml() {
 var DP_INFO = {
   socken: ['Mit 25 noch ledig? Dann hängt ein Kranz voller Socken. Socke für Socke kommt ab, und hinter jeder steckt eine kleine Aufgabe.', ['Socke für Socke', 'Würfel möglich', 'Gäste-Runden'], 'Zum 25. Geburtstag'],
   schachtel: ['Die Variante mit Schachteln: Eine nach der anderen kommt vom Kranz, und jede bringt ihr eigenes Spiel mit.', ['Schachtel für Schachtel', 'Allein oder zu zweit', 'Gäste-Runden'], 'Zum 25. Geburtstag'],
-  treppe: ['Mit 30 noch ledig: Die Treppe wird gefegt, dazwischen gibt es Einlagen. Erst mit der Zahnbürste, mit Glück bald mit dem Besen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen'], 'Zum 30. Geburtstag'],
-  klinke: ['Mit 30 noch ledig: Klinken putzen, dazwischen Einlagen. Erst mit dem Wattestäbchen, mit Glück bald mit dem Lappen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen'], 'Zum 30. Geburtstag'],
+  treppe: ['Mit 30 noch ledig: Die Treppe wird gefegt, dazwischen gibt es Einlagen. Mit jeder gewonnenen Zubehör-Chance kommt das nächste Teil dran.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen'], 'Zum 30. Geburtstag'],
+  klinke: ['Mit 30 noch ledig: Klinken putzen, dazwischen Einlagen. Mit jeder gewonnenen Zubehör-Chance kommt das nächste Teil dran.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen'], 'Zum 30. Geburtstag'],
   geburtstag: ['Geburtstag ohne Kranz und Besen: Runde für Runde Spiele rund um das Geburtstagskind.', ['Runde für Runde', 'Würfel möglich', 'Gäste-Runden'], 'Ohne Kranz und Besen'],
   hochzeit: ['Für Polterabend und Hochzeit: Spiele über das Brautpaar, mit den Geschichten der Gäste.', ['Für das Paar', 'Paar-Duelle', 'Gäste-Runden'], 'Für das Brautpaar'],
   jga: ['Der Junggesellenabschied: Missionen in der Stadt oder drinnen, die Truppe spielt mit.', ['Missionen', 'Mit der Truppe', 'Drinnen oder draußen'], 'Für Braut oder Bräutigam'],

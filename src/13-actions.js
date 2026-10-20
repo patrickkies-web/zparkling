@@ -370,7 +370,7 @@ A.freeMain = function (d) {
 A.openRun = function () { if (S.run && !S.run.finished) { go(S.run.pending ? 'step' : 'run'); return; } cfgDefaults(); UI.cfgErr = ''; UI.cfgStep = 1; go('runSetup'); };
 /* the setup steps: forward only when the first step is complete */
 function cfgGoStep(n) {
-  n = Math.max(1, Math.min(3, n));
+  n = Math.max(1, Math.min(4, n));
   var block = n > 1 ? cfgBlock() : '';
   if (block) { UI.cfgStep = 1; UI.cfgErr = block; render(); return; }
   UI.cfgErr = ''; UI.cfgStep = n; render();

@@ -17,18 +17,18 @@ function party(seed, anlass) { const c = load({ seed }); c.A.loadDemo(); c.A.mat
   const c = party(2, 'treppe');
   c.A.openRun(); c.A.cfgNext();
   let h = c.V.runSetup();
-  ok(/Wie viele Teile\?/.test(h) && /acc-step first">Zahnbürste/.test(h) && /acc-step[^"]*last">Besen/.test(h) && !/accName/.test(h), 'Setup: only the count, from the toothbrush to the broom');
+  ok(/Wie viele Teile habt ihr\?/.test(h) && !/Zahnbürste|Besen|acc-step/.test(h) && !/accName/.test(h), 'Setup: only the count, no objects named');
   c.A.cfgAccN({ d: '1' }); ok(c.cfgDefaults().accN === 5, 'The count goes up');
   c.A.cfgNext(); h = c.V.runSetup();
   ok(!/Zubehör-Wechsel/.test(h), 'No accessory extras on step 3');
   c.A.startRun(); c.kickClose(); const r = c.R(); r.bud.on = false;
-  ok(r.acc.items.length === 5 && r.acc.items[0] === 'Zahnbürste' && r.acc.items[4] === 'Besen' && !r.accPts.length, 'The run takes the ladder, no switch screens');
+  ok(r.acc.items.length === 5 && r.acc.items[0] === 'Teil 1' && r.acc.items[4] === 'Teil 5' && !r.accPts.length, 'The run counts the parts, no switch screens');
   r.pending = null; c.A.runNext();
   ok(!r.pending.accWin, 'Before four minutes: no chance');
   let tries = 0;
   do { r.pending = null; c.advance(4.1); c.A.runNext(); tries++; } while (!r.pending.accWin && tries < 30);
   const P = r.pending;
-  ok(P.accWin && P.accWin.from === 'Zahnbürste' && P.accWin.to === r.acc.items[1], 'After four minutes a task carries the chance (' + P.kind + ')');
+  ok(P.accWin && P.accWin.from === 'Teil 1 von 5' && P.accWin.to === 'Teil 2 von 5', 'After four minutes a task carries the chance (' + P.kind + ')');
   ok(/Zubehör-Chance!/.test(c.V.step()), 'The task says what can be won');
   /* won: nobody of the track drinks */
   P.result = { title: 'x', rows: [{ pid: r.who[0], name: 'x', n: 0 }] };

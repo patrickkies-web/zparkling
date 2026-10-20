@@ -17,9 +17,11 @@ function party(seed, anlass) { const c = load({ seed }); c.A.loadDemo(); c.A.mat
   c.A.cfgNext(); h = c.V.runSetup();
   ok(c.cfgStepNow() === 2 && /Wie geht ihr den Kranz ab\?/.test(h) && /Stück für Stück/.test(h) && /Zurück/.test(h), 'Step 2: the kind of game, with Zurück');
   c.A.cfgNext(); h = c.V.runSetup();
-  ok(c.cfgStepNow() === 3 && /Alles bereit\?/.test(h) && /Abend speichern/.test(h) && !/Los geht/.test(h) && /Plan des Piloten/.test(h), 'Step 3: the plan and a save button, the start waits at home');
-  ok((h.match(/class="wz-sum"/g) || []).length === 4 && /Material/.test(h) && /Ändern/.test(h), 'The plan has four lines with the material, each can be changed');
-  ok(!holes(h), 'Step 3 has no holes');
+  ok(c.cfgStepNow() === 3 && /Wie viel darf heute fallen\?/.test(h) && /data-act="setMax"/.test(h) && /data-act="setTarget"/.test(h) && /data-act="setUnit"/.test(h), 'Step 3: the pilot with maximum, target and unit');
+  c.A.cfgNext(); h = c.V.runSetup();
+  ok(c.cfgStepNow() === 4 && /Alles bereit\?/.test(h) && /Abend speichern/.test(h) && !/Los geht/.test(h) && /Pinnchen-Pilot/.test(h), 'Step 4: the plan and a save button, the start waits at home');
+  ok((h.match(/class="wz-sum"/g) || []).length === 5 && /Material/.test(h) && /Ändern/.test(h), 'The plan has five lines with the pilot and the material, each can be changed');
+  ok(!holes(h), 'Step 4 has no holes');
   c.A.cfgStep({ v: '1' });
   ok(c.cfgStepNow() === 1, 'Tapping a line or a step jumps back');
   c.A.cfgPrev();
@@ -68,7 +70,7 @@ function party(seed, anlass) { const c = load({ seed }); c.A.loadDemo(); c.A.mat
 {
   const c = party(4, 'treppe');
   c.A.openRun(); c.A.cfgNext();
-  ok(/Wie lange dauert das Event\?/.test(c.V.runSetup()) && /Wie viele Teile\?/.test(c.V.runSetup()) && /data-act="cfgAccN"/.test(c.V.runSetup()), 'Event: step 2 asks how long and how many accessories');
+  ok(/Wie lange dauert das Event\?/.test(c.V.runSetup()) && /Wie viele Teile habt ihr\?/.test(c.V.runSetup()) && /data-act="cfgAccN"/.test(c.V.runSetup()), 'Event: step 2 asks how long and how many accessories');
   c.A.cfgNext(); c.A.startRun();
   const h = c.V.run();
   ok(/Event läuft/.test(h) && /Minuten/.test(h) && /Status-Check/.test(h) && !holes(h), 'Event cockpit: minutes ring and Status-Check');

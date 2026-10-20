@@ -2,8 +2,8 @@
    Run setup in three short steps, the kick-off cheer and the
    cockpit while the game runs
    ========================================================= */
-var CFG_STEPS = ['Wer spielt', 'Spielart', 'Bereit?'];
-function cfgStepNow() { return Math.max(1, Math.min(3, +UI.cfgStep || 1)); }
+var CFG_STEPS = ['Wer spielt', 'Spielart', 'Pinnchen-Pilot', 'Bereit?'];
+function cfgStepNow() { return Math.max(1, Math.min(4, +UI.cfgStep || 1)); }
 function cfgStepBar(n) {
   return '<nav class="wz" aria-label="Schritte">' + CFG_STEPS.map(function (l, i) {
     var k = i + 1, st = k < n ? ' done' : k === n ? ' now' : '';
@@ -83,8 +83,24 @@ function cfgStep2(c) {
   return head + (vs.length > 1 ? '<p class="small mt6">Die Spiele selbst sucht die App aus und verrät sie erst, wenn es so weit ist.</p>' : '') + vopts + dice +
     '<span class="eyebrow mt22 block">' + (timed ? 'Dauer' : 'Länge') + '</span>' + len + dur + (fam === 'zeit' ? accCountBlock(c) : '');
 }
-/* step 3: the plan at a glance, the extras, then go */
+/* step 3: the pilot. How much falls tonight: the master sets it, the app plans with it */
 function cfgStep3(c) {
+  var e = E(), who = cfgWho(), fam = c.fam, steps = cfgSteps(), perPerson = steps / Math.max(1, who.length), shortPlan = false;
+  var plan = who.map(function (id) {
+    var M = e.max, T = Math.round(M * e.target / 100), est = planEstimate(id, perPerson); if (est < T) shortPlan = true;
+    return '<div class="pp-row">' + face(person(id), 34) + '<span class="grow name" style="font-size:15px">' + esc(person(id).name) + '</span><span class="pp-n"><b class="num">~' + T + '</b><small>Ziel' + (est < T ? ', eher ~' + est : '') + '</small></span><span class="pp-n"><b class="num">' + M + '</b><small>höchstens</small></span></div>';
+  }).join('');
+  var units = '<div class="chips" role="group" aria-label="Einheit">' + UNITS.map(function (u) { var sel = e.unit === u; return '<button type="button" class="chip-btn sm' + (sel ? ' is-sel' : '') + '" data-act="setUnit" data-v="' + u + '" aria-pressed="' + sel + '">' + u + '</button>'; }).join('') + '</div>';
+  var pilot = '<div class="pp mt14"><div class="pp-head"><span class="pp-e">' + emb('cheers', 34) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>So viel ' + esc(e.unit) + ' plant der Pilot für heute</b><small>Pro Spiel und Person fällt höchstens eins. Wer gewinnt, trinkt weniger.</small></span></div>' +
+    '<div class="pp-rows">' + plan + '</div>' +
+    (shortPlan ? '<p class="small pp-note">Bei so wenigen Aufgaben wird das Ziel nicht ganz erreicht. Mehr ' + (fam === 'frei' ? (c.variant === 'wuerfel' ? 'Felder' : 'Runden') : fam === 'kranz' ? (c.variant === 'meter' ? 'Meter' : 'Stationen am Kranz') : 'Spielzeit') + ' oder ein kleineres Maximum helfen.</p>' : '') +
+    '<div class="pp-ctl"><div class="row"><span class="stack grow" style="gap:1px"><span class="name">Höchstens pro Person</span><span class="sub">Für den ganzen Abend, wird nie überschritten</span></span>' + stepper('setMax', e.max, '', 'Maximum') + '</div>' +
+    '<div class="row"><span class="stack grow" style="gap:1px"><span class="name">Ziel</span><span class="sub">Im Schnitt landet ihr hier: ' + e.target + ' % vom Maximum</span></span>' + stepper('setTarget', Math.round(e.max * e.target / 100), '', 'Ziel') + '</div>' +
+    '<div class="stack" style="gap:8px;padding:6px 0 2px"><span class="name">Einheit</span>' + units + '</div></div></div>';
+  return '<h1 class="h1 mt18">Wie viel darf heute fallen?</h1><p class="small mt6">Der Pilot zählt mit und bremst, wenn es zu schnell wird. Pro Spiel und Person fällt höchstens eins, egal was ihr hier einstellt.</p>' + pilot;
+}
+/* step 4: the plan at a glance, the extras, then go */
+function cfgStep4(c) {
   var e = E(), who = cfgWho(), tog = cfgTogether(), fam = c.fam, timed = c.variant === 'zeit' || c.variant === 'abend', v = variantInfo(c.variant, fam);
   var steps = cfgSteps(), perPerson = steps / Math.max(1, who.length), shortPlan = false;
   var row = function (step, ic, title, sub) { return '<button type="button" class="wz-sum" data-act="cfgStep" data-v="' + step + '">' + ic + '<span class="stack grow" style="gap:2px;min-width:0;text-align:left"><b>' + title + '</b><span class="sub">' + sub + '</span></span><span class="wz-edit">Ändern</span></button>'; };
@@ -92,38 +108,28 @@ function cfgStep3(c) {
   var vic = '<span class="tile-ic wz-sum-ic" style="width:40px;height:40px;border-radius:13px;background:' + v.bg + '">' + (v.icon === 'sock' ? sockIc('#15122B', 16) : icon(v.icon, 22)) + '</span>';
   var cic = '<span class="tile-ic wz-sum-ic" style="width:40px;height:40px;border-radius:13px;background:var(--violet)">' + icon('i-clock', 22) + '</span>';
   var mic = '<span class="tile-ic wz-sum-ic" style="width:40px;height:40px;border-radius:13px;background:var(--mint)">' + icon('i-box', 22) + '</span>';
+  var pic = '<span class="tile-ic wz-sum-ic" style="width:40px;height:40px;border-radius:13px;background:var(--sun)">' + icon('i-shot', 22) + '</span>';
   var sum = '<div class="wz-plan mt14">' +
     row(1, faces, esc(joinNames(who.map(function (id) { return person(id).name; }))), who.length < 2 ? 'Allein im Mittelpunkt' : tog === 'gemeinsam' ? 'Gemeinsam, im Wechsel' : 'Gegeneinander, mit Duellen') +
     row(2, vic, esc(v.label), esc(cfgLenText(c, who, tog)) + (c.variant === 'wuerfel' ? (c.dice === 'echt' ? ', echter Würfel' : ', Würfel in der App') : '')) +
     row(2, cic, 'Etwa ' + c.minutes + ' Minuten', 'Etwa ' + steps + ' ' + (timed ? 'Einlagen' : 'Aufgaben')) +
+    row(3, pic, 'Pinnchen-Pilot', 'Ziel etwa ' + Math.round(e.max * e.target / 100) + ', höchstens ' + e.max + ' ' + esc(e.unit) + ' pro Person') +
     '<button type="button" class="wz-sum" data-act="openMaterial" data-from="runSetup">' + mic + '<span class="stack grow" style="gap:2px;min-width:0;text-align:left"><b>Material</b><span class="sub">' + esc(matSummary()) + '</span></span><span class="wz-edit">Ändern</span></button></div>';
-  var plan = who.map(function (id) {
-    var M = e.max, T = Math.round(M * e.target / 100), est = planEstimate(id, perPerson); if (est < T) shortPlan = true;
-    return '<div class="pp-row">' + face(person(id), 34) + '<span class="grow name" style="font-size:15px">' + esc(person(id).name) + '</span><span class="pp-n"><b class="num">~' + T + '</b><small>Ziel' + (est < T ? ', eher ~' + est : '') + '</small></span><span class="pp-n"><b class="num">' + M + '</b><small>höchstens</small></span></div>';
-  }).join('');
-  var units = '<div class="chips" role="group" aria-label="Einheit">' + UNITS.map(function (u) { var sel = e.unit === u; return '<button type="button" class="chip-btn sm' + (sel ? ' is-sel' : '') + '" data-act="setUnit" data-v="' + u + '" aria-pressed="' + sel + '">' + u + '</button>'; }).join('') + '</div>';
-  var pilot = '<span class="eyebrow mt22 block">Plan des Piloten</span><div class="pp mt10"><div class="pp-head"><span class="pp-e">' + emb('cheers', 34) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>So viel ' + esc(e.unit) + ' plant der Pilot für heute</b><small>Pro Spiel und Person fällt höchstens eins. Wer gewinnt, trinkt weniger.</small></span></div>' +
-    '<div class="pp-rows">' + plan + '</div>' +
-    (shortPlan ? '<p class="small pp-note">Bei so wenigen Aufgaben wird das Ziel nicht ganz erreicht. Mehr ' + (fam === 'frei' ? (c.variant === 'wuerfel' ? 'Felder' : 'Runden') : fam === 'kranz' ? (c.variant === 'meter' ? 'Meter' : 'Stationen am Kranz') : 'Spielzeit') + ' oder ein kleineres Maximum helfen.</p>' : '') +
-    '<div class="pp-ctl"><div class="row"><span class="stack grow" style="gap:1px"><span class="name">Höchstens pro Person</span><span class="sub">Für den ganzen Abend, wird nie überschritten</span></span>' + stepper('setMax', e.max, '', 'Maximum') + '</div>' +
-    '<div class="row"><span class="stack grow" style="gap:1px"><span class="name">Ziel</span><span class="sub">Im Schnitt landet ihr hier: ' + e.target + ' % vom Maximum</span></span>' + stepper('setTarget', Math.round(e.max * e.target / 100), '', 'Ziel') + '</div>' +
-    '<div class="stack" style="gap:8px;padding:6px 0 2px"><span class="name">Einheit</span>' + units + '</div></div></div>';
   var link = '<label class="row mt14 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Gäste per Link einbinden</span><span class="sub">Bei Schätz- und Abstimmfragen</span></span><button type="button" class="switch" role="switch" aria-checked="' + !!c.link + '" data-act="cfgLink" aria-label="Gäste per Link einbinden"><span></span></button></label>';
   var buddy = '<label class="row mt10 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Trinkbuddys</span><span class="sub">Jede Hauptperson wählt jemanden, der mittrinkt. Ab dem ersten gemeinsamen ' + esc(E().unit) + ' hält die Verbindung 1 bis 3 Spiele, das entscheidet die App. Dann wird neu gewählt.</span></span><button type="button" class="switch" role="switch" aria-checked="' + (c.buddy !== false) + '" data-act="cfgBuddy" aria-label="Trinkbuddys"><span></span></button></label>';
   return '<h1 class="h1 mt18">Alles bereit?</h1><p class="small mt6">Tipp eine Zeile an, um sie zu ändern.</p>' + sum +
-    pilot +
     '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (isJga() ? '' : crewSetupHtml(c)) + link + buddy +
     factCard('runSetup');
 }
 V.runSetup = function () {
   var c = cfgDefaults(), fam = c.fam, n = cfgStepNow(), running = S.run && !S.run.finished;
-  var body = cfgStepBar(n) + (n === 1 ? cfgStep1(c) : n === 2 ? cfgStep2(c) : cfgStep3(c)) + (UI.cfgErr ? '<p class="err mt14">' + UI.cfgErr + '</p>' : '');
+  var body = cfgStepBar(n) + (n === 1 ? cfgStep1(c) : n === 2 ? cfgStep2(c) : n === 3 ? cfgStep3(c) : cfgStep4(c)) + (UI.cfgErr ? '<p class="err mt14">' + UI.cfgErr + '</p>' : '');
   var back = n > 1 ? '<button type="button" class="btn-dark wz-back" data-act="cfgPrev">' + icon('i-back', 18) + 'Zurück</button>' : '';
   var fwd;
-  if (n < 3) fwd = '<button type="button" class="cta" data-act="cfgNext"' + (cfgWho().length ? '' : ' disabled') + '>Weiter' + icon('i-next', 18) + '</button>';
+  if (n < 4) fwd = '<button type="button" class="cta" data-act="cfgNext"' + (cfgWho().length ? '' : ' disabled') + '>Weiter' + icon('i-next', 18) + '</button>';
   else if (running) fwd = '<button type="button" class="cta" data-act="go" data-to="run">Zum laufenden Spiel</button>';
   else fwd = '<button type="button" class="cta mint wz-go" data-act="cfgSave"' + (cfgWho().length ? '' : ' disabled') + '>' + icon('i-check', 18) + 'Abend speichern</button>';
-  var foot = '<div class="cta-row">' + back + fwd + '</div>' + (n === 3 && running ? '<button type="button" class="btn-ghost" data-act="startRun">Neu starten</button>' : '');
+  var foot = '<div class="cta-row">' + back + fwd + '</div>' + (n === 4 && running ? '<button type="button" class="btn-ghost" data-act="startRun">Neu starten</button>' : '');
   return scr(topbar('home', 'Abend einstellen'), body, foot);
 };
 

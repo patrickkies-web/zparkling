@@ -1623,6 +1623,9 @@ body.desk .scr.tourscr .foot { max-width: 520px; margin: 0 auto; width: 100%; bo
 .wz-s.done { color: var(--text); }
 .wz-s.done .wz-n { background: var(--mint); color: var(--ink); }
 .wz-line { flex: 1 1 auto; height: 3px; min-width: 8px; border-radius: 3px; background: var(--surface-2); }
+/* four steps: on a phone only the current step keeps its name */
+body:not(.wide) .wz-s:not(.now) .wz-l { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+body:not(.wide) .wz-s { position: relative; }
 .wz-line.on { background: var(--mint); }
 .wz-people { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
 .wz-p { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 8px 12px; border-radius: 22px; border: 3px solid var(--line); background: var(--surface); color: var(--white); font: 800 14px var(--body); min-width: 0; transition: border-color .2s, background .2s; }
@@ -2439,6 +2442,16 @@ body.kb .body { scroll-padding-top: 72px; scroll-padding-bottom: 24px; }
 .fx-empty b { font: 800 19px var(--display); color: var(--white); letter-spacing: -0.01em; }
 .fx-empty > .stack > span { font-size: 14px; font-weight: 600; color: var(--muted); max-width: 300px; line-height: 1.4; }
 @media (hover: hover) { .fx-empty:hover { border-color: var(--accent); } }
+/* ---------- v41: after sending, the ticket is the hero; the stage and the foot step back ---------- */
+.gfin .gstage { padding-top: 58px; }
+.gfin .gbubble { font-size: 14px; padding: 8px 12px; }
+.gfin .gtk-wrap { margin-top: 10px; }
+.gfin .gt-name { font-size: 32px; }
+.gfin .gt-main { padding: 14px 18px 6px; }
+.gfin .gt-foot { padding: 12px 18px 14px; font-size: 13.5px; }
+.gfin .gfin-more { height: 48px; width: 100%; flex: 1; font-size: 15px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.gfin .gfin-done { height: 48px; min-width: 0; padding: 0 18px; flex: 0 0 auto; }
+.gfin .foot { padding-top: 6px; }
 /* ---------- v41: the pilot's plan in the evening setup ---------- */
 .pp { border-radius: 24px; background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--line); overflow: hidden; }
 .pp-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: linear-gradient(135deg, rgba(255,201,64,.16), rgba(255,122,69,.08)); border-bottom: 1.5px solid var(--line); }
@@ -6894,8 +6907,8 @@ V.rewind = function () {
    Run setup in three short steps, the kick-off cheer and the
    cockpit while the game runs
    ========================================================= */
-var CFG_STEPS = ['Wer spielt', 'Spielart', 'Bereit?'];
-function cfgStepNow() { return Math.max(1, Math.min(3, +UI.cfgStep || 1)); }
+var CFG_STEPS = ['Wer spielt', 'Spielart', 'Pinnchen-Pilot', 'Bereit?'];
+function cfgStepNow() { return Math.max(1, Math.min(4, +UI.cfgStep || 1)); }
 function cfgStepBar(n) {
   return '<nav class="wz" aria-label="Schritte">' + CFG_STEPS.map(function (l, i) {
     var k = i + 1, st = k < n ? ' done' : k === n ? ' now' : '';
@@ -6975,8 +6988,24 @@ function cfgStep2(c) {
   return head + (vs.length > 1 ? '<p class="small mt6">Die Spiele selbst sucht die App aus und verrät sie erst, wenn es so weit ist.</p>' : '') + vopts + dice +
     '<span class="eyebrow mt22 block">' + (timed ? 'Dauer' : 'Länge') + '</span>' + len + dur + (fam === 'zeit' ? accCountBlock(c) : '');
 }
-/* step 3: the plan at a glance, the extras, then go */
+/* step 3: the pilot. How much falls tonight: the master sets it, the app plans with it */
 function cfgStep3(c) {
+  var e = E(), who = cfgWho(), fam = c.fam, steps = cfgSteps(), perPerson = steps / Math.max(1, who.length), shortPlan = false;
+  var plan = who.map(function (id) {
+    var M = e.max, T = Math.round(M * e.target / 100), est = planEstimate(id, perPerson); if (est < T) shortPlan = true;
+    return '<div class="pp-row">' + face(person(id), 34) + '<span class="grow name" style="font-size:15px">' + esc(person(id).name) + '</span><span class="pp-n"><b class="num">~' + T + '</b><small>Ziel' + (est < T ? ', eher ~' + est : '') + '</small></span><span class="pp-n"><b class="num">' + M + '</b><small>höchstens</small></span></div>';
+  }).join('');
+  var units = '<div class="chips" role="group" aria-label="Einheit">' + UNITS.map(function (u) { var sel = e.unit === u; return '<button type="button" class="chip-btn sm' + (sel ? ' is-sel' : '') + '" data-act="setUnit" data-v="' + u + '" aria-pressed="' + sel + '">' + u + '</button>'; }).join('') + '</div>';
+  var pilot = '<div class="pp mt14"><div class="pp-head"><span class="pp-e">' + emb('cheers', 34) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>So viel ' + esc(e.unit) + ' plant der Pilot für heute</b><small>Pro Spiel und Person fällt höchstens eins. Wer gewinnt, trinkt weniger.</small></span></div>' +
+    '<div class="pp-rows">' + plan + '</div>' +
+    (shortPlan ? '<p class="small pp-note">Bei so wenigen Aufgaben wird das Ziel nicht ganz erreicht. Mehr ' + (fam === 'frei' ? (c.variant === 'wuerfel' ? 'Felder' : 'Runden') : fam === 'kranz' ? (c.variant === 'meter' ? 'Meter' : 'Stationen am Kranz') : 'Spielzeit') + ' oder ein kleineres Maximum helfen.</p>' : '') +
+    '<div class="pp-ctl"><div class="row"><span class="stack grow" style="gap:1px"><span class="name">Höchstens pro Person</span><span class="sub">Für den ganzen Abend, wird nie überschritten</span></span>' + stepper('setMax', e.max, '', 'Maximum') + '</div>' +
+    '<div class="row"><span class="stack grow" style="gap:1px"><span class="name">Ziel</span><span class="sub">Im Schnitt landet ihr hier: ' + e.target + ' % vom Maximum</span></span>' + stepper('setTarget', Math.round(e.max * e.target / 100), '', 'Ziel') + '</div>' +
+    '<div class="stack" style="gap:8px;padding:6px 0 2px"><span class="name">Einheit</span>' + units + '</div></div></div>';
+  return '<h1 class="h1 mt18">Wie viel darf heute fallen?</h1><p class="small mt6">Der Pilot zählt mit und bremst, wenn es zu schnell wird. Pro Spiel und Person fällt höchstens eins, egal was ihr hier einstellt.</p>' + pilot;
+}
+/* step 4: the plan at a glance, the extras, then go */
+function cfgStep4(c) {
   var e = E(), who = cfgWho(), tog = cfgTogether(), fam = c.fam, timed = c.variant === 'zeit' || c.variant === 'abend', v = variantInfo(c.variant, fam);
   var steps = cfgSteps(), perPerson = steps / Math.max(1, who.length), shortPlan = false;
   var row = function (step, ic, title, sub) { return '<button type="button" class="wz-sum" data-act="cfgStep" data-v="' + step + '">' + ic + '<span class="stack grow" style="gap:2px;min-width:0;text-align:left"><b>' + title + '</b><span class="sub">' + sub + '</span></span><span class="wz-edit">Ändern</span></button>'; };
@@ -6984,38 +7013,28 @@ function cfgStep3(c) {
   var vic = '<span class="tile-ic wz-sum-ic" style="width:40px;height:40px;border-radius:13px;background:' + v.bg + '">' + (v.icon === 'sock' ? sockIc('#15122B', 16) : icon(v.icon, 22)) + '</span>';
   var cic = '<span class="tile-ic wz-sum-ic" style="width:40px;height:40px;border-radius:13px;background:var(--violet)">' + icon('i-clock', 22) + '</span>';
   var mic = '<span class="tile-ic wz-sum-ic" style="width:40px;height:40px;border-radius:13px;background:var(--mint)">' + icon('i-box', 22) + '</span>';
+  var pic = '<span class="tile-ic wz-sum-ic" style="width:40px;height:40px;border-radius:13px;background:var(--sun)">' + icon('i-shot', 22) + '</span>';
   var sum = '<div class="wz-plan mt14">' +
     row(1, faces, esc(joinNames(who.map(function (id) { return person(id).name; }))), who.length < 2 ? 'Allein im Mittelpunkt' : tog === 'gemeinsam' ? 'Gemeinsam, im Wechsel' : 'Gegeneinander, mit Duellen') +
     row(2, vic, esc(v.label), esc(cfgLenText(c, who, tog)) + (c.variant === 'wuerfel' ? (c.dice === 'echt' ? ', echter Würfel' : ', Würfel in der App') : '')) +
     row(2, cic, 'Etwa ' + c.minutes + ' Minuten', 'Etwa ' + steps + ' ' + (timed ? 'Einlagen' : 'Aufgaben')) +
+    row(3, pic, 'Pinnchen-Pilot', 'Ziel etwa ' + Math.round(e.max * e.target / 100) + ', höchstens ' + e.max + ' ' + esc(e.unit) + ' pro Person') +
     '<button type="button" class="wz-sum" data-act="openMaterial" data-from="runSetup">' + mic + '<span class="stack grow" style="gap:2px;min-width:0;text-align:left"><b>Material</b><span class="sub">' + esc(matSummary()) + '</span></span><span class="wz-edit">Ändern</span></button></div>';
-  var plan = who.map(function (id) {
-    var M = e.max, T = Math.round(M * e.target / 100), est = planEstimate(id, perPerson); if (est < T) shortPlan = true;
-    return '<div class="pp-row">' + face(person(id), 34) + '<span class="grow name" style="font-size:15px">' + esc(person(id).name) + '</span><span class="pp-n"><b class="num">~' + T + '</b><small>Ziel' + (est < T ? ', eher ~' + est : '') + '</small></span><span class="pp-n"><b class="num">' + M + '</b><small>höchstens</small></span></div>';
-  }).join('');
-  var units = '<div class="chips" role="group" aria-label="Einheit">' + UNITS.map(function (u) { var sel = e.unit === u; return '<button type="button" class="chip-btn sm' + (sel ? ' is-sel' : '') + '" data-act="setUnit" data-v="' + u + '" aria-pressed="' + sel + '">' + u + '</button>'; }).join('') + '</div>';
-  var pilot = '<span class="eyebrow mt22 block">Plan des Piloten</span><div class="pp mt10"><div class="pp-head"><span class="pp-e">' + emb('cheers', 34) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>So viel ' + esc(e.unit) + ' plant der Pilot für heute</b><small>Pro Spiel und Person fällt höchstens eins. Wer gewinnt, trinkt weniger.</small></span></div>' +
-    '<div class="pp-rows">' + plan + '</div>' +
-    (shortPlan ? '<p class="small pp-note">Bei so wenigen Aufgaben wird das Ziel nicht ganz erreicht. Mehr ' + (fam === 'frei' ? (c.variant === 'wuerfel' ? 'Felder' : 'Runden') : fam === 'kranz' ? (c.variant === 'meter' ? 'Meter' : 'Stationen am Kranz') : 'Spielzeit') + ' oder ein kleineres Maximum helfen.</p>' : '') +
-    '<div class="pp-ctl"><div class="row"><span class="stack grow" style="gap:1px"><span class="name">Höchstens pro Person</span><span class="sub">Für den ganzen Abend, wird nie überschritten</span></span>' + stepper('setMax', e.max, '', 'Maximum') + '</div>' +
-    '<div class="row"><span class="stack grow" style="gap:1px"><span class="name">Ziel</span><span class="sub">Im Schnitt landet ihr hier: ' + e.target + ' % vom Maximum</span></span>' + stepper('setTarget', Math.round(e.max * e.target / 100), '', 'Ziel') + '</div>' +
-    '<div class="stack" style="gap:8px;padding:6px 0 2px"><span class="name">Einheit</span>' + units + '</div></div></div>';
   var link = '<label class="row mt14 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Gäste per Link einbinden</span><span class="sub">Bei Schätz- und Abstimmfragen</span></span><button type="button" class="switch" role="switch" aria-checked="' + !!c.link + '" data-act="cfgLink" aria-label="Gäste per Link einbinden"><span></span></button></label>';
   var buddy = '<label class="row mt10 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Trinkbuddys</span><span class="sub">Jede Hauptperson wählt jemanden, der mittrinkt. Ab dem ersten gemeinsamen ' + esc(E().unit) + ' hält die Verbindung 1 bis 3 Spiele, das entscheidet die App. Dann wird neu gewählt.</span></span><button type="button" class="switch" role="switch" aria-checked="' + (c.buddy !== false) + '" data-act="cfgBuddy" aria-label="Trinkbuddys"><span></span></button></label>';
   return '<h1 class="h1 mt18">Alles bereit?</h1><p class="small mt6">Tipp eine Zeile an, um sie zu ändern.</p>' + sum +
-    pilot +
     '<span class="eyebrow mt22 block">Extras, wenn ihr wollt</span>' + (isJga() ? '' : crewSetupHtml(c)) + link + buddy +
     factCard('runSetup');
 }
 V.runSetup = function () {
   var c = cfgDefaults(), fam = c.fam, n = cfgStepNow(), running = S.run && !S.run.finished;
-  var body = cfgStepBar(n) + (n === 1 ? cfgStep1(c) : n === 2 ? cfgStep2(c) : cfgStep3(c)) + (UI.cfgErr ? '<p class="err mt14">' + UI.cfgErr + '</p>' : '');
+  var body = cfgStepBar(n) + (n === 1 ? cfgStep1(c) : n === 2 ? cfgStep2(c) : n === 3 ? cfgStep3(c) : cfgStep4(c)) + (UI.cfgErr ? '<p class="err mt14">' + UI.cfgErr + '</p>' : '');
   var back = n > 1 ? '<button type="button" class="btn-dark wz-back" data-act="cfgPrev">' + icon('i-back', 18) + 'Zurück</button>' : '';
   var fwd;
-  if (n < 3) fwd = '<button type="button" class="cta" data-act="cfgNext"' + (cfgWho().length ? '' : ' disabled') + '>Weiter' + icon('i-next', 18) + '</button>';
+  if (n < 4) fwd = '<button type="button" class="cta" data-act="cfgNext"' + (cfgWho().length ? '' : ' disabled') + '>Weiter' + icon('i-next', 18) + '</button>';
   else if (running) fwd = '<button type="button" class="cta" data-act="go" data-to="run">Zum laufenden Spiel</button>';
   else fwd = '<button type="button" class="cta mint wz-go" data-act="cfgSave"' + (cfgWho().length ? '' : ' disabled') + '>' + icon('i-check', 18) + 'Abend speichern</button>';
-  var foot = '<div class="cta-row">' + back + fwd + '</div>' + (n === 3 && running ? '<button type="button" class="btn-ghost" data-act="startRun">Neu starten</button>' : '');
+  var foot = '<div class="cta-row">' + back + fwd + '</div>' + (n === 4 && running ? '<button type="button" class="btn-ghost" data-act="startRun">Neu starten</button>' : '');
   return scr(topbar('home', 'Abend einstellen'), body, foot);
 };
 
@@ -7649,7 +7668,8 @@ function gStage(big) {
   var f = E() ? E().focus : [];
   if (!UI.gBubble) gSay(String(gForm().author || '').trim() ? 'name' : 'hello');
   var b = UI.gBubble, sp = f.filter(function (p) { return p.id === b.who; })[0] || f[0];
-  var size = (f.length > 2 ? 76 : f.length === 2 ? 92 : 112) + (big ? 8 : 0);
+  /* after sending, the ticket is the hero: the stage steps back */
+  var size = big ? (f.length > 2 ? 54 : f.length === 2 ? 68 : 84) : (f.length > 2 ? 76 : f.length === 2 ? 92 : 112);
   var avs = f.map(function (p, i) {
     var talk = sp && p.id === sp.id;
     return '<span class="gav' + (talk ? ' talk' : '') + '" style="--d:' + (-i * 1.3) + 's">' + face(p, size, 'border:4px solid var(--ink);box-sizing:border-box', talk ? b.mood : (b.mood === 'jubel' ? 'jubel' : '')) + '</span>';
@@ -8093,7 +8113,9 @@ function gFinale(head) {
     '<div class="gt-foot"><b>' + (f.n === 1 ? 'Dein Beitrag ist' : 'Deine ' + f.n + ' Beiträge sind') + ' angekommen.</b> Der Spielleiter gibt sie frei. Ob und wann sie drankommen, vielleicht sogar in einem Gästespiel, siehst du heute Abend.<span class="gt-turn">Antippen zum Umdrehen</span></div></div>' +
     '<div class="gt-face gt-back"><div class="gt-top"><span>Rückseite</span><span>' + esc(UI.qSent) + '</span></div><div class="gt-main"><span class="gt-lbl">Das hast du eingereicht</span><div class="gt-kinds">' + kinds + '</div><span class="gt-lvl mt14">Heute Abend gilt: Augen auf! Vielleicht erkennst du deinen Beitrag wieder.</span></div><div class="gt-foot">Antippen zum Zurückdrehen</div></div>' +
     '</div></div>';
-  return scr(head, body, '<button type="button" class="cta" data-act="qAnother">' + icon('i-plus', 18) + 'Noch etwas beitragen</button>' + (UI.guestMode === 'test' ? '<button type="button" class="btn-ghost" data-act="go" data-to="' + UI.guestFrom + '">Fertig</button>' : ''), 'gscr' + (UI.guestMode === 'test' ? ' gtest' : ''));
+  var more = '<button type="button" class="btn-ghost gfin-more" data-act="qAnother">' + icon('i-plus', 16) + 'Noch etwas beitragen</button>';
+  var foot = UI.guestMode === 'test' ? '<div class="cta-row"><button type="button" class="btn-dark gfin-done" data-act="go" data-to="' + UI.guestFrom + '">Fertig</button>' + more + '</div>' : more;
+  return scr(head, body, foot, 'gscr gfin' + (UI.guestMode === 'test' ? ' gtest' : ''));
 }
 
 /* =========================================================
@@ -11124,31 +11146,27 @@ function spTick() {
   }
 }
 /* =========================================================
-   Fegen and putzen: the accessories. The master only says how many.
-   They go from the hardest to the easiest (toothbrush ... broom).
-   Every four minutes the next task carries a chance: whoever makes it
-   may swap to the next accessory, otherwise it is the drink as always.
-   No screen of its own: a hint on the task, a field in the result.
+   Fegen and putzen: the accessories. The master only says how many
+   parts there are; which ones, he knows himself (from the hardest to
+   the easiest). Every four minutes the next task carries a chance:
+   whoever makes it moves on to the next part, otherwise it is the
+   drink as always. No screen of its own: a hint on the task, a field in
+   the result.
    ========================================================= */
 var A = A || {};
-var ACC_MIN = 4;
-var ACC_LADDER = { fegen: ['Zahnbürste', 'Pinsel', 'Spülbürste', 'Staubwedel', 'Handfeger', 'Besen'], putzen: ['Wattestäbchen', 'Zahnbürste', 'Taschentuch', 'Socke', 'Schwamm', 'Lappen'] };
+var ACC_MIN = 4, ACC_MAX = 30;
 var ACC_KINDS = ['spiel', 'schaetzen', 'quiz', 'frage', 'gast', 'menge'];
 function accJob() { var f = E() ? E().focus[0] : null; return f && faOf(f).job === 'putzen' ? 'putzen' : 'fegen'; }
-/* n parts, spread over the ladder: always from the hardest to the easiest */
-function accItems(job, n) {
-  var L = ACC_LADDER[job] || ACC_LADDER.fegen, out = []; n = clamp(n || 4, 2, L.length);
-  for (var k = 0; k < n; k++) out.push(L[Math.round(k * (L.length - 1) / (n - 1))]);
-  return out;
-}
-function accN(c) { return clamp(c.accN || 4, 2, 6); }
+/* n parts, counted: Teil 1 is the hardest, Teil n the easiest */
+function accItems(job, n) { var out = []; n = clamp(n || 4, 1, ACC_MAX); for (var k = 0; k < n; k++) out.push('Teil ' + (k + 1)); return out; }
+function accN(c) { return clamp(c.accN || 4, 1, ACC_MAX); }
+function accPart(r, i) { var n = r && r.acc && r.acc.items ? r.acc.items.length : 0; return 'Teil ' + (i + 1) + (n ? ' von ' + n : ''); }
 function accCountBlock(c) {
-  var items = accItems(accJob(), accN(c));
-  return '<span class="eyebrow mt22 block">Zubehör</span><div class="card pad mt10"><div class="row"><span class="stack grow"><span class="name">Wie viele Teile?</span><span class="sub">Vom schwersten zum leichtesten</span></span>' + stepper('cfgAccN', accN(c), '', 'Zubehörteile') + '</div>' +
-    '<div class="acc-ladder mt10">' + items.map(function (it, i) { return (i ? '<span class="acc-arr" aria-hidden="true">' + icon('i-next', 13) + '</span>' : '') + '<span class="acc-step' + (i ? '' : ' first') + (i === items.length - 1 ? ' last' : '') + '">' + esc(it) + '</span>'; }).join('') + '</div></div>' +
-    '<p class="small mt8">Alle ' + ACC_MIN + ' Minuten wird eine Aufgabe zur Zubehör-Chance: Wer sie schafft, darf zum nächsten Teil greifen. Sonst gibt es das ' + esc(E().unit) + '.</p>';
+  var n = accN(c);
+  return '<span class="eyebrow mt22 block">Zubehör</span><div class="card pad mt10"><div class="row"><span class="stack grow"><span class="name">Wie viele Teile habt ihr?</span><span class="sub">Vom schwersten zum leichtesten, welche, weißt du selbst</span></span>' + stepper('cfgAccN', n, '', 'Zubehörteile') + '</div></div>' +
+    '<p class="small mt8">' + (n < 2 ? 'Mit einem Teil gibt es keinen Wechsel. Ab zwei Teilen wird alle ' + ACC_MIN + ' Minuten eine Aufgabe zur Zubehör-Chance.' : 'Alle ' + ACC_MIN + ' Minuten wird eine Aufgabe zur Zubehör-Chance: Wer sie schafft, greift zum nächsten Teil. Sonst gibt es das ' + esc(E().unit) + '. Die App sagt dir nur, wann das nächste Teil dran ist.') + '</p>';
 }
-A.cfgAccN = function (d) { var c = cfgDefaults(); c.accN = clamp(accN(c) + (+d.d), 2, 6); commit(); };
+A.cfgAccN = function (d) { var c = cfgDefaults(); c.accN = clamp(accN(c) + (+d.d), 1, ACC_MAX); commit(); };
 /* when the next task is drawn: after four minutes it carries the chance */
 function accOffer(r) {
   var P = r && r.pending; if (!P || r.fam !== 'zeit' || P.accWin || P.result || ACC_KINDS.indexOf(P.kind) < 0) return;
@@ -11157,7 +11175,7 @@ function accOffer(r) {
   /* a duel between the people of the same track always has a loser: no chance there */
   if (P.format === 'duell' && P.opp && tr.ids.indexOf(P.opp) >= 0) return;
   if (now() - (r.accAt || r.t0) < ACC_MIN * 60000) return;
-  P.accWin = { track: tr.id, from: items[tr.accIdx], to: items[tr.accIdx + 1], ids: tr.ids.slice() };
+  P.accWin = { track: tr.id, from: accPart(r, tr.accIdx), to: accPart(r, tr.accIdx + 1), ids: tr.ids.slice() };
 }
 /* once the result is there: won means nobody of the track has to drink */
 function accSettle(P) {
@@ -11165,25 +11183,25 @@ function accSettle(P) {
   var tr = trackById(a.track); if (!tr) return;
   var lost = (P.result.rows || []).some(function (x) { return x.pid && a.ids.indexOf(x.pid) >= 0 && x.n > 0 && !x.freed; });
   a.done = true; a.won = !lost; r.accAt = now();
-  if (a.won) { tr.accIdx = Math.min(r.acc.items.length - 1, tr.accIdx + 1); logRun('acc', focusNames(tr.ids) + ': Wechsel gewonnen, jetzt mit ' + a.to); }
+  if (a.won) { tr.accIdx = Math.min(r.acc.items.length - 1, tr.accIdx + 1); logRun('acc', focusNames(tr.ids) + ': Wechsel gewonnen, jetzt ' + a.to); }
   else logRun('info', focusNames(tr.ids) + ': kein Zubehör-Wechsel, weiter mit ' + a.from);
   save();
 }
 function accTaskHtml(P) {
   var a = P && P.accWin; if (!a || P.result) return '';
-  return '<div class="acc-chance"><span class="acc-e">' + icon('i-broom', 20) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>Zubehör-Chance!</b><span>Schafft ' + esc(focusNames(a.ids)) + ' das, geht es mit ' + esc(a.to) + ' statt ' + esc(a.from) + ' weiter. Sonst gibt es das ' + esc(U()) + '.</span></span></div>';
+  return '<div class="acc-chance"><span class="acc-e">' + icon('i-broom', 20) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>Zubehör-Chance!</b><span>Schafft ' + esc(focusNames(a.ids)) + ' das, geht es mit dem nächsten Teil weiter (' + esc(a.to) + '). Sonst gibt es das ' + esc(U()) + '.</span></span></div>';
 }
 function accResultHtml(P) {
   var a = P && P.accWin; if (!a || !a.done) return '';
-  return a.won ? '<div class="acc-res won mt14"><span class="acc-e">' + icon('i-broom', 22) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>Zubehör-Wechsel gewonnen!</b><span>Ab jetzt mit ' + esc(a.to) + ' statt ' + esc(a.from) + '. Einmal laut feiern!</span></span></div>'
+  return a.won ? '<div class="acc-res won mt14"><span class="acc-e">' + icon('i-broom', 22) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>Zubehör-Wechsel gewonnen!</b><span>Ab jetzt ' + esc(a.to) + '. Neues Teil in die Hand, einmal laut feiern!</span></span></div>'
     : '<div class="acc-res mt14"><span class="acc-e">' + icon('i-broom', 22) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>Kein Wechsel diesmal</b><span>Es bleibt bei ' + esc(a.from) + ', dafür gibt es das ' + esc(U()) + '. In ' + ACC_MIN + ' Minuten kommt die nächste Chance.</span></span></div>';
 }
-/* in the cockpit: what is in the hand, when the next chance comes */
+/* in the cockpit: which part is in the hand, when the next chance comes */
 function accRunHtml(r) {
   if (!r || r.fam !== 'zeit' || !r.acc || (r.acc.items || []).length < 2) return '';
   return r.tracks.map(function (tr) {
     var items = r.acc.items, i = Math.min(tr.accIdx, items.length - 1), last = i >= items.length - 1;
-    return '<div class="zc-row"><span class="zc-e acc-ic">' + icon('i-broom', 22) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>' + esc(items[i]) + (r.tracks.length > 1 ? ' · ' + esc(focusNames(tr.ids)) : '') + '</b><span>' + (last ? 'Das leichteste Teil ist erreicht' : 'Nächste Chance auf ' + esc(items[i + 1]) + ' nach') + '</span></span>' + (last ? '' : '<span class="zc-t">' + zt((r.accAt || r.t0) + ACC_MIN * 60000, 'fällig') + '</span>') + '</div>';
+    return '<div class="zc-row"><span class="zc-e acc-ic">' + icon('i-broom', 22) + '</span><span class="stack grow" style="gap:1px;min-width:0"><b>Zubehör: ' + esc(accPart(r, i)) + (r.tracks.length > 1 ? ' · ' + esc(focusNames(tr.ids)) : '') + '</b><span>' + (last ? 'Das letzte Teil ist erreicht' : 'Nächste Chance auf ' + esc(accPart(r, i + 1)) + ' nach') + '</span></span>' + (last ? '' : '<span class="zc-t">' + zt((r.accAt || r.t0) + ACC_MIN * 60000, 'fällig') + '</span>') + '</div>';
   }).join('');
 }
 /* =========================================================
@@ -11935,8 +11953,8 @@ function demoHomeHtml() {
 var DP_INFO = {
   socken: ['Mit 25 noch ledig? Dann hängt ein Kranz voller Socken. Socke für Socke kommt ab, und hinter jeder steckt eine kleine Aufgabe.', ['Socke für Socke', 'Würfel möglich', 'Gäste-Runden'], 'Zum 25. Geburtstag'],
   schachtel: ['Die Variante mit Schachteln: Eine nach der anderen kommt vom Kranz, und jede bringt ihr eigenes Spiel mit.', ['Schachtel für Schachtel', 'Allein oder zu zweit', 'Gäste-Runden'], 'Zum 25. Geburtstag'],
-  treppe: ['Mit 30 noch ledig: Die Treppe wird gefegt, dazwischen gibt es Einlagen. Erst mit der Zahnbürste, mit Glück bald mit dem Besen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen'], 'Zum 30. Geburtstag'],
-  klinke: ['Mit 30 noch ledig: Klinken putzen, dazwischen Einlagen. Erst mit dem Wattestäbchen, mit Glück bald mit dem Lappen.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen'], 'Zum 30. Geburtstag'],
+  treppe: ['Mit 30 noch ledig: Die Treppe wird gefegt, dazwischen gibt es Einlagen. Mit jeder gewonnenen Zubehör-Chance kommt das nächste Teil dran.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen'], 'Zum 30. Geburtstag'],
+  klinke: ['Mit 30 noch ledig: Klinken putzen, dazwischen Einlagen. Mit jeder gewonnenen Zubehör-Chance kommt das nächste Teil dran.', ['Nach Zeit', 'Zubehör-Chancen', 'Einlagen'], 'Zum 30. Geburtstag'],
   geburtstag: ['Geburtstag ohne Kranz und Besen: Runde für Runde Spiele rund um das Geburtstagskind.', ['Runde für Runde', 'Würfel möglich', 'Gäste-Runden'], 'Ohne Kranz und Besen'],
   hochzeit: ['Für Polterabend und Hochzeit: Spiele über das Brautpaar, mit den Geschichten der Gäste.', ['Für das Paar', 'Paar-Duelle', 'Gäste-Runden'], 'Für das Brautpaar'],
   jga: ['Der Junggesellenabschied: Missionen in der Stadt oder drinnen, die Truppe spielt mit.', ['Missionen', 'Mit der Truppe', 'Drinnen oder draußen'], 'Für Braut oder Bräutigam'],
@@ -12402,7 +12420,7 @@ A.freeMain = function (d) {
 A.openRun = function () { if (S.run && !S.run.finished) { go(S.run.pending ? 'step' : 'run'); return; } cfgDefaults(); UI.cfgErr = ''; UI.cfgStep = 1; go('runSetup'); };
 /* the setup steps: forward only when the first step is complete */
 function cfgGoStep(n) {
-  n = Math.max(1, Math.min(3, n));
+  n = Math.max(1, Math.min(4, n));
   var block = n > 1 ? cfgBlock() : '';
   if (block) { UI.cfgStep = 1; UI.cfgErr = block; render(); return; }
   UI.cfgErr = ''; UI.cfgStep = n; render();
