@@ -55,7 +55,7 @@ const typing = (c, on) => { c.document.activeElement = on ? { tagName: 'INPUT' }
   ok(/Es gibt noch mehr Karten/.test(c.gkPanelHtml(c.UI.gk)), 'The card says there are more, without showing them');
   c.UI.gk = null;
   c.UI.guestMode = ''; c.go('questions'); h = c.V.questions();
-  ok((h.match(/class="qp-f[ "]/g) || []).length >= 5 && /class="qo-t lock"/.test(h) && /gibt es mit dem Game Pass/.test(h) && /pc-shelf locked/.test(h), 'Master page: the kinds as filters, the rest locked, the KI and the cards behind the pass');
+  ok((h.match(/class="qp-f[ "]/g) || []).length >= 5 && /class="qo-t lock"/.test(h) && /gibt es mit dem Game Pass/.test(h) && /class="pc-shelf"/.test(h) && /mit dem Game Pass./.test(h), 'Master page: the kinds as filters, the rest locked, the KI and the cards behind the pass');
   c.go('games'); h = c.V.games();
   ok((h.match(/gtile gm-t dlk/g) || []).length === 4, 'Spiele: four tiles locked');
   c.A.freeQuick({ v: 'quiz' }); ok(c.UI.screen === 'pass', 'A locked game leads to the Game Pass');

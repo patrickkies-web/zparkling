@@ -147,20 +147,13 @@ function artGames() {
     return '<div class="t-gc" style="--c:' + c.c + ';--i:' + i + ';--dl:' + [0, -6, -4, -2][i] + 's"><span class="t-gc-k">' + icon('i-users', 15) + 'Gäste-Runde</span><b class="t-gc-t">' + esc(c.t) + '</b>' + c.v + by(c.by) + '</div>';
   }).join('') + '</div>';
 }
-var REEL_A = [['sock', 'Sockenkranz'], ['i-broom', 'Treppe fegen'], ['i-dice', 'Spielabend'], ['i-trophy', 'Hochzeit'], ['i-sparkle', 'Klinken putzen'], ['i-box', 'Schachtelkranz'], ['i-cup', 'Junggesellenabschied'], ['i-star', 'Geburtstag']];
-var REEL_B = [['sock', 'Stück für Stück'], ['i-clock', 'Nach Zeit'], ['i-dice', 'Würfeln'], ['i-flag', 'Runde für Runde'], ['i-ruler', 'Meter für Meter']];
-var REEL_C = [['i-users', 'Gemeinsam'], ['i-flag', 'Gegeneinander'], ['i-users', 'Gemeinsam'], ['i-flag', 'Gegeneinander']];
-function reelStrip(list, stops) {
-  /* stops: indexes into list, the first one again at the end; three blur items between two stops */
-  var out = [], k = 0;
-  stops.forEach(function (s, i) { out.push(list[s]); if (i < stops.length - 1) for (var f = 0; f < 3; f++) { k++; out.push(list[(s + f + 1 + k) % list.length]); } });
-  return out.map(function (x) { return '<span class="t-ri">' + (x[0] === 'sock' ? sockIc('#15122B', 14) : icon(x[0], 20)) + '<b>' + esc(x[1]) + '</b></span>'; }).join('');
-}
+/* every occasion as a ticket, dealt onto the stage one after the other, like the choice in the app */
+var TOUR_OCC = ['socken', 'treppe', 'geburtstag', 'jga', 'party'];
 function artModes() {
-  var rows = [['Anlass', reelStrip(REEL_A, [0, 1, 2, 3, 0])], ['Spielart', reelStrip(REEL_B, [0, 1, 2, 3, 0])], ['Wie', reelStrip(REEL_C, [0, 1, 1, 0, 0])]];
-  return '<div class="t-slot"><div class="t-sl-top"><span class="t-bulbs" aria-hidden="true">' + new Array(9).join('<i></i>') + '</span><b>Euer Abend</b></div>' +
-    rows.map(function (r, i) { return '<span class="t-sl-l">' + r[0] + '</span><div class="t-win"><div class="t-strip" style="--k:' + i + '">' + r[1] + '</div></div>'; }).join('') +
-    '<span class="t-lever" aria-hidden="true"><i></i></span></div>';
+  var list = TOUR_OCC.map(function (id) { return EVENT_TYPES.filter(function (t) { return t.id === id; })[0]; }).filter(Boolean);
+  return '<div class="t-tkdeck">' + list.map(function (t, i) {
+    return '<div class="t-tk" style="--c:' + t.bg + ';--i:' + i + '"><span class="t-tk-art">' + (t.ic === 'sock' ? sockIc('#15122B', 20) : icon(t.ic, 24)) + '</span><span class="t-tk-t"><small>' + esc((DP_INFO[t.id] || [0, 0, t.sub])[2] || t.sub) + '</small><b>' + esc(t.label) + '</b></span><span class="t-tk-x">' + icon('i-check', 14) + '</span></div>';
+  }).join('') + '</div>';
 }
 function artDials() {
   var hand = '<svg class="t-hand" viewBox="0 0 44 56" width="40" height="51" aria-hidden="true"><path d="M12.5 2c2.5 0 4.5 2 4.5 4.5V22h1.5c.3-2 2-3.5 4-3.5s3.7 1.5 4 3.5h.5c.6-1.7 2.2-3 4-3s3.5 1.3 4 3c.7-1 1.9-1.7 3.2-1.7 2.2 0 4 1.8 4 4V38c0 8-6 14-14 14h-4c-6 0-10.5-3-13.5-8L3 33c-1.2-2-.6-4.6 1.4-5.8 1.9-1.1 4.3-.6 5.6 1.1L8 30V6.5C8 4 10 2 12.5 2z" fill="#FFFFFF" stroke="#15122B" stroke-width="2.6" stroke-linejoin="round"/><path d="M17 22v8M25.5 22v8M33.5 23v7" stroke="#15122B" stroke-width="2" stroke-linecap="round"/></svg>';
