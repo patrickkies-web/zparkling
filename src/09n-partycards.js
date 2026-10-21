@@ -339,14 +339,54 @@ function gClosedView() {
 /* ---------- printing ---------- */
 function printCards() { var out = []; PC_KINDS.forEach(function (t) { pcAll(t).forEach(function (q) { if (q.status === 'ok' && !q.used) out.push(q); }); }); return out; }
 function pcLogo() { return '<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#FF7A45"></rect><g transform="translate(6.5 6.3) scale(.95)"><path d="M8 2H28V31L35 38C39.5 42.5 38 50.5 31.5 51.5C28.5 52 25.5 51 23 48.5L11 36.5C9 34.5 8 32 8 29Z" fill="#15122B"></path></g><path d="M48 5Q49.6 12.4 57 14Q49.6 15.6 48 23Q46.4 15.6 39 14Q46.4 12.4 48 5Z" fill="#FFC940" stroke="#15122B" stroke-width="2.2" stroke-linejoin="round"></path></svg>'; }
+/* The card's colours are drawn as SVG shapes, not as CSS backgrounds. Browsers
+   drop backgrounds when printing unless „Hintergrundgrafiken“ is on (Safari
+   has no such switch at all), and a card of white text on white paper looks
+   see-through. Shapes are content and print everywhere. The card is 63 × 88
+   in every size, so one viewBox in tenths of a millimetre fits them all. */
+var PC_INK = {
+  joker: { f: [135, [['#FF6FD8', 0], ['#FFC940', .3], ['#6FE3FF', .6], ['#9886FF', .8], ['#FF6FD8', 1]]], p: ['#3E3488', '#1D1A40', '#141130'], c: '#FF9BE6', a: '#FFD3F3', g: '#FF6FD8', r: '#5A4A70' },
+  weiter: { f: [120, [['#FDFEFF', 0], ['#C6CFDA', .16], ['#8C98A8', .32], ['#F2F5F9', .48], ['#9AA6B5', .64], ['#FFFFFF', .8], ['#B4BEC9', 1]]], p: ['#56627A', '#2A3142', '#1A1F2B'], c: '#E2E9F1', a: '#DCE3EC', g: '#E2E9F1', r: '#5E6677', sh: [[.26, 0], [.42, .2], [.52, 0], [.64, .1], [.72, 0]] },
+  regel: { f: [135, [['#FF7A45', 0], ['#FFC940', .5], ['#FF5A5A', 1]]], p: ['#3E3488', '#1D1A40', '#141130'], c: '#FFB27A', a: '#FFD9B8', g: '#FF7A45', r: '#5C4A62' }
+};
+var pcSeq = 0;
+/* a CSS-style angled gradient (0deg up, 90deg right) over the box x,y,w,h, in user units */
+function pcLin(id, deg, stops, x, y, w, h) {
+  var a = deg * Math.PI / 180, dx = Math.sin(a), dy = -Math.cos(a), L = Math.abs(w * dx) + Math.abs(h * dy), cx = x + w / 2, cy = y + h / 2, r = function (v) { return Math.round(v * 10) / 10; };
+  return '<linearGradient id="' + id + '" gradientUnits="userSpaceOnUse" x1="' + r(cx - dx * L / 2) + '" y1="' + r(cy - dy * L / 2) + '" x2="' + r(cx + dx * L / 2) + '" y2="' + r(cy + dy * L / 2) + '">' +
+    stops.map(function (s) { return '<stop offset="' + s[1] + '" stop-color="' + s[0] + '"' + (s[2] != null ? ' stop-opacity="' + s[2] + '"' : '') + '></stop>'; }).join('') + '</linearGradient>';
+}
+/* frame, dark panel, dots and shine; ids are per card, a gradient inside a hidden card would not resolve */
+function pcBgSvg(t, n) {
+  var k = PC_INK[t] || PC_INK.joker, F = 24.7, pw = 630 - 2 * F, ph = 880 - 2 * F, sh = k.sh || [[.32, 0], [.44, .13], [.56, 0]];
+  var panel = function (fill) { return '<rect x="' + F + '" y="' + F + '" width="' + pw + '" height="' + ph + '" rx="26" fill="' + fill + '"></rect>'; };
+  return '<svg class="pc-bg" viewBox="0 0 630 880" preserveAspectRatio="none" aria-hidden="true"><defs>' +
+    pcLin(n + 'f', k.f[0], k.f[1], 0, 0, 630, 880) +
+    '<radialGradient id="' + n + 'p" cx=".5" cy="0" r="1" gradientTransform="translate(.5 0) scale(1.2 .7) translate(-.5 0)"><stop offset="0" stop-color="' + k.p[0] + '"></stop><stop offset=".62" stop-color="' + k.p[1] + '"></stop><stop offset="1" stop-color="' + k.p[2] + '"></stop></radialGradient>' +
+    '<pattern id="' + n + 'd" width="28.6" height="28.6" patternUnits="userSpaceOnUse"><circle cx="14.3" cy="14.3" r="2.1" fill="#FFFFFF" fill-opacity=".09"></circle></pattern>' +
+    pcLin(n + 's', 115, sh.map(function (s) { return ['#FFFFFF', s[0], s[1]]; }), F, F, pw, ph) + '</defs>' +
+    '<rect width="630" height="880" rx="39" fill="url(#' + n + 'f)"></rect>' + panel('url(#' + n + 'p)') + panel('url(#' + n + 'd)') + panel('url(#' + n + 's)') + '</svg>';
+}
+/* the emblem's disc with its glow and thin ring. The ring is a solid colour and
+   comes last: a translucent stroke right before a gradient fill made poppler
+   (Linux print filters) draw the disc with the stroke's alpha */
+function pcArtSvg(t, n) {
+  var k = PC_INK[t] || PC_INK.joker;
+  return '<svg class="pc-f pc-fa" viewBox="0 0 100 100" aria-hidden="true"><defs>' +
+    '<radialGradient id="' + n + 'g"><stop offset=".55" stop-color="' + k.g + '" stop-opacity=".5"></stop><stop offset="1" stop-color="' + k.g + '" stop-opacity="0"></stop></radialGradient>' +
+    '<radialGradient id="' + n + 'a" cx=".35" cy=".3" r=".955"><stop offset="0" stop-color="#FFFFFF"></stop><stop offset=".72" stop-color="' + k.a + '"></stop></radialGradient></defs>' +
+    '<circle cx="50" cy="50" r="78" fill="url(#' + n + 'g)"></circle><circle cx="50" cy="50" r="50" fill="url(#' + n + 'a)"></circle><circle cx="50" cy="50" r="51.3" fill="none" stroke="' + k.r + '" stroke-width="2.6"></circle></svg>';
+}
+/* a plain fill behind a chip or box; the element's own border-radius clips it */
+function pcFill(color, op) { return '<svg class="pc-f" viewBox="0 0 10 10" preserveAspectRatio="none" aria-hidden="true"><rect width="10" height="10" fill="' + color + '"' + (op != null ? ' fill-opacity="' + op + '"' : '') + '></rect></svg>'; }
 function pcCardHtml(q, big) {
-  var t = q.type, e = E(), date = typeof gWelcomeDate === 'function' ? gWelcomeDate() : '';
-  return '<div class="pc pc-' + t + (big ? ' big' : '') + '"><div class="pc-in">' +
-    '<div class="pc-top"><span class="pc-chip">' + esc(t === 'weiter' ? 'Silber' : t === 'regel' ? 'Regel' : 'Joker') + '</span><span class="pc-brand">' + pcLogo() + 'zparkling</span></div>' +
-    '<div class="pc-art"><span class="pc-ring"></span>' + emb(GQ_STYLE[t].e, 60) + '</div>' +
+  var t = q.type, e = E(), date = typeof gWelcomeDate === 'function' ? gWelcomeDate() : '', k = PC_INK[t] || PC_INK.joker, n = 'pc' + (++pcSeq) + '-';
+  return '<div class="pc pc-' + t + (big ? ' big' : '') + '">' + pcBgSvg(t, n) + '<div class="pc-in">' +
+    '<div class="pc-top"><span class="pc-chip">' + pcFill(k.c) + '<span>' + esc(t === 'weiter' ? 'Silber' : t === 'regel' ? 'Regel' : 'Joker') + '</span></span><span class="pc-brand">' + pcLogo() + 'zparkling</span></div>' +
+    '<div class="pc-art">' + pcArtSvg(t, n) + '<span class="pc-ring"></span>' + emb(GQ_STYLE[t].e, 60) + '</div>' +
     '<span class="pc-k">Bonuskarte</span><b class="pc-t">' + esc(pcTitle(t)) + '</b><p class="pc-x">' + esc(pcText(t)) + '</p>' +
     (t === 'joker' && q.text ? '<p class="pc-cond">Bedingung: ' + esc(q.text) + '</p>' : '') +
-    '<div class="pc-for"><span>Für</span><b>' + esc(q.author) + '</b></div>' +
+    '<div class="pc-for">' + pcFill('#FFFFFF', .08) + '<span>Für</span><b>' + esc(q.author) + '</b></div>' +
     '<div class="pc-foot"><span>' + esc(e && e.name ? e.name : focusNames()) + '</span><span>' + esc(date) + '</span></div></div></div>';
 }
 function printBlock() {
@@ -357,11 +397,11 @@ function printBlock() {
   var seg = '<div class="seg mt10" style="grid-template-columns:repeat(2,minmax(0,1fr));height:48px" role="group" aria-label="Format">' + [['karte', 'Spielkarte'], ['a4', 'A4, eine pro Seite']].map(function (x) { var s = fmt === x[0]; return '<button type="button" class="' + (s ? 'is-sel' : '') + '" data-act="prFmt" data-v="' + x[0] + '" aria-pressed="' + s + '">' + x[1] + '</button>'; }).join('') + '</div>';
   var pick = list.map(function (q) { var on = !sel[q.id]; return '<button type="button" class="pr-pick' + (on ? ' on' : '') + '" data-act="prToggle" data-id="' + q.id + '" aria-pressed="' + on + '"><span class="pr-box">' + (on ? icon('i-check', 14) : '') + '</span>' + emb(GQ_STYLE[q.type].e, 24) + '<span class="grow"><b>' + esc(pcName(q.type)) + '</b> für ' + esc(q.author) + '</span></button>'; }).join('');
   var prev = list.filter(function (q) { return !sel[q.id]; }).slice(0, 6).map(function (q) { return '<div class="pr-cell">' + pcCardHtml(q, false) + '</div>'; }).join('');
-  return '<span class="eyebrow mt18 block">Drucken</span><p class="small mt6">' + (fmt === 'a4' ? 'Jede Karte groß auf einer eigenen A4-Seite, zum Überreichen.' : 'Neun Karten pro A4-Blatt in Spielkartengröße (63 × 88 mm), zum Ausschneiden.') + '</p>' + seg +
+  return '<span class="eyebrow mt18 block">Drucken</span><p class="small mt6">' + (fmt === 'a4' ? 'Jede Karte groß auf einer eigenen A4-Seite, zum Überreichen.' : 'Bis zu neun Karten pro A4-Blatt in Spielkartengröße (63 × 88 mm), zum Ausschneiden.') + '</p>' + seg +
     '<div class="pr-picks mt10">' + pick + '</div>' +
     (prev ? '<div class="pr-prev mt14' + (fmt === 'a4' ? ' a4' : '') + '">' + prev + '</div>' : '') +
     '<button type="button" class="cta mt14" data-act="prGo"' + (n ? '' : ' disabled') + '>' + icon('i-print', 18) + (n === 1 ? 'Eine Karte drucken' : n + ' Karten drucken') + '</button>' +
-    '<p class="small mt8">Im Druckdialog „Hintergrundgrafiken“ einschalten, damit die Farben mitkommen. Als PDF speichern geht dort auch.</p>' + collectCloseHtml();
+    '<p class="small mt8">Die Farben kommen ohne weitere Einstellung mit. Als PDF speichern geht im Druckdialog auch.</p>' + collectCloseHtml();
 }
 A.prFmt = function (d) { UI.prFmt = d.v === 'a4' ? 'a4' : 'karte'; render(); };
 A.prToggle = function (d) { UI.prOff = UI.prOff || {}; UI.prOff[d.id] = !UI.prOff[d.id]; render(); };

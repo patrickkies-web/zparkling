@@ -2349,33 +2349,34 @@ body.desk .toast { bottom: 40px; }
 .pr-prev.a4 { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
 .pr-prev.a4 .pc { font-size: 2.1mm; width: 50.9mm; height: 71.1mm; }
 /* ---------- the printed cards (the same look as the bonus cards) ---------- */
-.pc { position: relative; width: 63mm; height: 88mm; box-sizing: border-box; padding: .95em; border-radius: 1.5em; font-size: 2.6mm; font-family: var(--body); color: #FFFFFF; background: var(--pcf); -webkit-print-color-adjust: exact; print-color-adjust: exact; flex: 0 0 auto; box-shadow: 0 .5em 1.4em rgba(21,18,43,.25); }
+.pc { position: relative; width: 63mm; height: 88mm; box-sizing: border-box; padding: .95em; border-radius: 1.5em; font-size: 2.6mm; font-family: var(--body); color: #FFFFFF; -webkit-print-color-adjust: exact; print-color-adjust: exact; flex: 0 0 auto; box-shadow: 0 .5em 1.4em rgba(21,18,43,.25); }
 .pc * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .pc.big { width: 170mm; height: 237.5mm; font-size: 7.02mm; }
-.pc-in { position: relative; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; padding: .9em 1em .8em; border-radius: 1em; overflow: hidden; background: radial-gradient(120% 70% at 50% 0%, #3E3488, #1D1A40 62%, #141130); }
-.pc-in::before { content: ''; position: absolute; inset: 0; background: radial-gradient(rgba(255,255,255,.09) .07em, transparent .1em) 0 0 / 1.1em 1.1em; pointer-events: none; }
-.pc-in::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,.13) 44%, transparent 56%); pointer-events: none; }
+/* the colours are SVG shapes (see pcBgSvg): they print with „Hintergrundgrafiken“ off, CSS backgrounds do not */
+.pc-bg, .pc-f { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.pc-fa { overflow: visible; }
+.pc-in { position: relative; z-index: 1; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; padding: .9em 1em .8em; border-radius: 1em; overflow: hidden; }
 .pc-top { position: relative; z-index: 1; align-self: stretch; display: flex; align-items: center; justify-content: space-between; }
-.pc-chip { padding: .28em .85em; border-radius: 99em; background: var(--pcc); color: #15122B; font: 800 .78em var(--display); }
+.pc-chip { position: relative; overflow: hidden; display: inline-flex; padding: .28em .85em; border-radius: 99em; color: #15122B; font: 800 .78em var(--display); }
+.pc-chip > span { position: relative; }
 .pc-brand { display: inline-flex; align-items: center; gap: .35em; font: 800 .72em var(--display); color: rgba(255,255,255,.78); }
 .pc-brand svg { width: 1.55em; height: 1.55em; }
-.pc-art { position: relative; z-index: 1; margin: 1.1em 0 .7em; width: 8.6em; height: 8.6em; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 35% 30%, #FFFFFF, var(--pca) 72%); box-shadow: 0 0 0 .22em rgba(255,255,255,.14), 0 0 2.2em var(--pcg); }
+.pc-art { position: relative; z-index: 1; margin: 1.1em 0 .7em; width: 8.6em; height: 8.6em; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 .pc-ring { position: absolute; inset: -.55em; border-radius: 50%; border: .14em dashed var(--pcc); opacity: .7; }
-.pc-art svg { width: 5.8em; height: 5.8em; }
+.pc-art svg { position: relative; width: 5.8em; height: 5.8em; }
+.pc-art .pc-f { position: absolute; width: 100%; height: 100%; }
 .pc-k { position: relative; z-index: 1; font: 800 .66em var(--display); letter-spacing: .1em; color: var(--pcc); }
 .pc-t { position: relative; z-index: 1; margin-top: .2em; font: 900 1.95em/1.05 var(--display); letter-spacing: -0.02em; }
 .pc-x { position: relative; z-index: 1; margin: .6em 0 0; font-size: .88em; line-height: 1.35; font-weight: 600; color: rgba(255,255,255,.84); }
 .pc-cond { position: relative; z-index: 1; margin: .45em 0 0; font-size: .74em; font-weight: 800; color: var(--pcc); }
-.pc-for { position: relative; z-index: 1; margin-top: auto; align-self: stretch; display: flex; flex-direction: column; align-items: center; padding: .45em .6em .5em; border-radius: .9em; background: rgba(255,255,255,.08); border: .12em dashed rgba(255,255,255,.32); }
-.pc-for span { font-size: .68em; font-weight: 800; color: rgba(255,255,255,.7); }
-.pc-for b { font: 900 1.65em/1.1 var(--display); color: var(--pcc); overflow-wrap: anywhere; }
+.pc-for { position: relative; z-index: 1; overflow: hidden; margin-top: auto; align-self: stretch; display: flex; flex-direction: column; align-items: center; padding: .45em .6em .5em; border-radius: .9em; border: .12em dashed rgba(255,255,255,.32); }
+.pc-for span { position: relative; font-size: .68em; font-weight: 800; color: rgba(255,255,255,.7); }
+.pc-for b { position: relative; font: 900 1.65em/1.1 var(--display); color: var(--pcc); overflow-wrap: anywhere; }
 .pc-foot { position: relative; z-index: 1; align-self: stretch; display: flex; justify-content: space-between; gap: .6em; margin-top: .55em; font-size: .6em; font-weight: 700; color: rgba(255,255,255,.62); }
 .pc-foot span:first-child { text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pc-joker { --pcf: linear-gradient(135deg, #FF6FD8, #FFC940 30%, #6FE3FF 60%, #9886FF 80%, #FF6FD8); --pcc: #FF9BE6; --pca: #FFD3F3; --pcg: rgba(255,111,216,.55); }
-.pc-weiter { --pcf: linear-gradient(120deg, #FDFEFF 0%, #C6CFDA 16%, #8C98A8 32%, #F2F5F9 48%, #9AA6B5 64%, #FFFFFF 80%, #B4BEC9 100%); --pcc: #E2E9F1; --pca: #DCE3EC; --pcg: rgba(226,233,241,.5); }
-.pc-weiter .pc-in { background: radial-gradient(120% 70% at 50% 0%, #56627A, #2A3142 62%, #1A1F2B); }
-.pc-weiter .pc-in::after { background: linear-gradient(115deg, transparent 26%, rgba(255,255,255,.2) 42%, transparent 52%, rgba(255,255,255,.1) 64%, transparent 72%); }
-.pc-regel { --pcf: linear-gradient(135deg, #FF7A45, #FFC940 50%, #FF5A5A); --pcc: #FFB27A; --pca: #FFD9B8; --pcg: rgba(255,122,69,.55); }
+.pc-joker { --pcc: #FF9BE6; }
+.pc-weiter { --pcc: #E2E9F1; }
+.pc-regel { --pcc: #FFB27A; }
 #zpPrint { display: none; }
 @media print {
   @page { size: A4 portrait; margin: 0; }
@@ -2383,12 +2384,15 @@ body.desk .toast { bottom: 40px; }
   html, body { height: auto !important; overflow: visible !important; background: #FFFFFF !important; }
   body > *:not(#zpPrint) { display: none !important; }
   #zpPrint { display: block !important; }
-  .pp-page { width: 210mm; height: 296mm; box-sizing: border-box; display: flex; align-items: center; justify-content: center; overflow: hidden; break-after: page; page-break-after: always; }
+  /* no fixed page box: a browser that keeps its own margins (Safari ignores @page) would spill it onto a second sheet */
+  .pp-page { display: block; width: 100%; box-sizing: border-box; padding: 9mm 0 0; break-after: page; page-break-after: always; }
   .pp-page:last-child { break-after: auto; page-break-after: auto; }
-  .pp-grid { display: grid; grid-template-columns: repeat(3, 63mm); grid-auto-rows: 88mm; gap: 3mm; align-content: center; justify-content: center; }
-  .pp-cut { position: relative; }
+  .pp-one { padding-top: 14mm; }
+  .pp-grid { display: grid; grid-template-columns: repeat(auto-fit, 63mm); gap: 3mm; justify-content: center; }
+  .pp-cut { position: relative; break-inside: avoid; page-break-inside: avoid; }
   .pp-cut::after { content: ''; position: absolute; inset: -.6mm; border: .2mm dashed #B8B3C9; border-radius: 4.5mm; }
   .pc { box-shadow: none; }
+  .pc.big { margin: 0 auto; }
 }
 @media (prefers-reduced-motion: reduce) { .r-wei .gk-front, .r-reg .gk-front, .bd-glasses { animation: none !important; } }
 body.desk .dk-cards { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
@@ -10264,14 +10268,54 @@ function gClosedView() {
 /* ---------- printing ---------- */
 function printCards() { var out = []; PC_KINDS.forEach(function (t) { pcAll(t).forEach(function (q) { if (q.status === 'ok' && !q.used) out.push(q); }); }); return out; }
 function pcLogo() { return '<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#FF7A45"></rect><g transform="translate(6.5 6.3) scale(.95)"><path d="M8 2H28V31L35 38C39.5 42.5 38 50.5 31.5 51.5C28.5 52 25.5 51 23 48.5L11 36.5C9 34.5 8 32 8 29Z" fill="#15122B"></path></g><path d="M48 5Q49.6 12.4 57 14Q49.6 15.6 48 23Q46.4 15.6 39 14Q46.4 12.4 48 5Z" fill="#FFC940" stroke="#15122B" stroke-width="2.2" stroke-linejoin="round"></path></svg>'; }
+/* The card's colours are drawn as SVG shapes, not as CSS backgrounds. Browsers
+   drop backgrounds when printing unless „Hintergrundgrafiken“ is on (Safari
+   has no such switch at all), and a card of white text on white paper looks
+   see-through. Shapes are content and print everywhere. The card is 63 × 88
+   in every size, so one viewBox in tenths of a millimetre fits them all. */
+var PC_INK = {
+  joker: { f: [135, [['#FF6FD8', 0], ['#FFC940', .3], ['#6FE3FF', .6], ['#9886FF', .8], ['#FF6FD8', 1]]], p: ['#3E3488', '#1D1A40', '#141130'], c: '#FF9BE6', a: '#FFD3F3', g: '#FF6FD8', r: '#5A4A70' },
+  weiter: { f: [120, [['#FDFEFF', 0], ['#C6CFDA', .16], ['#8C98A8', .32], ['#F2F5F9', .48], ['#9AA6B5', .64], ['#FFFFFF', .8], ['#B4BEC9', 1]]], p: ['#56627A', '#2A3142', '#1A1F2B'], c: '#E2E9F1', a: '#DCE3EC', g: '#E2E9F1', r: '#5E6677', sh: [[.26, 0], [.42, .2], [.52, 0], [.64, .1], [.72, 0]] },
+  regel: { f: [135, [['#FF7A45', 0], ['#FFC940', .5], ['#FF5A5A', 1]]], p: ['#3E3488', '#1D1A40', '#141130'], c: '#FFB27A', a: '#FFD9B8', g: '#FF7A45', r: '#5C4A62' }
+};
+var pcSeq = 0;
+/* a CSS-style angled gradient (0deg up, 90deg right) over the box x,y,w,h, in user units */
+function pcLin(id, deg, stops, x, y, w, h) {
+  var a = deg * Math.PI / 180, dx = Math.sin(a), dy = -Math.cos(a), L = Math.abs(w * dx) + Math.abs(h * dy), cx = x + w / 2, cy = y + h / 2, r = function (v) { return Math.round(v * 10) / 10; };
+  return '<linearGradient id="' + id + '" gradientUnits="userSpaceOnUse" x1="' + r(cx - dx * L / 2) + '" y1="' + r(cy - dy * L / 2) + '" x2="' + r(cx + dx * L / 2) + '" y2="' + r(cy + dy * L / 2) + '">' +
+    stops.map(function (s) { return '<stop offset="' + s[1] + '" stop-color="' + s[0] + '"' + (s[2] != null ? ' stop-opacity="' + s[2] + '"' : '') + '></stop>'; }).join('') + '</linearGradient>';
+}
+/* frame, dark panel, dots and shine; ids are per card, a gradient inside a hidden card would not resolve */
+function pcBgSvg(t, n) {
+  var k = PC_INK[t] || PC_INK.joker, F = 24.7, pw = 630 - 2 * F, ph = 880 - 2 * F, sh = k.sh || [[.32, 0], [.44, .13], [.56, 0]];
+  var panel = function (fill) { return '<rect x="' + F + '" y="' + F + '" width="' + pw + '" height="' + ph + '" rx="26" fill="' + fill + '"></rect>'; };
+  return '<svg class="pc-bg" viewBox="0 0 630 880" preserveAspectRatio="none" aria-hidden="true"><defs>' +
+    pcLin(n + 'f', k.f[0], k.f[1], 0, 0, 630, 880) +
+    '<radialGradient id="' + n + 'p" cx=".5" cy="0" r="1" gradientTransform="translate(.5 0) scale(1.2 .7) translate(-.5 0)"><stop offset="0" stop-color="' + k.p[0] + '"></stop><stop offset=".62" stop-color="' + k.p[1] + '"></stop><stop offset="1" stop-color="' + k.p[2] + '"></stop></radialGradient>' +
+    '<pattern id="' + n + 'd" width="28.6" height="28.6" patternUnits="userSpaceOnUse"><circle cx="14.3" cy="14.3" r="2.1" fill="#FFFFFF" fill-opacity=".09"></circle></pattern>' +
+    pcLin(n + 's', 115, sh.map(function (s) { return ['#FFFFFF', s[0], s[1]]; }), F, F, pw, ph) + '</defs>' +
+    '<rect width="630" height="880" rx="39" fill="url(#' + n + 'f)"></rect>' + panel('url(#' + n + 'p)') + panel('url(#' + n + 'd)') + panel('url(#' + n + 's)') + '</svg>';
+}
+/* the emblem's disc with its glow and thin ring. The ring is a solid colour and
+   comes last: a translucent stroke right before a gradient fill made poppler
+   (Linux print filters) draw the disc with the stroke's alpha */
+function pcArtSvg(t, n) {
+  var k = PC_INK[t] || PC_INK.joker;
+  return '<svg class="pc-f pc-fa" viewBox="0 0 100 100" aria-hidden="true"><defs>' +
+    '<radialGradient id="' + n + 'g"><stop offset=".55" stop-color="' + k.g + '" stop-opacity=".5"></stop><stop offset="1" stop-color="' + k.g + '" stop-opacity="0"></stop></radialGradient>' +
+    '<radialGradient id="' + n + 'a" cx=".35" cy=".3" r=".955"><stop offset="0" stop-color="#FFFFFF"></stop><stop offset=".72" stop-color="' + k.a + '"></stop></radialGradient></defs>' +
+    '<circle cx="50" cy="50" r="78" fill="url(#' + n + 'g)"></circle><circle cx="50" cy="50" r="50" fill="url(#' + n + 'a)"></circle><circle cx="50" cy="50" r="51.3" fill="none" stroke="' + k.r + '" stroke-width="2.6"></circle></svg>';
+}
+/* a plain fill behind a chip or box; the element's own border-radius clips it */
+function pcFill(color, op) { return '<svg class="pc-f" viewBox="0 0 10 10" preserveAspectRatio="none" aria-hidden="true"><rect width="10" height="10" fill="' + color + '"' + (op != null ? ' fill-opacity="' + op + '"' : '') + '></rect></svg>'; }
 function pcCardHtml(q, big) {
-  var t = q.type, e = E(), date = typeof gWelcomeDate === 'function' ? gWelcomeDate() : '';
-  return '<div class="pc pc-' + t + (big ? ' big' : '') + '"><div class="pc-in">' +
-    '<div class="pc-top"><span class="pc-chip">' + esc(t === 'weiter' ? 'Silber' : t === 'regel' ? 'Regel' : 'Joker') + '</span><span class="pc-brand">' + pcLogo() + 'zparkling</span></div>' +
-    '<div class="pc-art"><span class="pc-ring"></span>' + emb(GQ_STYLE[t].e, 60) + '</div>' +
+  var t = q.type, e = E(), date = typeof gWelcomeDate === 'function' ? gWelcomeDate() : '', k = PC_INK[t] || PC_INK.joker, n = 'pc' + (++pcSeq) + '-';
+  return '<div class="pc pc-' + t + (big ? ' big' : '') + '">' + pcBgSvg(t, n) + '<div class="pc-in">' +
+    '<div class="pc-top"><span class="pc-chip">' + pcFill(k.c) + '<span>' + esc(t === 'weiter' ? 'Silber' : t === 'regel' ? 'Regel' : 'Joker') + '</span></span><span class="pc-brand">' + pcLogo() + 'zparkling</span></div>' +
+    '<div class="pc-art">' + pcArtSvg(t, n) + '<span class="pc-ring"></span>' + emb(GQ_STYLE[t].e, 60) + '</div>' +
     '<span class="pc-k">Bonuskarte</span><b class="pc-t">' + esc(pcTitle(t)) + '</b><p class="pc-x">' + esc(pcText(t)) + '</p>' +
     (t === 'joker' && q.text ? '<p class="pc-cond">Bedingung: ' + esc(q.text) + '</p>' : '') +
-    '<div class="pc-for"><span>Für</span><b>' + esc(q.author) + '</b></div>' +
+    '<div class="pc-for">' + pcFill('#FFFFFF', .08) + '<span>Für</span><b>' + esc(q.author) + '</b></div>' +
     '<div class="pc-foot"><span>' + esc(e && e.name ? e.name : focusNames()) + '</span><span>' + esc(date) + '</span></div></div></div>';
 }
 function printBlock() {
@@ -10282,11 +10326,11 @@ function printBlock() {
   var seg = '<div class="seg mt10" style="grid-template-columns:repeat(2,minmax(0,1fr));height:48px" role="group" aria-label="Format">' + [['karte', 'Spielkarte'], ['a4', 'A4, eine pro Seite']].map(function (x) { var s = fmt === x[0]; return '<button type="button" class="' + (s ? 'is-sel' : '') + '" data-act="prFmt" data-v="' + x[0] + '" aria-pressed="' + s + '">' + x[1] + '</button>'; }).join('') + '</div>';
   var pick = list.map(function (q) { var on = !sel[q.id]; return '<button type="button" class="pr-pick' + (on ? ' on' : '') + '" data-act="prToggle" data-id="' + q.id + '" aria-pressed="' + on + '"><span class="pr-box">' + (on ? icon('i-check', 14) : '') + '</span>' + emb(GQ_STYLE[q.type].e, 24) + '<span class="grow"><b>' + esc(pcName(q.type)) + '</b> für ' + esc(q.author) + '</span></button>'; }).join('');
   var prev = list.filter(function (q) { return !sel[q.id]; }).slice(0, 6).map(function (q) { return '<div class="pr-cell">' + pcCardHtml(q, false) + '</div>'; }).join('');
-  return '<span class="eyebrow mt18 block">Drucken</span><p class="small mt6">' + (fmt === 'a4' ? 'Jede Karte groß auf einer eigenen A4-Seite, zum Überreichen.' : 'Neun Karten pro A4-Blatt in Spielkartengröße (63 × 88 mm), zum Ausschneiden.') + '</p>' + seg +
+  return '<span class="eyebrow mt18 block">Drucken</span><p class="small mt6">' + (fmt === 'a4' ? 'Jede Karte groß auf einer eigenen A4-Seite, zum Überreichen.' : 'Bis zu neun Karten pro A4-Blatt in Spielkartengröße (63 × 88 mm), zum Ausschneiden.') + '</p>' + seg +
     '<div class="pr-picks mt10">' + pick + '</div>' +
     (prev ? '<div class="pr-prev mt14' + (fmt === 'a4' ? ' a4' : '') + '">' + prev + '</div>' : '') +
     '<button type="button" class="cta mt14" data-act="prGo"' + (n ? '' : ' disabled') + '>' + icon('i-print', 18) + (n === 1 ? 'Eine Karte drucken' : n + ' Karten drucken') + '</button>' +
-    '<p class="small mt8">Im Druckdialog „Hintergrundgrafiken“ einschalten, damit die Farben mitkommen. Als PDF speichern geht dort auch.</p>' + collectCloseHtml();
+    '<p class="small mt8">Die Farben kommen ohne weitere Einstellung mit. Als PDF speichern geht im Druckdialog auch.</p>' + collectCloseHtml();
 }
 A.prFmt = function (d) { UI.prFmt = d.v === 'a4' ? 'a4' : 'karte'; render(); };
 A.prToggle = function (d) { UI.prOff = UI.prOff || {}; UI.prOff[d.id] = !UI.prOff[d.id]; render(); };

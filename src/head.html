@@ -2327,33 +2327,34 @@ body.desk .toast { bottom: 40px; }
 .pr-prev.a4 { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
 .pr-prev.a4 .pc { font-size: 2.1mm; width: 50.9mm; height: 71.1mm; }
 /* ---------- the printed cards (the same look as the bonus cards) ---------- */
-.pc { position: relative; width: 63mm; height: 88mm; box-sizing: border-box; padding: .95em; border-radius: 1.5em; font-size: 2.6mm; font-family: var(--body); color: #FFFFFF; background: var(--pcf); -webkit-print-color-adjust: exact; print-color-adjust: exact; flex: 0 0 auto; box-shadow: 0 .5em 1.4em rgba(21,18,43,.25); }
+.pc { position: relative; width: 63mm; height: 88mm; box-sizing: border-box; padding: .95em; border-radius: 1.5em; font-size: 2.6mm; font-family: var(--body); color: #FFFFFF; -webkit-print-color-adjust: exact; print-color-adjust: exact; flex: 0 0 auto; box-shadow: 0 .5em 1.4em rgba(21,18,43,.25); }
 .pc * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .pc.big { width: 170mm; height: 237.5mm; font-size: 7.02mm; }
-.pc-in { position: relative; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; padding: .9em 1em .8em; border-radius: 1em; overflow: hidden; background: radial-gradient(120% 70% at 50% 0%, #3E3488, #1D1A40 62%, #141130); }
-.pc-in::before { content: ''; position: absolute; inset: 0; background: radial-gradient(rgba(255,255,255,.09) .07em, transparent .1em) 0 0 / 1.1em 1.1em; pointer-events: none; }
-.pc-in::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,.13) 44%, transparent 56%); pointer-events: none; }
+/* the colours are SVG shapes (see pcBgSvg): they print with „Hintergrundgrafiken“ off, CSS backgrounds do not */
+.pc-bg, .pc-f { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.pc-fa { overflow: visible; }
+.pc-in { position: relative; z-index: 1; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; padding: .9em 1em .8em; border-radius: 1em; overflow: hidden; }
 .pc-top { position: relative; z-index: 1; align-self: stretch; display: flex; align-items: center; justify-content: space-between; }
-.pc-chip { padding: .28em .85em; border-radius: 99em; background: var(--pcc); color: #15122B; font: 800 .78em var(--display); }
+.pc-chip { position: relative; overflow: hidden; display: inline-flex; padding: .28em .85em; border-radius: 99em; color: #15122B; font: 800 .78em var(--display); }
+.pc-chip > span { position: relative; }
 .pc-brand { display: inline-flex; align-items: center; gap: .35em; font: 800 .72em var(--display); color: rgba(255,255,255,.78); }
 .pc-brand svg { width: 1.55em; height: 1.55em; }
-.pc-art { position: relative; z-index: 1; margin: 1.1em 0 .7em; width: 8.6em; height: 8.6em; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 35% 30%, #FFFFFF, var(--pca) 72%); box-shadow: 0 0 0 .22em rgba(255,255,255,.14), 0 0 2.2em var(--pcg); }
+.pc-art { position: relative; z-index: 1; margin: 1.1em 0 .7em; width: 8.6em; height: 8.6em; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 .pc-ring { position: absolute; inset: -.55em; border-radius: 50%; border: .14em dashed var(--pcc); opacity: .7; }
-.pc-art svg { width: 5.8em; height: 5.8em; }
+.pc-art svg { position: relative; width: 5.8em; height: 5.8em; }
+.pc-art .pc-f { position: absolute; width: 100%; height: 100%; }
 .pc-k { position: relative; z-index: 1; font: 800 .66em var(--display); letter-spacing: .1em; color: var(--pcc); }
 .pc-t { position: relative; z-index: 1; margin-top: .2em; font: 900 1.95em/1.05 var(--display); letter-spacing: -0.02em; }
 .pc-x { position: relative; z-index: 1; margin: .6em 0 0; font-size: .88em; line-height: 1.35; font-weight: 600; color: rgba(255,255,255,.84); }
 .pc-cond { position: relative; z-index: 1; margin: .45em 0 0; font-size: .74em; font-weight: 800; color: var(--pcc); }
-.pc-for { position: relative; z-index: 1; margin-top: auto; align-self: stretch; display: flex; flex-direction: column; align-items: center; padding: .45em .6em .5em; border-radius: .9em; background: rgba(255,255,255,.08); border: .12em dashed rgba(255,255,255,.32); }
-.pc-for span { font-size: .68em; font-weight: 800; color: rgba(255,255,255,.7); }
-.pc-for b { font: 900 1.65em/1.1 var(--display); color: var(--pcc); overflow-wrap: anywhere; }
+.pc-for { position: relative; z-index: 1; overflow: hidden; margin-top: auto; align-self: stretch; display: flex; flex-direction: column; align-items: center; padding: .45em .6em .5em; border-radius: .9em; border: .12em dashed rgba(255,255,255,.32); }
+.pc-for span { position: relative; font-size: .68em; font-weight: 800; color: rgba(255,255,255,.7); }
+.pc-for b { position: relative; font: 900 1.65em/1.1 var(--display); color: var(--pcc); overflow-wrap: anywhere; }
 .pc-foot { position: relative; z-index: 1; align-self: stretch; display: flex; justify-content: space-between; gap: .6em; margin-top: .55em; font-size: .6em; font-weight: 700; color: rgba(255,255,255,.62); }
 .pc-foot span:first-child { text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pc-joker { --pcf: linear-gradient(135deg, #FF6FD8, #FFC940 30%, #6FE3FF 60%, #9886FF 80%, #FF6FD8); --pcc: #FF9BE6; --pca: #FFD3F3; --pcg: rgba(255,111,216,.55); }
-.pc-weiter { --pcf: linear-gradient(120deg, #FDFEFF 0%, #C6CFDA 16%, #8C98A8 32%, #F2F5F9 48%, #9AA6B5 64%, #FFFFFF 80%, #B4BEC9 100%); --pcc: #E2E9F1; --pca: #DCE3EC; --pcg: rgba(226,233,241,.5); }
-.pc-weiter .pc-in { background: radial-gradient(120% 70% at 50% 0%, #56627A, #2A3142 62%, #1A1F2B); }
-.pc-weiter .pc-in::after { background: linear-gradient(115deg, transparent 26%, rgba(255,255,255,.2) 42%, transparent 52%, rgba(255,255,255,.1) 64%, transparent 72%); }
-.pc-regel { --pcf: linear-gradient(135deg, #FF7A45, #FFC940 50%, #FF5A5A); --pcc: #FFB27A; --pca: #FFD9B8; --pcg: rgba(255,122,69,.55); }
+.pc-joker { --pcc: #FF9BE6; }
+.pc-weiter { --pcc: #E2E9F1; }
+.pc-regel { --pcc: #FFB27A; }
 #zpPrint { display: none; }
 @media print {
   @page { size: A4 portrait; margin: 0; }
@@ -2361,12 +2362,15 @@ body.desk .toast { bottom: 40px; }
   html, body { height: auto !important; overflow: visible !important; background: #FFFFFF !important; }
   body > *:not(#zpPrint) { display: none !important; }
   #zpPrint { display: block !important; }
-  .pp-page { width: 210mm; height: 296mm; box-sizing: border-box; display: flex; align-items: center; justify-content: center; overflow: hidden; break-after: page; page-break-after: always; }
+  /* no fixed page box: a browser that keeps its own margins (Safari ignores @page) would spill it onto a second sheet */
+  .pp-page { display: block; width: 100%; box-sizing: border-box; padding: 9mm 0 0; break-after: page; page-break-after: always; }
   .pp-page:last-child { break-after: auto; page-break-after: auto; }
-  .pp-grid { display: grid; grid-template-columns: repeat(3, 63mm); grid-auto-rows: 88mm; gap: 3mm; align-content: center; justify-content: center; }
-  .pp-cut { position: relative; }
+  .pp-one { padding-top: 14mm; }
+  .pp-grid { display: grid; grid-template-columns: repeat(auto-fit, 63mm); gap: 3mm; justify-content: center; }
+  .pp-cut { position: relative; break-inside: avoid; page-break-inside: avoid; }
   .pp-cut::after { content: ''; position: absolute; inset: -.6mm; border: .2mm dashed #B8B3C9; border-radius: 4.5mm; }
   .pc { box-shadow: none; }
+  .pc.big { margin: 0 auto; }
 }
 @media (prefers-reduced-motion: reduce) { .r-wei .gk-front, .r-reg .gk-front, .bd-glasses { animation: none !important; } }
 body.desk .dk-cards { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
