@@ -338,7 +338,7 @@ function gClosedView() {
 
 /* ---------- printing ---------- */
 function printCards() { var out = []; PC_KINDS.forEach(function (t) { pcAll(t).forEach(function (q) { if (q.status === 'ok' && !q.used) out.push(q); }); }); return out; }
-function pcLogo() { return '<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#FF7A45"></rect><g transform="translate(6.5 6.3) scale(.95)"><path d="M8 2H28V31L35 38C39.5 42.5 38 50.5 31.5 51.5C28.5 52 25.5 51 23 48.5L11 36.5C9 34.5 8 32 8 29Z" fill="#15122B"></path></g><path d="M48 5Q49.6 12.4 57 14Q49.6 15.6 48 23Q46.4 15.6 39 14Q46.4 12.4 48 5Z" fill="#FFC940" stroke="#15122B" stroke-width="2.2" stroke-linejoin="round"></path></svg>'; }
+function pcLogo() { return brandTile(0, '#2C2750'); }
 /* The card's colours are drawn as SVG shapes, not as CSS backgrounds. Browsers
    drop backgrounds when printing unless „Hintergrundgrafiken“ is on (Safari
    has no such switch at all), and a card of white text on white paper looks

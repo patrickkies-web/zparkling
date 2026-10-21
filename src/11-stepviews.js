@@ -16,7 +16,7 @@ function questionOf(P) {
   return null;
 }
 function bigCard(bg, badge, title, extra) {
-  return '<div class="bigcard stack gap10" style="background:' + bg + '"><svg aria-hidden="true" width="120" height="120" viewBox="0 0 40 56" style="position:absolute;right:-26px;top:-14px;opacity:.13;transform:rotate(18deg)"><use href="#sk" fill="#15122B"></use></svg><span class="badge">' + badge + '</span><h2>' + title + '</h2>' + (extra || '') + '</div><!--bc-->';
+  return '<div class="bigcard stack gap10" style="background:' + bg + '"><svg aria-hidden="true" width="150" height="121" viewBox="9 13 47 38" style="position:absolute;right:-30px;top:-10px;opacity:.13;transform:rotate(14deg)">' + bandMark('#15122B', '#15122B', '#15122B') + '</svg><span class="badge">' + badge + '</span><h2>' + title + '</h2>' + (extra || '') + '</div><!--bc-->';
 }
 function vsRow(a, b) {
   return '<div class="mt18 vsrow"><div class="stack" style="align-items:center;gap:6px">' + a + '</div><div class="stack" style="align-items:center;gap:6px">' + b + '</div><span class="vs" aria-hidden="true">VS</span></div>';
@@ -92,7 +92,7 @@ function resultHero(P, res, fresh) {
   }).join('');
   var cls = 'bigcard rhero' + (party ? ' party' : '') + (cast.some(function (c) { return c.crown; }) && n > 1 ? ' crowned' : '') + (fresh && res.tone === 'fail' ? ' shake' : '');
   return '<div class="' + cls + '" style="background:' + bg + '">' +
-    (party ? garland(350, fills) : '<svg aria-hidden="true" width="120" height="120" viewBox="0 0 40 56" style="position:absolute;right:-26px;top:-14px;opacity:.13;transform:rotate(18deg)"><use href="#sk" fill="#15122B"></use></svg>') +
+    (party ? garland(350, fills) : '<svg aria-hidden="true" width="150" height="121" viewBox="9 13 47 38" style="position:absolute;right:-30px;top:-10px;opacity:.13;transform:rotate(14deg)">' + bandMark('#15122B', '#15122B', '#15122B') + '</svg>') +
     (faces ? '<div class="rh-faces">' + faces + '</div>' : '') +
     '<span class="badge">Ergebnis</span><h2>' + esc(res.title) + '</h2>' + (res.text ? '<p>' + esc(res.text) + '</p>' : '') + '</div>';
 }
@@ -569,7 +569,7 @@ V.guestLive = function () {
   var banner = UI.guestMode === 'test' ? '<div class="testbanner">' + icon('i-user', 18) + '<span class="grow">Testansicht: So sehen die Gäste die Live-Frage.</span><button type="button" class="tag plain" data-act="go" data-to="' + (L && L.kind === 'menge' ? (UI.liveFrom === 'free' ? 'free' : 'step') : 'live') + '" style="height:30px;color:var(--sun)">Zurück</button></div>' : '';
   var head = banner + '<div class="' + (banner ? 'mt14' : '') + '">' + guestHeader('Live') + '</div>';
   if (!L || !L.open) return scr(head, '<div class="bigcard waitcard mt14" style="background:var(--violet)">' + garland(350, ['#15122B', '#FFFFFF', '#48D9A6', '#FFC940', '#FF7A45', '#15122B']) +
-    '<span class="wait-e" aria-hidden="true">' + sockIc('#FF7A45', 40) + '</span><span class="badge">Live-Runde</span><h2>Gleich geht’s los.</h2>' +
+    '<span class="wait-e" aria-hidden="true">' + brandMark(52) + '</span><span class="badge">Live-Runde</span><h2>Gleich geht’s los.</h2>' +
     '<p>Sobald der Spielleiter eine Abstimmung startet, erscheint sie hier. Lass die Seite einfach offen.</p><span class="wait-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>' +
     '<div class="card pad mt14 row" style="align-items:flex-start"><span class="tile-ic" style="width:40px;height:40px;border-radius:12px;background:var(--sun)">' + icon('i-bubble', 20) + '</span><span class="stack grow" style="gap:3px"><span class="name">So läuft’s</span><span class="sub">Frage lesen, antippen, abschicken. Dein Tipp landet sofort beim Spielleiter, dein Name nur, wenn du ihn einträgst.</span></span></div>', '');
   if (UI.liveSent) {

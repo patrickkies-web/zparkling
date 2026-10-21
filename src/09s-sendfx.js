@@ -18,7 +18,7 @@ function gSendFx(n, done) {
       '<div class="gs-letter"><span>' + (n === 1 ? 'Beitrag' : 'Beiträge') + '</span><b>' + n + '</b></div>' +
       '<svg class="wl-front" viewBox="0 0 240 160"><path d="M1.5 44L120 80L238.5 44V145a13 13 0 0 1-13 13H14.5a13 13 0 0 1-13-13Z" fill="#FFF6E3" stroke="#15122B" stroke-width="3" stroke-linejoin="round"></path><path d="M1.5 156L100 92M238.5 156L140 92" stroke="#15122B" stroke-width="2.5" stroke-linecap="round" opacity=".35"></path></svg>' +
       '<svg class="gs-flap" viewBox="0 0 240 100"><path d="M3 3H237L128 84a12 12 0 0 1-16 0Z" fill="#FFE7C2" stroke="#15122B" stroke-width="3" stroke-linejoin="round"></path></svg>' +
-      '<div class="gs-seal">' + sockIc('#15122B', 15) + '</div></div>' +
+      '<div class="gs-seal">' + brandMark(20, '#15122B', '#FFFFFF') + '</div></div>' +
       '<p class="gs-txt" style="top:' + Math.round(cy + 104) + 'px">Unterwegs zu ' + esc(names) + ' …</p></div>');
     var ov = document.getElementById('gsend'); if (!ov) return false;
     var fl = ov.querySelector('.gs-flyers'), env = ov.querySelector('.gs-env'), flap = ov.querySelector('.gs-flap'), seal = ov.querySelector('.gs-seal'), txt = ov.querySelector('.gs-txt');

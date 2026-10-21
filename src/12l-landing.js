@@ -9,16 +9,16 @@ var LP_WORD = 'ZPARKLING';
 var LP_COLS = ['#FF7A45', '#FFFFFF', '#48D9A6', '#9886FF', '#FFC940', '#FF8FC4', '#48D9A6', '#FFFFFF', '#FF7A45'];
 function lpLogo(size) {
   size = size || 34;
-  return '<span class="lp-logo" style="width:' + size + 'px;height:' + size + 'px" aria-hidden="true"><svg viewBox="0 0 64 64" width="' + size + '" height="' + size + '"><rect width="64" height="64" rx="16" fill="#FF7A45"></rect><g transform="translate(6.5 6.3) scale(.95)"><use href="#sk" fill="#15122B"></use></g><path d="M48 5Q49.6 12.4 57 14Q49.6 15.6 48 23Q46.4 15.6 39 14Q46.4 12.4 48 5Z" fill="#FFC940" stroke="#15122B" stroke-width="2.2" stroke-linejoin="round"></path></svg></span>';
+  return '<span class="lp-logo" style="width:' + size + 'px;height:' + size + 'px" aria-hidden="true">' + brandTile(size) + '</span>';
 }
-/* the name hangs on the line, one sock per letter */
+/* the name hangs on the line, one ribbon tag per letter */
 function lpGarland() {
   var n = LP_WORD.length, out = '<svg class="lp-line" viewBox="0 0 900 250" role="img" aria-label="zparkling"><path d="M-10 26Q450 136 910 26" stroke="#F4F1FF" stroke-opacity=".55" stroke-width="3" fill="none"></path>';
   for (var k = 0; k < n; k++) {
     var x = 50 + k * 100, t = (x + 10) / 920, y = (1 - t) * (1 - t) * 26 + 2 * (1 - t) * t * 136 + t * t * 26;
     out += '<g transform="translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ')"><g class="lp-drop" style="--i:' + k + '"><g class="lp-sk" style="--r:' + (k % 2 ? 4 : -5) + 'deg">' +
-      '<g transform="scale(2.5) translate(-18 0)"><use href="#sk" fill="' + LP_COLS[k] + '"></use><rect x="8" y="2" width="20" height="7" fill="#15122B" fill-opacity="0.22"></rect>' +
-      '<text x="18" y="25.5" text-anchor="middle" font-family="Unbounded, Arial Black, sans-serif" font-weight="900" font-size="14" fill="#15122B">' + LP_WORD[k] + '</text></g>' +
+      '<g transform="scale(2.5) translate(-18 0)">' + garlandItem('band', k, LP_COLS[k]) +
+      '<text x="18" y="24.5" text-anchor="middle" font-family="Unbounded, Arial Black, sans-serif" font-weight="900" font-size="14" fill="#15122B">' + LP_WORD[k] + '</text></g>' +
       '<rect x="-5" y="-11" width="10" height="24" rx="3" fill="' + (k % 2 ? '#15122B' : '#F4F1FF') + '" stroke="#15122B" stroke-width="2"></rect></g></g></g>';
   }
   return out + '</svg>';

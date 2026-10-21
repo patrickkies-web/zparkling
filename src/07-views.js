@@ -4,6 +4,22 @@
 var UI = { screen: 'welcome', step: 1, draft: null, draftIsNew: false, draftFrom: 'setup', draftErr: '', avCat: 'form', avMood: '', confirm: null, setupErr: '', qFilter: 'offen', qDraft: null, qErr: '', qSent: '', guestFrom: 'questions', liveFrom: 'step', liveSent: false, liveName: '', liveVal: '', gameCat: 'Alle', gameId: null, gameFmt: '', gameWho: '', counterFrom: '', toast: '', cfgErr: '', guestMode: '' };
 
 function icon(id, size) { size = size || 20; return '<svg class="ic" width="' + size + '" height="' + size + '" aria-hidden="true"><use href="#' + id + '"></use></svg>'; }
+/* The brand mark: one ribbon, folded twice into a Z. Front orange, the fold shows
+   the gold back, the folds throw a small shadow (logo canvas, „F · Band“). Pure
+   polygons, no ids, so any number of copies can sit on one page. */
+var BAND_PTS = { s1: '13,14 52,14 55.03,25 13,25', s2: '52,14 55.03,25 13,50 9.97,39', s3: '52,50 13,50 9.97,39 52,39', sh1a: '29.2,25 47.7,14 52,14 55.03,25', sh1b: '31.36,25 49.85,14 52,14 55.03,25', sh2a: '13,50 9.97,39 13.67,36.8 35.19,36.8', sh2b: '13,50 9.97,39 11.82,37.9 33.34,37.9' };
+function bandMark(front, back, shadow) {
+  front = front || '#FF7A45'; back = back || '#FFC940'; shadow = shadow || '#15122B';
+  var P = BAND_PTS, poly = function (pts, fill, op) { return '<polygon points="' + pts + '" fill="' + fill + '"' + (op ? ' fill-opacity="' + op + '"' : '') + '></polygon>'; };
+  return poly(P.s1, front) + poly(P.sh1a, shadow, '.1') + poly(P.sh1b, shadow, '.16') + poly(P.s2, back) + poly(P.sh2a, shadow, '.1') + poly(P.sh2b, shadow, '.16') + poly(P.s3, front) +
+    '<line x1="52" y1="14" x2="55.03" y2="25" stroke="#FFFFFF" stroke-opacity=".45" stroke-width=".9"></line><line x1="13" y1="50" x2="9.97" y2="39" stroke="#FFFFFF" stroke-opacity=".35" stroke-width=".9"></line>';
+}
+/* the mark alone; w is the width in px (the Z is 47 by 38) */
+function brandMark(w, front, back, shadow) { return '<svg viewBox="9 13 47 38" width="' + w + '" height="' + Math.round(w * 38 / 47) + '" aria-hidden="true">' + bandMark(front, back, shadow) + '</svg>'; }
+/* the app icon: the mark on the night-blue tile; without a size the CSS sizes it */
+function brandTile(size, bg, front, back) {
+  return '<svg viewBox="0 0 64 64"' + (size ? ' width="' + size + '" height="' + size + '"' : '') + ' aria-hidden="true"><rect width="64" height="64" rx="16" fill="' + (bg || '#15122B') + '"></rect><rect x="1" y="1" width="62" height="62" rx="15" fill="none" stroke="#FFFFFF" stroke-opacity=".08" stroke-width="1.5"></rect><g transform="translate(32 32) scale(.84) translate(-32 -32)">' + bandMark(front, back) + '</g></svg>';
+}
 function sockIc(fill, w) { w = w || 13; return '<svg width="' + w + '" height="' + Math.round(w * 1.4) + '" viewBox="0 0 40 56" aria-hidden="true"><use href="#sk" fill="' + fill + '"></use></svg>'; }
 function face(p, size, style, mood) {
   style = style || '';
@@ -31,7 +47,7 @@ function stepper(act, value, data, label) {
   return '<div class="stepper"><button type="button" class="iconbtn sm" data-act="' + act + '" data-d="-1"' + (data || '') + ' aria-label="' + (label || '') + ' weniger">' + icon('i-minus', 16) + '</button><span class="val num">' + value + '</span><button type="button" class="iconbtn sm" data-act="' + act + '" data-d="1"' + (data || '') + ' aria-label="' + (label || '') + ' mehr">' + icon('i-plus', 16) + '</button></div>';
 }
 function garlandShape() {
-  if (!E()) return 'sock';
+  if (!E()) return 'band';
   var t = evType(), f = E().focus, k = {};
   f.forEach(function (p) { k[p.anlass] = true; });
   if (t.fam === 'kranz') return k.sockenkranz && k.schachtelkranz ? 'mix' : k.schachtelkranz || (!f.length && t.id === 'schachtel') ? 'box' : 'sock';
@@ -41,6 +57,8 @@ function garlandItem(shape, i, fill) {
   if (shape === 'mix') shape = i % 2 ? 'box' : 'sock';
   if (shape === 'box') return '<rect x="3" y="6" width="30" height="26" rx="4" fill="' + fill + '"></rect><rect x="15" y="6" width="6" height="26" fill="#15122B" fill-opacity="0.22"></rect><rect x="3" y="13" width="30" height="5" fill="#15122B" fill-opacity="0.22"></rect>';
   if (shape === 'flag') return '<path d="M2 4H34L18 40Z" fill="' + fill + '"></path><path d="M2 4H34L32 9H4Z" fill="#15122B" fill-opacity="0.22"></path>';
+  /* a piece of ribbon with a folded corner, the brand's own shape */
+  if (shape === 'band') return '<path d="M3 6H27L33 12V32H3Z" fill="' + fill + '"></path><path d="M3 6H33V11H3Z" fill="#15122B" fill-opacity="0.16"></path><path d="M27 6L33 12H27Z" fill="#FFC940"></path>';
   return '<use href="#sk" fill="' + fill + '"></use><rect x="8" y="2" width="20" height="7" fill="#15122B" fill-opacity="0.22"></rect>';
 }
 /* progress overview in the shape of the real thing: what is still hanging, what is already off */
@@ -100,7 +118,7 @@ function qrHTML(code) {
     var on = f !== null ? f : sep(x, y) ? false : y === 6 ? x % 2 === 0 : x === 6 ? y % 2 === 0 : ((x * 7 + y * 13 + x * y * 3 + (x ^ y) + seed) % 5) < 2;
     out += '<span' + (on ? ' style="background:#15122B"' : '') + '></span>';
   }
-  return '<div class="qr" aria-hidden="true">' + out + '<span style="position:absolute;left:66px;top:66px;width:36px;height:36px;box-sizing:border-box;border-radius:10px;background:#FF7A45;border:4px solid #F4F1FF;display:flex;align-items:center;justify-content:center">' + sockIc('#15122B', 13) + '</span></div>';
+  return '<div class="qr" aria-hidden="true">' + out + '<span style="position:absolute;left:66px;top:66px;width:36px;height:36px;box-sizing:border-box;border-radius:10px;background:#15122B;border:4px solid #F4F1FF;display:flex;align-items:center;justify-content:center">' + brandMark(20) + '</span></div>';
 }
 function shareBlock(link, waText, code, testAct, testLabel, title, sub) {
   title = title || 'Ein Link für alle'; testLabel = testLabel || 'Als Gast testen';
@@ -659,7 +677,7 @@ function qrBigHtml() {
 function qDraftNew(author) { return { author: author || '', forId: '', type: author === 'Spielleiter' ? 'schaetzen' : 'steckbrief', text: '', unit: '', answer: '', options: ['', '', '', ''], correct: 0, min: '0', max: '100', note: '', year: '', bday: '', meet: '', byear: '', trait: '', interest: '' }; }
 function guestHeader(sub) {
   var e = E();
-  return '<div class="row" style="justify-content:space-between"><div class="row" style="gap:10px"><span class="tile-ic" style="width:36px;height:36px;border-radius:12px;background:var(--accent)">' + sockIc('#15122B', 17) + '</span><span style="font:800 16px var(--display);color:var(--white)">zparkling</span></div><span class="sub" style="font-weight:700">' + esc(sub || '') + '</span></div>';
+  return '<div class="row" style="justify-content:space-between"><div class="row" style="gap:10px"><span class="tile-ic" style="width:36px;height:36px;border-radius:12px;overflow:hidden">' + brandTile(36) + '</span><span style="font:800 16px var(--display);color:var(--white)">zparkling</span></div><span class="sub" style="font-weight:700">' + esc(sub || '') + '</span></div>';
 }
 /* the fields of one contribution. bp = bind prefix, k = item index in the guest list ('' for the master form) */
 function draftFields(d, bp, k) {

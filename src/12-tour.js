@@ -56,17 +56,17 @@ function nameLine(name, W, fresh) {
     var ch = chars[i]; if (ch === ' ') continue;
     var x = x0 + i * gap, col = SOCK_COLS[i % SOCK_COLS.length], rot = [-6, 5, -3, 7, -5, 4, -7, 3][i % 8];
     o += '<span class="t-sock' + (ghost ? ' ghost' : '') + (fresh && i === n - 1 ? ' new' : '') + '" style="left:' + (x - sw * 0.45).toFixed(1) + 'px;top:' + (yAt(x) - 4).toFixed(1) + 'px;width:' + sw.toFixed(1) + 'px;--r:' + rot + 'deg;--i:' + i + '">' +
-      '<svg viewBox="0 0 40 56" aria-hidden="true"><use href="#sk" fill="' + col[0] + '" stroke="#15122B" stroke-width="2.4"/><rect x="9.2" y="4" width="17.6" height="5" fill="' + col[1] + '" opacity=".85"/><rect x="15" y="-4" width="6" height="12" rx="1.6" fill="#E7B36A" stroke="#15122B" stroke-width="1.8"/></svg>' +
+      '<svg viewBox="0 0 40 56" aria-hidden="true"><path d="M3 5H30L37 12V40H3Z" fill="' + col[0] + '" stroke="#15122B" stroke-width="2.4" stroke-linejoin="round"/><path d="M30 5L37 12H30Z" fill="#FFC940" stroke="#15122B" stroke-width="2.4" stroke-linejoin="round"/><rect x="15" y="-4" width="6" height="12" rx="1.6" fill="#E7B36A" stroke="#15122B" stroke-width="1.8"/></svg>' +
       (ch ? '<b style="color:' + col[1] + ';font-size:' + Math.round(sw * 0.52) + 'px">' + esc(ch) + '</b>' : '') + '</span>';
   }
   return o;
 }
-/* drawn confetti: socks, stars, ribbons, scraps */
+/* drawn confetti: ribbon tags, stars, streamers, scraps */
 function confetti(k, seed) {
   var r = seedRand(seed * 101 + 7), cols = ['#FFFFFF', '#15122B', '#FFC940', '#48D9A6', '#9886FF', '#FF8FC4', '#5B8CFF', '#FF7A45'], o = '<div class="t-conf" aria-hidden="true">';
   for (var i = 0; i < k; i++) {
     var c = cols[Math.floor(r() * cols.length)], kind = i % 4;
-    var shape = kind === 0 ? '<svg viewBox="0 0 40 56" width="15" height="21"><use href="#sk" fill="' + c + '" stroke="#15122B" stroke-width="3.5"/></svg>'
+    var shape = kind === 0 ? '<svg viewBox="0 0 40 40" width="15" height="15"><path d="M3 5H30L37 12V37H3Z" fill="' + c + '" stroke="#15122B" stroke-width="3.5" stroke-linejoin="round"/><path d="M30 5L37 12H30Z" fill="#FFC940" stroke="#15122B" stroke-width="3.5" stroke-linejoin="round"/></svg>'
       : kind === 1 ? '<svg viewBox="0 0 20 20" width="15" height="15"><path d="M10 1l2.6 6 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.2 1.4-6.3L1 7.6l6.4-.6z" fill="' + c + '" stroke="#15122B" stroke-width="1.6" stroke-linejoin="round"/></svg>'
       : kind === 2 ? '<svg viewBox="0 0 26 12" width="24" height="11"><path d="M2 6c3-5 5 5 8 0s5 5 8 0 4 4 6 2" fill="none" stroke="' + (c === '#15122B' ? '#FFFFFF' : c) + '" stroke-width="3.2" stroke-linecap="round"/></svg>'
       : '<i style="background:' + c + '"></i>';
@@ -127,7 +127,7 @@ function artLink() {
     [g[2], 'Millionenfrage', '#9886FF', tn('Hab eine Frage über {N} drin, die wird hart.', 'Hab eine Frage drin, die wird hart.')],
     [g[3], 'Steckbrief', '#48D9A6', tn('Kenne {N} seit der fünften Klasse!', 'Kenne sie seit der fünften Klasse!')]
   ];
-  var t0 = 0.5, chat = '<div class="t-msg out" style="--t:' + t0 + 's"><div class="t-ob"><div class="t-lc"><span class="t-lc-art">' + sockIc('#FF7A45', 11) + sockIc('#FFFFFF', 11) + sockIc('#48D9A6', 11) + '<b>zparkling</b></span><b class="t-lc-h">' + esc(tn('Was weißt du über {N}?', 'Was weißt du über unsere Hauptperson?')) + '</b><small>Beiträge für die Party sammeln</small></div><span class="t-tx">Macht mal mit, dauert zwei Minuten!</span></div></div>';
+  var t0 = 0.5, chat = '<div class="t-msg out" style="--t:' + t0 + 's"><div class="t-ob"><div class="t-lc"><span class="t-lc-art">' + brandTile(26) + '<b>zparkling</b></span><b class="t-lc-h">' + esc(tn('Was weißt du über {N}?', 'Was weißt du über unsere Hauptperson?')) + '</b><small>Beiträge für die Party sammeln</small></div><span class="t-tx">Macht mal mit, dauert zwei Minuten!</span></div></div>';
   msgs.forEach(function (m, i) {
     var t = 1.5 + i * 1.55;
     chat += '<div class="t-typing" style="--t:' + t + 's">' + castFace(m[0], 22) + '<span><i></i><i></i><i></i></span></div>' +
@@ -223,7 +223,7 @@ V.tour = function () {
   var from = UI.tourFrom && UI.tourFrom !== s.c ? UI.tourFrom : '';
   var bg = '<div class="t-bg" aria-hidden="true">' + (from ? '<span class="t-glow old" style="--tc:' + from + '"></span>' : '') + '<span class="t-glow"></span><span class="t-dots"></span>' + tourStars() + '</div>';
   var body = '<div class="t-wrap">' + bg + prog +
-    '<div class="t-top"><span class="t-brand">' + sockIc('#FFFFFF', 12) + 'zparkling</span><button type="button" class="t-skip" data-act="tourSkip">' + (last ? 'Schließen' : 'Überspringen') + '</button></div>' +
+    '<div class="t-top"><span class="t-brand">' + brandMark(18) + 'zparkling</span><button type="button" class="t-skip" data-act="tourSkip">' + (last ? 'Schließen' : 'Überspringen') + '</button></div>' +
     '<div class="t-stage' + (from ? ' tin' + (UI.tourDir < 0 ? ' back' : '') : '') + '" aria-live="polite"><h1 class="t-h" style="font-size:' + hs + 'px">' + kin(tx.h) + '</h1>' + (tx.t ? '<p class="t-p">' + esc(tx.t) + '</p>' : '') + '<div class="t-art"><div class="t-art-in">' + TOUR_ART[s.id]() + '</div></div></div>' +
     (last || s.id === 'name' ? '' : '<button type="button" class="t-zone l" data-act="tourPrev" aria-label="Zurück"></button><button type="button" class="t-zone r" data-act="tourNext" aria-label="Weiter"></button>') + '</div>';
   var foot = last

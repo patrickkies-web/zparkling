@@ -15,10 +15,10 @@ function gWelcomeIntro() {
   var pop = ''; for (var k = 0; k < 10; k++) pop += '<i style="--a:' + (k * 36 + 8) + 'deg;--c:' + ['#FFC940', '#FFFFFF', '#48D9A6', '#FF8FC4', '#9886FF'][k % 5] + '"></i>';
   return '<div class="wl-intro" aria-hidden="true"><div class="wl-env">' +
     '<svg class="wl-back" viewBox="0 0 240 160"><rect x="1.5" y="1.5" width="237" height="157" rx="14" fill="#F2D9B8" stroke="#15122B" stroke-width="3"></rect></svg>' +
-    '<div class="wl-letter"><span class="wl-letter-k">Einladung</span><span class="wl-letter-l"></span><span class="wl-letter-l s"></span><span class="wl-letter-sk">' + sockIc('#FF7A45', 14) + '</span></div>' +
+    '<div class="wl-letter"><span class="wl-letter-k">Einladung</span><span class="wl-letter-l"></span><span class="wl-letter-l s"></span><span class="wl-letter-sk">' + brandMark(22) + '</span></div>' +
     '<svg class="wl-front" viewBox="0 0 240 160"><path d="M1.5 44L120 80L238.5 44V145a13 13 0 0 1-13 13H14.5a13 13 0 0 1-13-13Z" fill="#FFF6E3" stroke="#15122B" stroke-width="3" stroke-linejoin="round"></path><path d="M1.5 156L100 92M238.5 156L140 92" stroke="#15122B" stroke-width="2.5" stroke-linecap="round" opacity=".35"></path></svg>' +
     '<svg class="wl-flap" viewBox="0 0 240 100"><path d="M3 3H237L128 84a12 12 0 0 1-16 0Z" fill="#FFE7C2" stroke="#15122B" stroke-width="3" stroke-linejoin="round"></path></svg>' +
-    '<div class="wl-seal">' + sockIc('#15122B', 15) + '</div><div class="wl-pop">' + pop + '</div></div></div>';
+    '<div class="wl-seal">' + brandMark(20, '#15122B', '#FFFFFF') + '</div><div class="wl-pop">' + pop + '</div></div></div>';
 }
 function gWelcomeView() {
   var e = E(), f = e ? e.focus : [], names = f.length ? focusNames() : 'eure Gastgeber', date = gWelcomeDate();

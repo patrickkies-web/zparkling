@@ -40,7 +40,7 @@ function pvWing(side) {
 function pvCardHtml(o) {
   var e = E(), name = e ? (e.name || (e.focus.length ? focusNames() : '')) : '';
   return '<div class="pv-card"><span class="pv-holo" aria-hidden="true"></span><span class="pv-shine" aria-hidden="true"></span>' +
-    '<div class="pv-top"><b class="pv-k">GAME PASS</b><span class="pv-logo" aria-hidden="true"><svg width="22" height="31" viewBox="0 0 40 56"><use href="#sk" fill="#4A2E00"></use></svg></span></div>' +
+    '<div class="pv-top"><b class="pv-k">GAME PASS</b><span class="pv-logo" aria-hidden="true">' + brandMark(24, '#4A2E00', '#8A5A00', '#4A2E00') + '</span></div>' +
     '<span class="pv-chip" aria-hidden="true"><i></i><i></i></span><span class="pv-star" aria-hidden="true"><svg viewBox="0 0 24 24" width="64" height="64"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.3l7.1-.7z" fill="#FFF6C8" fill-opacity=".55" stroke="#8A5A00" stroke-opacity=".35" stroke-width="1"></path></svg></span>' +
     '<b class="pv-n">' + esc(name || 'Euer Abend') + '</b><span class="pv-d">Alles drin · gültig bis ' + esc(pvShort(o.w.end)) + '</span></div>';
 }

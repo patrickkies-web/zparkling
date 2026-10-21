@@ -20,7 +20,7 @@ const pages = JSON.parse(fs.readFileSync(path.join(__dirname, 'og.json'), 'utf8'
       h1{position:relative;margin:14px 0 0;font:900 ${pg.h1.length > 58 ? 44 : 54}px/1.06 Unbounded;letter-spacing:-.03em;max-width:900px}
       .brand{position:absolute;right:56px;bottom:44px;display:flex;align-items:center;gap:14px;font:800 30px Unbounded;letter-spacing:-.02em}
       svg.g{position:absolute;left:0;top:0;width:100%;height:auto}
-    </style></head><body><div class="glow"></div><div class="dots"></div><div class="card">${pg.garland}<span class="k">${pg.kicker}</span><h1>${pg.h1}</h1><span class="brand"><svg viewBox="0 0 64 64" width="52" height="52"><rect width="64" height="64" rx="16" fill="#15122B"/><g transform="translate(6.5 6.3) scale(.95)"><path d="M8 2H28V31L35 38C39.5 42.5 38 50.5 31.5 51.5C28.5 52 25.5 51 23 48.5L11 36.5C9 34.5 8 32 8 29Z" fill="#FF7A45"/></g><path d="M48 5Q49.6 12.4 57 14Q49.6 15.6 48 23Q46.4 15.6 39 14Q46.4 12.4 48 5Z" fill="#FFC940" stroke="#15122B" stroke-width="2.2" stroke-linejoin="round"/></svg>zparkling</span></div></body></html>`;
+    </style></head><body><div class="glow"></div><div class="dots"></div><div class="card">${pg.garland}<span class="k">${pg.kicker}</span><h1>${pg.h1}</h1><span class="brand">${pg.brand}zparkling</span></div></body></html>`;
     await p.setContent(html); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(300);
     const out = pg.slug ? path.join(PUB, 'ratgeber', pg.slug, 'og.png') : path.join(PUB, 'ratgeber', 'og.png');
     await p.screenshot({ path: out }); console.log(out);

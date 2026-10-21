@@ -491,13 +491,13 @@ function gkPackHtml() {
   var cracks = ['M98 56L90 80L104 104L92 130L101 150', 'M40 56L52 76L38 98L50 118', 'M160 56L148 82L165 104L150 128L162 146', 'M101 150L80 172L96 196L84 220', 'M150 128L176 140L192 134', 'M50 118L24 126L4 120', 'M101 150L120 170L112 196L128 222L120 252', 'M84 220L60 236L66 264'];
   var leaks = ''; for (var i = 0; i < 9; i++) leaks += '<i style="--a:' + (i * 40 + 12) + 'deg;--i:' + i + '"></i>';
   return '<div class="gk-pack" aria-hidden="true"><div class="gk-leaks">' + leaks + '</div><div class="gk-pack-sh"><div class="gk-pack-top"><i class="gk-crimp"></i><span class="gk-perf"></span></div><div class="gk-pack-body"><i class="gk-crimp b"></i><span class="gk-pack-shine"></span>' +
-    '<span class="gk-pack-logo"><svg width="46" height="64" viewBox="0 0 40 56"><use href="#sk" fill="#15122B"></use></svg></span><b class="gk-pack-t">Bonus</b><span class="gk-pack-s">zparkling · 1 Karte</span><span class="gk-pack-st"><i></i><i></i><i></i></span></div>' +
+    '<span class="gk-pack-logo">' + brandMark(52, '#15122B', '#FF7A45') + '</span><b class="gk-pack-t">Bonus</b><span class="gk-pack-s">zparkling · 1 Karte</span><span class="gk-pack-st"><i></i><i></i><i></i></span></div>' +
     '<svg class="gk-cracks" viewBox="0 0 196 286" width="196" height="286">' + cracks.map(function (d, i) { return '<path d="' + d + '" pathLength="100" style="--i:' + i + '"/>'; }).join('') + '</svg></div></div>';
 }
 function gkCardHtml(k, rar, st) {
   var t = gkTitle(k);
   return '<div class="gk-card"><div class="gk-tilt"><div class="gk-inner">' +
-    '<div class="gk-face gk-back"><span class="gk-back-sk"><svg width="92" height="128" viewBox="0 0 40 56"><use href="#sk" fill="currentColor"></use></svg></span><b>zparkling</b><small>Bonuskarte</small></div>' +
+    '<div class="gk-face gk-back"><span class="gk-back-sk">' + brandMark(124) + '</span><b>zparkling</b><small>Bonuskarte</small></div>' +
     '<div class="gk-face gk-front"><div class="gk-fin">' +
     '<div class="gk-top"><span class="gk-rar">' + esc(rar.name) + '</span><span class="gk-no">Karte ' + k.no + ' von ' + GK_MAX + '</span></div>' +
     '<div class="gk-art"><span class="gk-art-ring"></span><span class="gk-art-c">' + emb(st.e, 92) + '</span></div>' +

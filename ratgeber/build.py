@@ -14,9 +14,15 @@ GAMES = json.load(open(os.path.join(ROOT, 'ratgeber', 'games.json')))
 def esc(s): return html.escape(str(s), quote=True)
 def slugify(s): return re.sub(r'[^a-z0-9]+', '-', s.lower().replace('ä','ae').replace('ö','oe').replace('ü','ue').replace('ß','ss')).strip('-')
 
-LOGO = ('<svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#FF7A45"/>'
-        '<g transform="translate(6.5 6.3) scale(.95)"><path d="M8 2H28V31L35 38C39.5 42.5 38 50.5 31.5 51.5C28.5 52 25.5 51 23 48.5L11 36.5C9 34.5 8 32 8 29Z" fill="#15122B"/></g>'
-        '<path d="M48 5Q49.6 12.4 57 14Q49.6 15.6 48 23Q46.4 15.6 39 14Q46.4 12.4 48 5Z" fill="#FFC940" stroke="#15122B" stroke-width="2.2" stroke-linejoin="round"/></svg>')
+# Das Zeichen: ein Band, zweimal gefaltet, ein Z (Vorderseite Orange, Rückseite Gold), wie in der App (bandMark in src/07-views.js)
+BAND = {'s1': '13,14 52,14 55.03,25 13,25', 's2': '52,14 55.03,25 13,50 9.97,39', 's3': '52,50 13,50 9.97,39 52,39', 'sh1a': '29.2,25 47.7,14 52,14 55.03,25', 'sh1b': '31.36,25 49.85,14 52,14 55.03,25', 'sh2a': '13,50 9.97,39 13.67,36.8 35.19,36.8', 'sh2b': '13,50 9.97,39 11.82,37.9 33.34,37.9'}
+def band_mark(front='#FF7A45', back='#FFC940', shadow='#15122B'):
+    poly = lambda pts, fill, op=None: '<polygon points="%s" fill="%s"%s/>' % (pts, fill, (' fill-opacity="%s"' % op) if op else '')
+    return (poly(BAND['s1'], front) + poly(BAND['sh1a'], shadow, '.1') + poly(BAND['sh1b'], shadow, '.16') + poly(BAND['s2'], back) + poly(BAND['sh2a'], shadow, '.1') + poly(BAND['sh2b'], shadow, '.16') + poly(BAND['s3'], front) +
+            '<line x1="52" y1="14" x2="55.03" y2="25" stroke="#FFFFFF" stroke-opacity=".45" stroke-width=".9"/><line x1="13" y1="50" x2="9.97" y2="39" stroke="#FFFFFF" stroke-opacity=".35" stroke-width=".9"/>')
+def brand_tile(size, bg='#15122B'):
+    return ('<svg viewBox="0 0 64 64" width="%s" height="%s" aria-hidden="true"><rect width="64" height="64" rx="16" fill="%s"/><rect x="1" y="1" width="62" height="62" rx="15" fill="none" stroke="#FFFFFF" stroke-opacity=".08" stroke-width="1.5"/><g transform="translate(32 32) scale(.84) translate(-32 -32)">%s</g></svg>' % (size, size, bg, band_mark()))
+LOGO = brand_tile(30, '#211D3D')
 FONTS = ('<link rel="preload" href="/fonts/figtree.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/unbounded.woff2" as="font" type="font/woff2" crossorigin>')
 PLAY = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>'
 CHEV = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>'
@@ -59,12 +65,13 @@ def autolink(text, self_slug, used, limit=3):
     return text
 def reading_minutes(words): return max(2, int(round(words / 200.0)))
 
-def garland(colors, shape='sock'):
+def garland(colors, shape='band'):
     w = 360; n = len(colors); out = '<svg class="rg-garland" viewBox="0 0 360 70" preserveAspectRatio="xMidYMin meet" aria-hidden="true"><path d="M-4 10Q180 42 364 10" stroke="#F4F1FF" stroke-opacity=".55" stroke-width="2.5" fill="none"/>'
     for i, c in enumerate(colors):
         x = 34 + i * ((w - 68) / (n - 1)); t = (x + 4) / (w + 8); y = 10 + 64 * t * (1 - t)
         if shape == 'box': item = '<rect x="3" y="6" width="30" height="26" rx="4" fill="%s"/><rect x="15" y="6" width="6" height="26" fill="#15122B" fill-opacity=".22"/>' % c
         elif shape == 'flag': item = '<path d="M2 4H34L18 40Z" fill="%s"/>' % c
+        elif shape == 'band': item = '<path d="M3 6H27L33 12V32H3Z" fill="%s"/><path d="M3 6H33V11H3Z" fill="#15122B" fill-opacity=".16"/><path d="M27 6L33 12H27Z" fill="#FFC940"/>' % c
         else: item = '<path d="M8 2H28V31L35 38C39.5 42.5 38 50.5 31.5 51.5C28.5 52 25.5 51 23 48.5L11 36.5C9 34.5 8 32 8 29Z" fill="%s"/><rect x="8" y="2" width="20" height="7" fill="#15122B" fill-opacity=".22"/>' % c
         out += '<g transform="translate(%.1f %.1f) rotate(%d) translate(-11 3) scale(.62)">%s</g><rect x="%.1f" y="%.1f" width="5" height="10" rx="1.5" fill="%s"/>' % (x, y, 6 if i % 2 else -7, item, x - 2.5, y - 5, '#15122B' if i % 2 else '#FFFFFF')
     return out + '</svg>'
