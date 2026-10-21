@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Alterskennzeichnung nach § 5 Abs. 3 Nr. 2 JMStV für Jugendschutzprogramme. Vor dem Start mit dem
+     JusProg-Label-Generator (jugendschutzprogramm.de) prüfen oder neu erzeugen und die Werte hier übernehmen. -->
+<age-declaration>
+  <ageblock-basic>
+    <age-issuer>[Vorname Nachname]</age-issuer>
+    <last-change>2026-10-21</last-change>
+    <country>de</country>
+    <label-version>1.0</label-version>
+    <revisit-after>30</revisit-after>
+  </ageblock-basic>
+  <ageblock-labeltype>
+    <xmlfile>true</xmlfile>
+    <httpheader>false</httpheader>
+    <htmlmeta>true</htmlmeta>
+    <label-z>false</label-z>
+    <default-age>18</default-age>
+    <alternate>false</alternate>
+  </ageblock-labeltype>
+  <ageblock-labeltype-definition>
+    <labeltype-xmlfile>
+      <label class="default">
+        <min-age>18</min-age>
+        <default-age>18</default-age>
+      </label>
+      <label name="ratgeber">
+        <unit>folder</unit>
+        <scope>https://www.zparkling.com/ratgeber/</scope>
+        <protocol>all</protocol>
+        <age>16</age>
+      </label>
+      <label name="rechtliches">
+        <unit>folder</unit>
+        <scope>https://www.zparkling.com/verantwortung/</scope>
+        <protocol>all</protocol>
+        <age>16</age>
+      </label>
+      <label name="recht2">
+        <unit>folder</unit>
+        <scope>https://www.zparkling.com/nutzungsbedingungen/</scope>
+        <protocol>all</protocol>
+        <age>0</age>
+      </label>
+      <label name="recht3">
+        <unit>folder</unit>
+        <scope>https://www.zparkling.com/impressum/</scope>
+        <protocol>all</protocol>
+        <age>0</age>
+      </label>
+      <label name="recht4">
+        <unit>folder</unit>
+        <scope>https://www.zparkling.com/datenschutz/</scope>
+        <protocol>all</protocol>
+        <age>0</age>
+      </label>
+    </labeltype-xmlfile>
+  </ageblock-labeltype-definition>
+</age-declaration>

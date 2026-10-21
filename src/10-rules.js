@@ -10,6 +10,7 @@ var FORMAT_FAQ = {
   team: [['Dürfen die Gäste helfen?', 'Nein, ihr zwei seid allein dran.']]
 };
 var ALWAYS_FAQ = ['Wer entscheidet bei Streit?', 'Der Spielleiter. Sein Wort gilt.'];
+var NOBODY_FAQ = ['Muss ich trinken?', 'Nein, niemand muss. Wasser oder Aussetzen ist immer okay, ohne Kommentar. Wer fährt, trinkt nichts.'];
 /* everything that is not a minigame */
 var KIND_RULES = {
   menge: { a: 'Gegen die Menge! Die Gäste stimmen über fünf Fragen ab. Danach wird geraten: Was hat die Mehrheit gewählt? Drei Treffer, und die Runde ist geschafft.', f: [['Wer stimmt ab?', 'Alle Gäste, per Link oder per Handzeichen. Die Geburtstagskinder nicht.'], ['Dürfen die Geburtstagskinder zuschauen?', 'Beim Handzeichen nicht: Augen zu oder kurz raus. Per Link bleibt die Verteilung bis zur Auflösung geheim.'], ['Wie lange wird abgestimmt?', 'Bis der Spielleiter die Abstimmung beendet.'], ['Was ist bei Gleichstand?', 'Dann zählt jede Antwort als richtig.'], ['Raten beide gemeinsam?', 'Ja, sie einigen sich bei jeder Frage auf eine Antwort.']] },
@@ -52,29 +53,29 @@ function rulesFor(P) {
     var tx = gameTx(g, fmt);
     faq = (g.faq || []).slice();
     (FORMAT_FAQ[fmt] || []).forEach(function (x) { if (!faq.some(function (y) { return y[0] === x[0]; })) faq.push(x); });
-    return { a: g.name + '! ' + (tx ? tx.join(' ') : ''), f: faq.concat([ALWAYS_FAQ]) };
+    return { a: g.name + '! ' + (tx ? tx.join(' ') : ''), f: faq.concat([NOBODY_FAQ, ALWAYS_FAQ]) };
   }
   if (P.kind === 'gast') {
     r = GG_RULES[P.gg]; if (!r) return null;
     var K = P.items ? P.items.length : 0, M = P.need || 0, fill = function (t) { return t.replace(/\{K\}/g, K).replace(/\{M\}/g, M); };
     var own = r.f.map(function (x) { return [fill(x[0]), fill(x[1])]; });
-    return { a: fill(r.a), f: own.concat(GG_FAQ.filter(function (x) { return !own.some(function (y) { return y[0] === x[0]; }); }), [ALWAYS_FAQ]) };
+    return { a: fill(r.a), f: own.concat(GG_FAQ.filter(function (x) { return !own.some(function (y) { return y[0] === x[0]; }); }), [NOBODY_FAQ, ALWAYS_FAQ]) };
   }
   if (P.kind === 'frage') {
     var q = S.questions.filter(function (x) { return x.id === P.qid; })[0], key = 'frage';
     if (q && q.type === 'aufgabe') key = 'frage_aufgabe';
     if (q && (q.type === 'luege' || q.type === 'wer' || q.type === 'steckbrief')) key = 'frage_' + q.type;
-    if (q && (q.type === 'schaetzen' || q.type === 'bereich')) { r = KIND_RULES.schaetzen; return { a: 'Schätzfrage von den Gästen! {N} tippt, die Gruppe hält dagegen. Wer näher dran ist, gewinnt.', f: r.f.concat(KIND_RULES.frage.f.slice(1), [ALWAYS_FAQ]) }; }
-    r = KIND_RULES[key]; return { a: r.a, f: r.f.concat([ALWAYS_FAQ]) };
+    if (q && (q.type === 'schaetzen' || q.type === 'bereich')) { r = KIND_RULES.schaetzen; return { a: 'Schätzfrage von den Gästen! {N} tippt, die Gruppe hält dagegen. Wer näher dran ist, gewinnt.', f: r.f.concat(KIND_RULES.frage.f.slice(1), [NOBODY_FAQ, ALWAYS_FAQ]) }; }
+    r = KIND_RULES[key]; return { a: r.a, f: r.f.concat([NOBODY_FAQ, ALWAYS_FAQ]) };
   }
   /* a mission inside the crew or for the person alone gets its own announcement */
   if (P.kind === 'mission' && P.who && P.who !== 'fremd') {
     r = KIND_RULES.mission;
     var ma = P.who === 'truppe' ? 'Mission! Diesmal in der Truppe: {N} hat einen Auftrag, die Truppe spielt mit. Wer verweigert, trinkt.' : 'Mission! {N} allein, die Truppe ist Publikum und Jury. Wer verweigert, trinkt.';
-    return { a: ma, f: r.f.slice(1).concat([ALWAYS_FAQ]) };
+    return { a: ma, f: r.f.slice(1).concat([NOBODY_FAQ, ALWAYS_FAQ]) };
   }
   r = KIND_RULES[P.kind];
-  return r ? { a: r.a, f: r.f.concat([ALWAYS_FAQ]) } : null;
+  return r ? { a: r.a, f: r.f.concat([NOBODY_FAQ, ALWAYS_FAQ]) } : null;
 }
 function rulesText(s, P) { var pid = P && (P.main || (P.ids && P.ids[0])); var t = unitText(s, pid); var n = P && P.kind === 'toast' && P.ids ? focusNames(P.ids) : pid ? person(pid).name : ''; return t.replace(/\{N\}/g, n || 'du'); }
 /* the announcement card: read it out, or let the phone read it */

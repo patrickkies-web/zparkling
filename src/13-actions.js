@@ -87,6 +87,21 @@ A.setEventAnlass = function (d) {
   commit();
 };
 A.setUnit = function (d) { E().unit = d.v; commit(); };
+/* with or without alcohol: the units follow, alcohol needs the confirmation (18+, nobody has to) */
+A.setAlk = function (d) {
+  var e = E(); if (!e) return;
+  e.alk = d.v === 'nein' ? 'nein' : 'ja';
+  if (e.alk === 'nein' && FREE_UNITS.indexOf(e.unit) < 0) e.unit = 'Schluck';
+  if (e.alk === 'ja' && UNITS.indexOf(e.unit) < 0) e.unit = 'Pinnchen';
+  UI.cfgErr = ''; commit();
+};
+A.alkConfirm = function () { var e = E(); if (!e) return; e.alk = 'ja'; e.alkOk = Date.now(); UI.cfgErr = ''; commit(); };
+function alkBlock() {
+  var e = E(); if (!e) return '';
+  if (!alkChosen()) return 'Mit oder ohne Alkohol? Wähl eins, damit der Pilot richtig rechnet.';
+  if (alkOn() && !e.alkOk) return 'Bitte bestätige kurz: Alle, die trinken, sind volljährig, und niemand muss.';
+  return '';
+}
 A.setMax = function (d) { E().max = clamp(E().max + (+d.d), 2, 30); commit(); };
 /* the target in steps of one drink: the percentage follows */
 A.setTarget = function (d) { var e = E(), T = clamp(Math.round(e.max * e.target / 100) + (+d.d), 1, e.max); e.target = clamp(Math.round(T / e.max * 100), 20, 100); commit(); };
@@ -389,6 +404,8 @@ function cfgGoStep(n) {
   n = Math.max(1, Math.min(4, n));
   var block = n > 1 ? cfgBlock() : '';
   if (block) { UI.cfgStep = 1; UI.cfgErr = block; render(); return; }
+  var ab = n > 3 ? alkBlock() : '';
+  if (ab) { UI.cfgStep = 3; UI.cfgErr = ab; render(); return; }
   UI.cfgErr = ''; UI.cfgStep = n; render();
   var b = app.querySelector('.body'); if (b) b.scrollTop = 0;
 }
@@ -431,6 +448,7 @@ A.cfgSwaps = function (d) { var c = cfgDefaults(); c.acc.swaps = clamp(c.acc.swa
 A.cfgLink = function () { var c = cfgDefaults(); c.link = !c.link; commit(); };
 A.cfgBuddy = function () { var c = cfgDefaults(); c.buddy = c.buddy === false; commit(); };
 A.startRun = function () { if (needPass('Das Spiel starten geht mit dem Game Pass.')) return;
+  var ab = alkBlock(); if (ab) { UI.cfgErr = ab; UI.cfgStep = 3; go('runSetup'); return; }
   /* a Junggesellenabschied needs its crew: the master enters who is there */
   if (isJga() && crewList().length < 2) { UI.cfgErr = 'Tragt zuerst die Truppe ein, mindestens zwei Namen. Beim Junggesellenabschied spielt sie mit.'; UI.cfgStep = 1; render(); return; }
   if (!startRun()) { UI.cfgErr = 'Wähl mindestens eine Person aus.'; UI.cfgStep = 1; render(); return; } UI.confirm = null; UI.ckLog = false; commit(); go('run'); runKickoff(); };
@@ -463,6 +481,7 @@ A.heroGo = function () {
 /* the last setup step saves the evening, the start waits on the home screen */
 A.cfgSave = function () {
   var block = cfgBlock(); if (block) { UI.cfgStep = 1; UI.cfgErr = block; render(); return; }
+  var ab = alkBlock(); if (ab) { UI.cfgStep = 3; UI.cfgErr = ab; render(); return; }
   var c = cfgDefaults(); c.saved = true; UI.cfgErr = ''; UI.heroFx = 'unlock';
   commit(); go('home'); setToast('Abend eingestellt. Der Start ist frei!');
 };
@@ -1213,6 +1232,7 @@ try { localStorage.removeItem('altesocke.history'); } catch (e) {}
   if (S.run && !S.run.fam) S.run.fam = 'kranz';
 })();
 if (S.event && !S.event.mats) { S.event.mats = {}; MATERIALS.forEach(function (m) { S.event.mats[m.id] = true; }); }
+if (S.event && S.event.alk == null) { S.event.alk = S.event.unit === 'Glas Wasser' ? 'nein' : 'ja'; S.event.alkOk = 0; }
 var hash = (location.hash || '').replace('#', '');
 if (hash === 'gast-fragen') { UI.guestMode = 'link'; UI.screen = 'guestForm'; UI.qDraft = qDraftNew(''); gReset(); }
 else if (hash === 'gast-live') { UI.guestMode = 'link'; UI.screen = 'guestLive'; }

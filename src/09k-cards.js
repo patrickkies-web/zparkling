@@ -199,7 +199,7 @@ function gkSub(k) {
   if (k.type === 'spruch') return 'Den einen Spruch, genau so, wie ' + N + ' ihn sagt.';
   if (k.type === 'joker') return 'Wer heute verliert, darf dich fragen, ob du ihn einlöst. Dann fällt ein ' + gkUnit() + ' weg. Du entscheidest.';
   if (k.type === 'weiter') return 'Wählt dich jemand als Trinkbuddy, gibst du den Job an jemand anderen weiter. Einmal einsetzbar.';
-  if (k.type === 'regel') return 'Auf der Party stellst du eine Regel auf. Die Hauptpersonen halten sie fünf Minuten ein. Wer sie bricht, trinkt ein ' + gkUnit() + '.';
+  if (k.type === 'regel') return 'Auf der Party stellst du eine Regel auf. Die Hauptpersonen halten sie fünf Minuten ein. Wer sie bricht, trinkt ' + einU(gkUnit()) + '.';
   return 'Ein Wort, das Erste, was dir einfällt. Die häufigsten Antworten landen auf der Tafel.';
 }
 function gkValid(k) {

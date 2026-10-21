@@ -43,7 +43,14 @@ function mergeInbox() {
    People
    ========================================================= */
 var PEOPLE_COLORS = ['#48D9A6', '#9886FF', '#FFC940', '#FF7A45', '#F4F1FF', '#FF7AB6', '#5B8CFF', '#7FE3C0', '#FFD970'];
-function newEvent() { return { name: '', anlass: 'socken', focus: [], unit: 'Pinnchen', max: 10, target: 70, jokers: 2, mats: {} }; }
+function newEvent() { return { name: '', anlass: 'socken', focus: [], unit: 'Pinnchen', max: 10, target: 70, jokers: 2, mats: {}, alk: '', alkOk: 0 }; }
+/* Alcohol is a choice the master makes for the evening, never a default: 'ja' (and the
+   confirmation in alkOk, a timestamp), 'nein' (a sip of whatever is in the glass, or water), '' not chosen yet. */
+function alkOn() { var e = E(); return !!e && e.alk === 'ja'; }
+function alkChosen() { var e = E(); return !!e && (e.alk === 'ja' || e.alk === 'nein'); }
+function unitList() { return alkOn() || !alkChosen() ? UNITS : FREE_UNITS; }
+/* „ein Pinnchen“, „einen Schluck“, „ein Glas Wasser“: the unit with its article */
+function einU(u) { u = u || U(); return (u === 'Schluck' || u === 'Shot' || u === 'Kurzer' ? 'einen ' : 'ein ') + (u === 'Kurzer' ? 'Kurzen' : u); }
 function E() { return S.event; }
 function U() { return (E() && E().unit) || 'Pinnchen'; }
 function allPeople() { return E() ? E().focus.concat(S.people) : []; }
@@ -964,6 +971,7 @@ function demoEvent() {
   ];
   e.mats = {};
   MAT_PRESET_PARTY.concat(['teebeutel', 'socken', 'ball', 'zeitung', 'kekse', 'klammern', 'schnur', 'tischtennis']).forEach(function (id) { e.mats[id] = true; });
+  e.alk = 'ja'; e.alkOk = Date.now();
   S.event = e;
   S.collectCode = makeCode();
   var demoQ = [

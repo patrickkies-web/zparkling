@@ -56,7 +56,7 @@ V.landing = function () {
     '<div><span class="lp-fair-e">' + emb('cheers', 44) + '</span><b>Höchstens ein Pinnchen pro Spiel</b><p>Pro Spiel und Person nie mehr als eins. Wer viel gewinnt, trinkt weniger.</p></div>' +
     '<div><span class="lp-fair-e">' + emb('watch', 44) + '</span><b>Die App achtet aufs Tempo</b><p>Wird der Abend zu schnell, tritt sie auf die Bremse.</p></div>' +
     '<div><span class="lp-fair-e">' + emb('shield', 44) + '</span><b>Niemand muss</b><p>Gäste machen freiwillig mit. Wer nur zuschauen will, schaut zu.</p></div>' +
-    '</div></section>';
+    '</div><p class="lp-p lp-narrow lp-adult">Für Erwachsene. Ob Pinnchen oder Wasser, entscheidet der Spielleiter vor dem Abend; die App spielt beides gleich. Wer fährt, trinkt nichts. <a class="lp-a" href="/verantwortung/">Mehr zur Verantwortung</a></p></section>';
   var plans = PASS_PLANS.map(function (p) { return '<span class="lp-price"><b>' + esc(p.price) + '</b><span>' + esc(p.label) + '</span></span>'; }).join('');
   var pass = '<section class="lp-sec"><div class="lp-pass"><div class="lp-copy"><h2 class="lp-h2">Ausprobieren kostet nichts.</h2>' +
     '<p class="lp-p">Der Beispiel-Abend zeigt euch, wie alles funktioniert. Für eure eigene Party gibt es den Game Pass: einmal zahlen, kein Abo, alle Spiele und Gäste-Links bis zwei Tage nach dem Fest.</p>' +
@@ -64,7 +64,7 @@ V.landing = function () {
     '<div class="lp-ctas lp-ctas-col">' + lpBtn('openDemoPick', 'Beispiel-Abend ansehen', 'ink') + lpBtn('go', 'Game Pass ansehen', 'ghost ink-ghost').replace('data-act="go"', 'data-act="go" data-to="pass"') + '</div></div></section>';
   var end = '<section class="lp-end"><h2 class="lp-h2">Bereit für eure Party?</h2><p class="lp-p">Das Intro zeigt in gut einer Minute, was zparkling aus eurem Abend macht.</p>' +
     '<div class="lp-ctas">' + lpBtn('lpIntro', 'Intro starten', '', 'i-play') + lpBtn('newEvent', 'Gleich eure Party anlegen', 'ghost') + '</div></section>' +
-    '<footer class="lp-foot"><span class="lp-brand">' + lpLogo(24) + '<b>zparkling</b></span><span>Das Partyspiel für euren Abend · <a class="lp-a" href="/ratgeber/">Ratgeber zu Sockenkranz, Schachtelkranz, Treppe fegen</a></span></footer>';
+    '<footer class="lp-foot"><span class="lp-brand">' + lpLogo(24) + '<b>zparkling</b></span><span>Das Partyspiel für euren Abend · <a class="lp-a" href="/ratgeber/">Ratgeber zu Sockenkranz, Schachtelkranz, Treppe fegen</a></span><span class="lp-legal">Für Erwachsene · <a class="lp-a" href="/verantwortung/">Verantwortung</a> · <a class="lp-a" href="/nutzungsbedingungen/">Nutzungsbedingungen</a> · <a class="lp-a" href="/impressum/">Impressum</a> · <a class="lp-a" href="/datenschutz/">Datenschutz</a></span></footer>';
   return scr('', top + lpMarquee() + hero + steps + guests + occ + fair + pass + end, '', 'lp');
 };
 A.lpIntro = function () { A.openTour(); };

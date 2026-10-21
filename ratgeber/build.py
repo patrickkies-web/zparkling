@@ -149,6 +149,7 @@ def page_html(pg, all_pages):
 <meta property="article:modified_time" content="{DATE}">
 <meta property="article:section" content="Ratgeber">
 <meta name="author" content="{esc(AUTHOR)}">
+<meta name="age-de-meta-label" content="age=16 v=1.0 kind=sl protocol=all">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0C0A1A">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -171,7 +172,7 @@ def page_html(pg, all_pages):
 <section class="rg-cta-box" style="--c:{pg['color']}"><div><span class="rg-app-k">zparkling</span><b>{esc(pg['cta_title'])}</b><p>{pg['cta_text']}</p></div><a class="rg-cta" href="/#beispiel-{pg['anlass']}">{PLAY}Beispiel-Abend ansehen</a></section>
 <section class="rg-related"><h2>Weiterlesen</h2><div class="rg-rels">{related}</div><p class="rg-all"><a href="/ratgeber/">Alle Ratgeber ansehen {CHEV}</a></p></section>
 </main>
-<footer class="rg-foot"><a class="rg-brand" href="/">{LOGO}<b>zparkling</b></a><span>Das Partyspiel für euren Abend · <a href="/ratgeber/">Alle Ratgeber</a></span></footer>
+<footer class="rg-foot"><a class="rg-brand" href="/">{LOGO}<b>zparkling</b></a><span>Das Partyspiel für euren Abend · <a href="/ratgeber/">Alle Ratgeber</a> · <a href="/verantwortung/">Verantwortung</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></span></footer>
 </body>
 </html>
 '''
@@ -200,6 +201,7 @@ def index_html(all_pages):
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="website"><meta property="og:title" content="Ratgeber: Bräuche, Partyspiele und Aufgaben"><meta property="og:description" content="Sockenkranz, Schachtelkranz, Treppe fegen und Klinken putzen: Aufgaben, Fragen, Regeln und Spiele."><meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}/ratgeber/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="de_DE">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="age-de-meta-label" content="age=16 v=1.0 kind=sl protocol=all">
 <meta name="theme-color" content="#0C0A1A">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -215,7 +217,7 @@ def index_html(all_pages):
 {sections}
 <section class="rg-cta-box" style="--c:#FFC940"><div><span class="rg-app-k">zparkling</span><b>Die App, die den Abend spielt</b><p>Eure Gäste schicken vorab per Link, was sie über das Geburtstagskind wissen. Daraus baut zparkling über 140 Minispiele und Gäste-Runden, die es nur auf eurer Party gibt. Pro Spiel fällt höchstens ein Pinnchen, Gäste werden nie gezwungen.</p></div><a class="rg-cta" href="/">{PLAY}App ansehen</a></section>
 </main>
-<footer class="rg-foot"><a class="rg-brand" href="/">{LOGO}<b>zparkling</b></a><span>Das Partyspiel für euren Abend</span></footer>
+<footer class="rg-foot"><a class="rg-brand" href="/">{LOGO}<b>zparkling</b></a><span>Das Partyspiel für euren Abend · Für Erwachsene · <a href="/verantwortung/">Verantwortung</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></span></footer>
 </body>
 </html>
 '''
@@ -230,7 +232,7 @@ if __name__ == '__main__':
         print(pg['slug'], words, 'Wörter', len(pg['title']), 'Title-Zeichen', len(pg['description']), 'Description-Zeichen')
     open(os.path.join(OUT, 'index.html'), 'w').write(index_html(PAGES))
     # sitemap and robots
-    urls = [SITE + '/', SITE + '/ratgeber/'] + [SITE + '/ratgeber/' + p['slug'] + '/' for p in PAGES]
+    urls = [SITE + '/', SITE + '/ratgeber/'] + [SITE + '/ratgeber/' + p['slug'] + '/' for p in PAGES] + [SITE + '/' + x + '/' for x in ['verantwortung', 'nutzungsbedingungen', 'impressum', 'datenschutz']]
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join('  <url><loc>%s</loc><lastmod>%s</lastmod></url>\n' % (u, DATE) for u in urls) + '</urlset>\n'
     open(os.path.join(ROOT, 'public', 'sitemap.xml'), 'w').write(sm)
     open(os.path.join(ROOT, 'public', 'robots.txt'), 'w').write('''# zparkling: Such-Crawler willkommen, Trainings-Crawler nicht.

@@ -42,7 +42,7 @@ function gWelcomeView() {
     '<div class="wl-crowd">' + gCrowd() + '</div>' +
     '</div>';
   var head = UI.guestMode === 'test' ? '<div class="testbanner">' + icon('i-user', 18) + '<span class="grow">Testansicht: So sieht der Link für Gäste aus.</span><button type="button" class="tag plain" data-act="go" data-to="' + UI.guestFrom + '" style="height:30px;color:var(--sun)">Zurück</button></div>' : '';
-  var foot = '<button type="button" class="cta wl-go" data-act="gWelcome">' + icon('i-play', 18) + 'Ich bin dabei!</button><p class="small" style="text-align:center">Dauert etwa zwei Minuten</p>';
+  var foot = '<button type="button" class="cta wl-go" data-act="gWelcome">' + icon('i-play', 18) + 'Ich bin dabei!</button><p class="small" style="text-align:center">Dauert etwa zwei Minuten · Die Party ist für Erwachsene, mitspielen geht mit und ohne Alkohol</p>';
   return scr(head, body, foot, 'wlscr');
 }
 /* „Ich bin dabei!“: the invitation opens like two doors, the form is behind it */

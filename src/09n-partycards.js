@@ -44,7 +44,7 @@ function pcTitle(t) { return { joker: 'Der Joker', weiter: 'Weiterleiten', regel
 function pcText(t) {
   if (t === 'joker') return 'Befreit eine Hauptperson einmal von einem ' + U() + '. Du entscheidest, ob du ihn einlöst.';
   if (t === 'weiter') return 'Wirst du Trinkbuddy, gibst du den Job an jemand anderen weiter. Einmal einsetzbar.';
-  return 'Stell eine Regel auf. Die Hauptpersonen halten sie fünf Minuten ein. Wer sie bricht, trinkt ein ' + U() + '.';
+  return 'Stell eine Regel auf. Die Hauptpersonen halten sie fünf Minuten ein. Wer sie bricht, trinkt ' + einU() + '.';
 }
 function runLive() { var r = R(); return r && !r.finished ? r : null; }
 
@@ -216,9 +216,9 @@ A.ruleBroke = function (d) {
   if (!x || !ruleLive(x) || x.broke[d.pid] || x.who.indexOf(d.pid) < 0) return;
   x.broke[d.pid] = true;
   var p = person(d.pid), bg = budget(d.pid), bd = budOf(d.pid);
-  if (bg.C < bg.M) { addDrink(d.pid, 1, 'regel', 'Regel gebrochen: ' + x.text); budStart(d.pid); bd = budOf(d.pid); setToast(p.name + ' trinkt ein ' + U() + (bd ? ', ' + budName(bd) + ' trinkt mit' : '')); x.water = x.water || {}; }
+  if (bg.C < bg.M) { addDrink(d.pid, 1, 'regel', 'Regel gebrochen: ' + x.text); budStart(d.pid); bd = budOf(d.pid); setToast(p.name + ' trinkt ' + einU() + (bd ? ', ' + budName(bd) + ' trinkt mit' : '')); x.water = x.water || {}; }
   else { x.water = x.water || {}; x.water[d.pid] = true; setToast(p.name + ' ist am Maximum, es gibt Wasser'); }
-  logRun('fail', p.name + ' hat die Regel gebrochen' + (bg.C < bg.M ? ' und trinkt ein ' + U() : ', am Maximum gibt es Wasser'));
+  logRun('fail', p.name + ' hat die Regel gebrochen' + (bg.C < bg.M ? ' und trinkt ' + einU() : ', am Maximum gibt es Wasser'));
   commit();
 };
 

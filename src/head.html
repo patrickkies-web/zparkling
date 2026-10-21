@@ -2084,6 +2084,9 @@ body:not(.wide) .wz-s { position: relative; }
 .lp-top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: calc(var(--top) - 4px) var(--gx) 10px; background: rgba(12,10,26,.78); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 .lp-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--white); }
 .lp-brand b { font: 800 18px var(--display); letter-spacing: -0.02em; }
+.lp-adult { margin-top: 18px; font-size: 14.5px; color: var(--muted); }
+.lp-legal { display: block; width: 100%; margin-top: 10px; font-size: 13px; color: var(--muted); }
+.legal-links a { color: var(--violet-text); }
 .lp-logo { display: inline-flex; flex: 0 0 auto; }
 .lp-logo svg { display: block; }
 .lp-nav { display: flex; align-items: center; gap: 6px; }
@@ -2494,6 +2497,19 @@ body.kb .body { scroll-padding-top: 72px; scroll-padding-bottom: 24px; }
 .gfin .gfin-done { height: 48px; min-width: 0; padding: 0 18px; flex: 0 0 auto; }
 .gfin .foot { padding-top: 6px; }
 /* ---------- v41: the pilot's plan in the evening setup ---------- */
+/* with or without alcohol: the host's choice, and the host's word before alcohol */
+.alk-tiles { display: grid; gap: 10px; }
+.alk-tile { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 20px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); text-align: left; font: inherit; cursor: pointer; }
+.alk-tile b { display: block; color: var(--white); font: 800 16px/1.2 var(--display); }
+.alk-tile > .stack > span { font-size: 13.5px; color: var(--muted); line-height: 1.35; }
+.alk-tile .check { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--line-2); background: transparent; display: grid; place-items: center; color: transparent; }
+.alk-tile.on { border-color: var(--mint); background: var(--sel); }
+.alk-tile.on .check { background: var(--mint); border-color: var(--mint); color: var(--ink); }
+.alk-ok { padding: 14px 16px; border-radius: 20px; background: rgba(255,201,64,.12); border: 1.5px solid rgba(255,201,64,.5); }
+.alk-ok b { color: var(--white); }
+.alk-ok ul { margin: 8px 0 0; padding-left: 20px; }
+.alk-ok li { margin: 6px 0; font-size: 14.5px; line-height: 1.4; }
+.alk-ok a { color: var(--violet-text); }
 .pp { border-radius: 24px; background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--line); overflow: hidden; }
 .pp-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: linear-gradient(135deg, rgba(255,201,64,.16), rgba(255,122,69,.08)); border-bottom: 1.5px solid var(--line); }
 .pp-head b { font: 800 15px/1.2 var(--body); color: var(--white); }

@@ -90,14 +90,27 @@ function cfgStep3(c) {
     var M = e.max, T = Math.round(M * e.target / 100), est = planEstimate(id, perPerson); if (est < T) shortPlan = true;
     return '<div class="pp-row">' + face(person(id), 34) + '<span class="grow name" style="font-size:15px">' + esc(person(id).name) + '</span><span class="pp-n"><b class="num">~' + T + '</b><small>Ziel' + (est < T ? ', eher ~' + est : '') + '</small></span><span class="pp-n"><b class="num">' + M + '</b><small>höchstens</small></span></div>';
   }).join('');
-  var units = '<div class="chips" role="group" aria-label="Einheit">' + UNITS.map(function (u) { var sel = e.unit === u; return '<button type="button" class="chip-btn sm' + (sel ? ' is-sel' : '') + '" data-act="setUnit" data-v="' + u + '" aria-pressed="' + sel + '">' + u + '</button>'; }).join('') + '</div>';
+  var units = '<div class="chips" role="group" aria-label="Einheit">' + unitList().map(function (u) { var sel = e.unit === u; return '<button type="button" class="chip-btn sm' + (sel ? ' is-sel' : '') + '" data-act="setUnit" data-v="' + u + '" aria-pressed="' + sel + '">' + u + '</button>'; }).join('') + '</div>';
+  var choice = alkChoiceHtml(e);
+  if (!alkChosen() || (alkOn() && !e.alkOk)) return '<h1 class="h1 mt18">Mit oder ohne Alkohol?</h1><p class="small mt6">Das entscheidet der Spielleiter, nicht die App. Beides spielt sich gleich: Pro Spiel und Person fällt höchstens eins.</p>' + choice;
   var pilot = '<div class="pp mt14"><div class="pp-head"><span class="pp-e">' + emb('cheers', 34) + '</span><span class="stack grow" style="gap:2px;min-width:0"><b>So viel ' + esc(e.unit) + ' plant der Pilot für heute</b><small>Pro Spiel und Person fällt höchstens eins. Wer gewinnt, trinkt weniger.</small></span></div>' +
     '<div class="pp-rows">' + plan + '</div>' +
     (shortPlan ? '<p class="small pp-note">Bei so wenigen Aufgaben wird das Ziel nicht ganz erreicht. Mehr ' + (fam === 'frei' ? (c.variant === 'wuerfel' ? 'Felder' : 'Runden') : fam === 'kranz' ? (c.variant === 'meter' ? 'Meter' : 'Stationen am Kranz') : 'Spielzeit') + ' oder ein kleineres Maximum helfen.</p>' : '') +
     '<div class="pp-ctl"><div class="row"><span class="stack grow" style="gap:1px"><span class="name">Höchstens pro Person</span><span class="sub">Für den ganzen Abend, wird nie überschritten</span></span>' + stepper('setMax', e.max, '', 'Maximum') + '</div>' +
     '<div class="row"><span class="stack grow" style="gap:1px"><span class="name">Ziel</span><span class="sub">Im Schnitt landet ihr hier: ' + e.target + ' % vom Maximum</span></span>' + stepper('setTarget', Math.round(e.max * e.target / 100), '', 'Ziel') + '</div>' +
     '<div class="stack" style="gap:8px;padding:6px 0 2px"><span class="name">Einheit</span>' + units + '</div></div></div>';
-  return '<h1 class="h1 mt18">Wie viel darf heute fallen?</h1><p class="small mt6">Der Pilot zählt mit und bremst, wenn es zu schnell wird. Pro Spiel und Person fällt höchstens eins, egal was ihr hier einstellt.</p>' + pilot;
+  return '<h1 class="h1 mt18">Wie viel darf heute fallen?</h1><p class="small mt6">Der Pilot zählt mit und bremst, wenn es zu schnell wird. Pro Spiel und Person fällt höchstens eins, egal was ihr hier einstellt.</p>' + choice + pilot;
+}
+/* with or without alcohol: two tiles; alcohol wants the host's word that everyone is of age and nobody has to */
+function alkChoiceHtml(e) {
+  var tile = function (v, ic, title, sub) { var on = e.alk === v; return '<button type="button" class="alk-tile' + (on ? ' on' : '') + '" data-act="setAlk" data-v="' + v + '" aria-pressed="' + on + '">' + emb(ic, 34) + '<span class="stack grow" style="gap:2px;min-width:0;text-align:left"><b>' + title + '</b><span>' + sub + '</span></span><span class="check">' + icon('i-check', 14) + '</span></button>'; };
+  var o = '<div class="alk-tiles mt14">' + tile('nein', 'jar', 'Ohne Alkohol', 'Ein Schluck vom eigenen Getränk oder ein Glas Wasser. Für Fahrer, Schwangere, alle, die nicht mögen.') + tile('ja', 'cheers', 'Mit Alkohol', 'Nur für Erwachsene. Pinnchen, Schluck, Shot oder Kurzer, der Pilot zählt mit und bremst.') + '</div>';
+  if (alkOn() && !e.alkOk) o += '<div class="alk-ok mt14"><b>Bevor es losgeht, dein Wort als Spielleiter:</b><ul>' +
+    '<li>Alle, die trinken, sind volljährig.</li><li>Niemand muss trinken. Wasser oder Aussetzen ist immer okay, ohne Kommentar.</li><li>Wer fährt, schwanger ist, Medikamente nimmt oder nicht mag, spielt ohne Alkohol mit.</li><li>Du achtest auf deine Gäste und beendest den Abend, wenn es jemandem nicht gut geht. Im Notfall: 112.</li></ul>' +
+    '<button type="button" class="cta mt10" data-act="alkConfirm">' + icon('i-check', 18) + 'Ja, dafür stehe ich</button><p class="small mt8">Mehr dazu unter <a href="/verantwortung/" target="_blank" rel="noopener">Verantwortung</a>.</p></div>';
+  else if (alkOn()) o += '<p class="small mt8">' + icon('i-check', 14) + ' Mit Alkohol, bestätigt: alle volljährig, niemand muss. Umstellen geht jederzeit.</p>';
+  else if (alkChosen()) o += '<p class="small mt8">' + icon('i-check', 14) + ' Ohne Alkohol. Gezählt wird trotzdem, der Pilot bremst nur das Tempo.</p>';
+  return o;
 }
 /* step 4: the plan at a glance, the extras, then go */
 function cfgStep4(c) {
@@ -113,7 +126,7 @@ function cfgStep4(c) {
     row(1, faces, esc(joinNames(who.map(function (id) { return person(id).name; }))), who.length < 2 ? 'Allein im Mittelpunkt' : tog === 'gemeinsam' ? 'Gemeinsam, im Wechsel' : 'Gegeneinander, mit Duellen') +
     row(2, vic, esc(v.label), esc(cfgLenText(c, who, tog)) + (c.variant === 'wuerfel' ? (c.dice === 'echt' ? ', echter Würfel' : ', Würfel in der App') : '')) +
     row(2, cic, 'Etwa ' + c.minutes + ' Minuten', 'Etwa ' + steps + ' ' + (timed ? 'Einlagen' : 'Aufgaben')) +
-    row(3, pic, 'Pinnchen-Pilot', 'Ziel etwa ' + Math.round(e.max * e.target / 100) + ', höchstens ' + e.max + ' ' + esc(e.unit) + ' pro Person') +
+    row(3, pic, alkOn() ? 'Pinnchen-Pilot · mit Alkohol' : 'Pilot · ohne Alkohol', 'Ziel etwa ' + Math.round(e.max * e.target / 100) + ', höchstens ' + e.max + ' ' + esc(e.unit) + ' pro Person') +
     '<button type="button" class="wz-sum" data-act="openMaterial" data-from="runSetup">' + mic + '<span class="stack grow" style="gap:2px;min-width:0;text-align:left"><b>Material</b><span class="sub">' + esc(matSummary()) + '</span></span><span class="wz-edit">Ändern</span></button></div>';
   var link = '<label class="row mt14 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Gäste per Link einbinden</span><span class="sub">Bei Schätz- und Abstimmfragen</span></span><button type="button" class="switch" role="switch" aria-checked="' + !!c.link + '" data-act="cfgLink" aria-label="Gäste per Link einbinden"><span></span></button></label>';
   var buddy = '<label class="row mt10 card pad" style="cursor:pointer"><span class="stack grow"><span class="name">Trinkbuddys</span><span class="sub">Jede Hauptperson wählt jemanden, der mittrinkt. Ab dem ersten gemeinsamen ' + esc(E().unit) + ' hält die Verbindung 1 bis 3 Spiele, das entscheidet die App. Dann wird neu gewählt.</span></span><button type="button" class="switch" role="switch" aria-checked="' + (c.buddy !== false) + '" data-act="cfgBuddy" aria-label="Trinkbuddys"><span></span></button></label>';

@@ -184,9 +184,13 @@ function typeCurrent() {
   var t = evType();
   return '<button type="button" class="opt row is-sel" data-act="setTypeOpen" aria-expanded="false" style="width:100%;min-height:58px;border-radius:18px;padding:7px 12px 7px 7px"><span class="tile-ic" style="width:40px;height:40px;border-radius:12px;background:' + t.bg + '">' + typeIcon(t) + '</span><span class="stack grow"><span style="font-size:15px;font-weight:800">' + esc(t.label) + '</span><span class="sub">' + esc(t.sub) + '</span></span><span class="linkbtn">Ändern</span></button>';
 }
+/* the legal pages of the website; from the app they open in a new tab */
+function legalLinks(cls) {
+  return '<p class="small legal-links' + (cls ? ' ' + cls : '') + '">' + [['/verantwortung/', 'Verantwortung & Alkohol'], ['/nutzungsbedingungen/', 'Nutzungsbedingungen'], ['/impressum/', 'Impressum'], ['/datenschutz/', 'Datenschutz']].map(function (l) { return '<a href="' + l[0] + '" target="_blank" rel="noopener">' + l[1] + '</a>'; }).join(' · ') + '</p>';
+}
 function rulesBlock() {
   var e = E();
-  return '<span class="eyebrow mt18 block">Einheit</span><div class="chips mt10" role="group" aria-label="Einheit">' + UNITS.map(function (u) {
+  return alkChoiceHtml(e) + '<span class="eyebrow mt18 block">Einheit</span><div class="chips mt10" role="group" aria-label="Einheit">' + unitList().map(function (u) {
     var sel = e.unit === u;
     return '<button type="button" class="chip-btn sm' + (sel ? ' is-sel' : '') + '" data-act="setUnit" data-v="' + u + '" aria-pressed="' + sel + '">' + u + '</button>';
   }).join('') + '</div>' +
@@ -452,6 +456,7 @@ V.settings = function () {
     '<p>Die Handicap-Station kostet nie etwas. Atempause heißt Wasser bei Niederlagen, Vollgas heißt kein Glück mit Wasser (höchstens eins über dem persönlichen Ziel), Strafe statt ' + esc(e.unit) + ' wird wie ein Joker verbucht. Maximum und Tempo-Bremse gelten immer.</p></div>') +
     passSettingsHtml() +
     '<button type="button" class="tourcard plain mt14" data-act="openTour"><span class="tc-e" aria-hidden="true">' + emb('garland', 40) + '</span><span class="stack grow" style="gap:2px;text-align:left"><b>Was kann die App?</b><span>Das Intro noch einmal ansehen</span></span>' + icon('i-play', 18) + '</button>' +
+    '<span class="eyebrow mt22 block">Verantwortung</span><p class="small mt6">zparkling ist ein Spiel für Erwachsene. Ob Alkohol im Spiel ist, entscheidet der Spielleiter; niemand muss trinken, Wasser oder Aussetzen ist immer okay. Wer fährt, schwanger ist oder Medikamente nimmt, spielt ohne. Bei Bewusstlosigkeit: Notruf 112.</p>' + legalLinks('mt8') +
     '<span class="eyebrow mt22 block">Daten</span><p class="small mt6">Alles bleibt nur in diesem Browser gespeichert.</p>' +
     (S.demo ? '<button type="button" class="btn-ghost mt10" data-act="openDemoPick" data-from="home">Anderen Beispiel-Abend laden</button>' : UI.confirm === 'loadDemo' ? confirmBox('Den Beispiel-Abend laden?', 'Dein eigener Abend wird dabei ersetzt. Lieber erst die Party zu Ende feiern.', 'loadDemo', 'Laden') : '<button type="button" class="btn-ghost mt10" data-act="askConfirm" data-v="loadDemo">Beispiel-Abend laden</button>') +
     (UI.confirm === 'resetAll' ? confirmBox('Den ganzen Abend löschen?', 'Personen, Fragen, Zähler und der Spielstand gehen verloren.', 'resetAll', 'Löschen') : '<button type="button" class="btn-ghost danger mt10" data-act="askConfirm" data-v="resetAll">Abend löschen und neu anfangen</button>');

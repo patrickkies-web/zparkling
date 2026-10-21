@@ -70,6 +70,6 @@ function dpTicket(t, i, on, dim) {
 }
 V.demoPick = function () {
   var sel = UI.dpSel, cards = EVENT_TYPES.map(function (t, i) { return dpTicket(t, i, sel === t.id, !!sel && sel !== t.id); }).join('');
-  var body = '<h1 class="h1 mt10">Welchen Abend wollt ihr ausprobieren?</h1><p class="lead mt8">Der Beispiel-Abend ist schon mit Gästen und ihren Beiträgen gefüllt. Tippt einen Anlass an, dann könnt ihr sofort losspielen.</p><div class="dp-list mt18">' + cards + '</div>';
+  var body = '<h1 class="h1 mt10">Welchen Abend wollt ihr ausprobieren?</h1><p class="lead mt8">Der Beispiel-Abend ist schon mit Gästen und ihren Beiträgen gefüllt. Tippt einen Anlass an, dann könnt ihr sofort losspielen.</p><div class="dp-list mt18">' + cards + '</div><p class="small mt14" style="text-align:center">Im Beispiel fallen Pinnchen. Eure eigene Party spielt sich auf Wunsch ohne Alkohol, der Spielleiter entscheidet. Für Erwachsene.</p>';
   return scr(topbar(UI.dpFrom || 'landing', 'Beispiel-Abend'), body, '', 'dpscr');
 };

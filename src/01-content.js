@@ -19,6 +19,8 @@ var FA = {
   eigen: { label: 'Eigener Anlass', unit: 'Station', units: 'Stationen', count: 20, kind: 'kranz' }
 };
 var UNITS = ['Pinnchen', 'Schluck', 'Shot', 'Kurzer'];
+/* without alcohol: a sip of whatever is in the glass, or a glass of water */
+var FREE_UNITS = ['Schluck', 'Glas Wasser'];
 var ACC_SUGGEST = {
   fegen: ['Besen', 'Handfeger', 'Zahnbürste', 'Kehrblech ohne Besen', 'Besen mit kurzem Stiel', 'Pinsel', 'Spülbürste', 'Staubwedel'],
   putzen: ['Lappen', 'Zahnbürste', 'Wattestäbchen', 'Schwamm', 'Taschentuch', 'Spülbürste', 'Socke']
