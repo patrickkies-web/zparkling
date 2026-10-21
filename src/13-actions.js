@@ -11,6 +11,11 @@ function render() {
   var body = app.querySelector('.body');
   var keep = body && app.getAttribute('data-screen') === UI.screen ? body.scrollTop : 0;
   var fn = V[UI.screen] || V.landing;
+  /* the website ships the landing page as static HTML (harness/prerender.js): the first render keeps it, so nothing flashes and the socks drop once */
+  if (app.getAttribute && app.getAttribute('data-prerender')) {
+    var pre = app.getAttribute('data-prerender'); app.removeAttribute('data-prerender');
+    if (pre === UI.screen && !UI.toast && !UI.qrBig && !UI.sin) { app.setAttribute('data-screen', UI.screen); tintSoon(); return; }
+  }
   var html = fn();
   /* a new screen comes in with a small rise; a re-render of the same screen stays still */
   if (UI.sin) { html = html.replace('class="scr', 'class="scr sin'); UI.sin = false; }

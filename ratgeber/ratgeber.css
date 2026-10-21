@@ -1,4 +1,7 @@
 /* zparkling Ratgeber: dieselbe Linie wie die App (Nachtblau, Unbounded/Figtree, Tickets, Konfetti-Farben) */
+/* Schriften liegen auf dem eigenen Server (variable WOFF2, OFL): kein Google-Fonts-Aufruf, kein Render-Blocking */
+@font-face { font-family: 'Unbounded'; font-style: normal; font-weight: 200 900; font-display: swap; src: url(/fonts/unbounded.woff2) format('woff2'); }
+@font-face { font-family: 'Figtree'; font-style: normal; font-weight: 300 900; font-display: swap; src: url(/fonts/figtree.woff2) format('woff2'); }
 :root { --page: #0C0A1A; --ink: #15122B; --surface: #211D3D; --surface-2: #2C2750; --line: #312C58; --line-2: #3A3463; --text: #F4F1FF; --white: #FFFFFF; --muted: #ABA4D4; --orange: #FF7A45; --mint: #48D9A6; --violet: #9886FF; --violet-text: #B3A6FF; --sun: #FFC940; --pink: #FF8FC4; --display: 'Unbounded', 'Arial Black', system-ui, sans-serif; --body: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif; --gx: max(20px, env(safe-area-inset-left, 0px)); color-scheme: dark; }
 * { box-sizing: border-box; }
 html { background: var(--page); scroll-behavior: smooth; }
@@ -97,6 +100,13 @@ tr:last-child td { border-bottom: 0; }
 .rg-rel b { font: 800 15.5px var(--body); color: var(--white); }
 .rg-rel small { font-size: 13px; color: var(--muted); }
 .rg-rel > svg { color: var(--muted); flex: 0 0 auto; }
+/* Übersicht: ein Abschnitt je Themen-Cluster */
+.rg-cluster { margin-top: 34px; }
+.rg-cluster h2 { margin: 0 0 6px; font: 800 24px/1.2 var(--display); letter-spacing: -0.02em; color: var(--white); scroll-margin-top: 16px; }
+.rg-cluster > p { margin: 0; max-width: 68ch; color: var(--muted); font-weight: 600; }
+.rg-cluster .rg-tiles { margin-top: 14px; }
+.rg-all { margin: 12px 0 0; }
+.rg-all a { display: inline-flex; align-items: center; gap: 4px; font-weight: 800; text-decoration: none; }
 /* Übersicht */
 .rg-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 24px 0 0; }
 .rg-tile { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 6px; padding: 18px 18px 16px; border-radius: 26px; background: var(--c); color: var(--ink); text-decoration: none; box-shadow: inset 0 -6px 0 rgba(0,0,0,.14), 0 12px 28px rgba(0,0,0,.3); transition: transform .2s; }

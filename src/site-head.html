@@ -18,6 +18,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <style>:root{color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px);background:#0C0A1A}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#0C0A1A;color:#F4F1FF}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-<script>window.ZP_SITE = true;</script>
+<script>window.ZP_SITE = true;
+/* the static landing page stays hidden for hosts with a saved party and for guest links: they get their own screen */
+try { var zs = localStorage.getItem('altesocke.app.v2'); if ((zs && JSON.parse(zs).event) || /^#gast-/.test(location.hash)) document.documentElement.className += ' nopre'; } catch (e) {}</script>
+<style>.nopre #app[data-prerender] { visibility: hidden; }</style>
 </head>
 <body>

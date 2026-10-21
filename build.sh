@@ -14,7 +14,12 @@ const fs=require("fs");const h=fs.readFileSync("'$APP'","utf8");
 const a=h.indexOf("<script>")+8,b=h.lastIndexOf("</script>");
 try{new Function(h.slice(a,b));console.log("SYNTAX_OK")}catch(e){console.log("SYNTAX_ERR",e.message);process.exit(1)}'
 # the website: its own page frame (title, icons, ZP_SITE), the fragment's title line goes
-{ cat src/site-head.html; sed '1{/^<title>/d}' $APP; } > public/index.html
+# the website: the fonts come from /fonts (variable WOFF2, OFL) instead of Google Fonts; the artifact keeps the Google link
+FONTS='<link rel="preload" href="/fonts/figtree.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/unbounded.woff2" as="font" type="font/woff2" crossorigin><style>@font-face{font-family:"Unbounded";font-style:normal;font-weight:200 900;font-display:swap;src:url(/fonts/unbounded.woff2) format("woff2")}@font-face{font-family:"Figtree";font-style:normal;font-weight:300 900;font-display:swap;src:url(/fonts/figtree.woff2) format("woff2")}</style>'
+{ cat src/site-head.html; sed -e '1{/^<title>/d}' -e "s#^<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/[^>]*>\$#$FONTS#" $APP; } > public/index.html
+grep -q 'fonts.googleapis' public/index.html && { echo "font substitution failed"; exit 1; }
+# the landing page as static HTML inside the app root (crawlers, first paint)
+node harness/prerender.js
 # test page with the same frame claude.ai adds
 { cat src/wrapper.html; cat $APP; } > test/page.html
 python3 - <<'PY'
