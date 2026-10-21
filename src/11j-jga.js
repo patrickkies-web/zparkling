@@ -50,6 +50,26 @@ function jgaLevel(pid, x, first) {
 }
 function jgaModeOf(r) { return r && r.jga ? r.jga.mode : (S.runCfg && S.runCfg.jgaMode) || 'stadt'; }
 
+/* ---------- who the mission involves: strangers, the crew, the person alone ----------
+   An evening in the city is not a string of „ask a stranger“: the three kinds take turns.
+   Shares by boldness (shy people get more inside the crew), the recent missions pull the
+   weights back toward the shares, never three of a kind in a row, the first one stays inside. */
+var JGA_WHO = ['fremd', 'truppe', 'solo'];
+var JGA_WHO_NAME = { fremd: 'Mit Fremden', truppe: 'In der Truppe', solo: 'Solo' };
+var JGA_WHO_SHARE = { 1: { fremd: 0.3, truppe: 0.42, solo: 0.28 }, 2: { fremd: 0.4, truppe: 0.35, solo: 0.25 }, 3: { fremd: 0.48, truppe: 0.3, solo: 0.22 } };
+function whoHist(r) { return r && Array.isArray(r.jwho) ? r.jwho : []; }
+function whoNote(r, w) { if (!r || !w) return; r.jwho = whoHist(r).concat([w]).slice(-8); }
+function jgaWho(r, pid, first) {
+  var base = JGA_WHO_SHARE[jgaMut(pid)] || JGA_WHO_SHARE[2], h = whoHist(r), n = h.length;
+  if (first || !n) return pick(['truppe', 'solo', 'truppe']);
+  var last = h[n - 1], twice = n >= 2 && h[n - 2] === last, win = h.slice(-6);
+  return weighted(JGA_WHO.map(function (w) {
+    var cnt = win.filter(function (x) { return x === w; }).length, want = base[w] * win.length;
+    var f = cnt > want ? Math.max(0.15, 1 - (cnt - want) / 2.5) : 1 + (want - cnt) / 3;
+    if (w === last) f *= twice ? 0 : 0.45;
+    return [w, base[w] * f];
+  }));
+}
 /* ---------- picking a mission ---------- */
 function missionData(pid) {
   var f = guestFacts(pid), p = person(pid);
@@ -71,12 +91,17 @@ function missionFill(s, pid, fill) {
   var n = person(pid).name;
   return String(s).replace(/\{Ns\}/g, possessive(n)).replace(/\{N\}/g, n).replace(/\{P\}/g, fill.P || '').replace(/\{I\}/g, fill.I || '').replace(/\{T\}/g, fill.T || '').replace(/\{M\}/g, fill.M || '');
 }
-/* a fresh mission of level L; when that level is used up, the nearest one below, then above (never above max) */
-function jgaPick(L, max, d, mode, not) {
+/* a fresh mission of level L for the counterpart who; first the level with that counterpart, then a
+   neighbouring level with it, then the level with anyone, then further out (never above max) */
+function jgaPick(L, max, d, mode, not, who) {
   var used = missionsUsed(), order = [L];
   for (var k = 1; k < 3; k++) { if (L - k >= 1) order.push(L - k); if (L + k <= max) order.push(L + k); }
-  for (var i = 0; i < order.length; i++) {
-    var c = JGA_TASKS.filter(function (m) { return m.lvl === order[i] && m.id !== not && used.indexOf(m.id) < 0 && missionOk(m, d, mode); });
+  var tries = [];
+  order.forEach(function (l, i) { if (who) tries.push([l, who]); if (i === 0 || i === order.length - 1 || Math.abs(l - L) >= 2) tries.push([l, null]); });
+  order.forEach(function (l) { tries.push([l, null]); });
+  for (var i = 0; i < tries.length; i++) {
+    var lv = tries[i][0], w = tries[i][1];
+    var c = JGA_TASKS.filter(function (m) { return m.lvl === lv && m.id !== not && used.indexOf(m.id) < 0 && (!w || m.who === w) && missionOk(m, d, mode); });
     if (c.length) return pick(c);
   }
   /* everything played: the one played longest ago */
@@ -92,10 +117,11 @@ function makeMissionStep(main, r, opt) {
   var x = opt.x != null ? opt.x : (r ? maxProgress(r) : 0.5);
   var first = r ? !(r.kinds || []).some(function (k) { return k === 'mission'; }) : false;
   var max = Math.min(opt.max || 3, jgaMaxLvl(main)), L = Math.min(max, jgaLevel(main, x, first));
-  var m = jgaPick(L, max, d, mode, opt.not); if (!m) return null;
+  var who = opt.who || jgaWho(r, main, first);
+  var m = jgaPick(L, max, d, mode, opt.not, who); if (!m) return null;
   var used = missionsUsed(), at = used.indexOf(m.id); if (at >= 0) used.splice(at, 1); used.push(m.id);
   var fill = { P: d.P, I: d.I.length ? pick(d.I) : '', T: d.T.length ? pick(d.T) : '', M: d.M.length ? pick(d.M) : '' };
-  return { kind: 'mission', mid: m.id, lvl: m.lvl, main: main, title: missionFill(m.title, main, fill), text: missionFill(m.t, main, fill), win: missionFill(m.win, main, fill), take: m.take.slice(), buy: m.buy, s: m.s, sid: uid('s') };
+  return { kind: 'mission', mid: m.id, lvl: m.lvl, who: m.who, main: main, title: missionFill(m.title, main, fill), text: missionFill(m.t, main, fill), win: missionFill(m.win, main, fill), take: m.take.slice(), buy: m.buy, s: m.s, sid: uid('s') };
 }
 /* refusing costs a drink, unless max, tempo brake or a breather say no, or the person is already one over the personal target */
 function refuseRow(pid) {
@@ -105,6 +131,7 @@ function refuseRow(pid) {
 }
 function noteMission(r, P, how) {
   if (!r) return;
+  whoNote(r, P.who);
   var s = r.jstat = r.jstat || { ok: 0, fail: 0, refuse: 0, wild: 0, best: '' };
   s[how] += 1;
   if (how === 'ok' && P.lvl === 3) { s.wild += 1; s.best = P.title; }
@@ -131,7 +158,10 @@ function crewInjection(r) {
 function prepCrewStep(r, P) {
   var st = crewState(r), left = crewJobsLeft(r);
   var low = Math.min.apply(null, left.map(function (x) { return st.by[x.c.id] || 0; }));
-  var pickd = pick(left.filter(function (x) { return (st.by[x.c.id] || 0) === low; }));
+  var cand = left.filter(function (x) { return (st.by[x.c.id] || 0) === low; }), h = whoHist(r);
+  var inside = cand.filter(function (x) { var ro = jgaRole(x.c.role); return ro.w && ro.w[x.i] === 't'; });
+  if (h.length && h[h.length - 1] === 'fremd' && inside.length && Math.random() < 0.7) cand = inside;
+  var pickd = pick(cand);
   st.n += 1; st.last = r.steps; st.used.push(pickd.k); st.by[pickd.c.id] = (st.by[pickd.c.id] || 0) + 1;
   var role = jgaRole(pickd.c.role), fill = function (s) { return String(s).replace(/\{C\}/g, pickd.c.name).replace(/\{N\}/g, person(P.main).name); };
   P.cid = pickd.c.id; P.name = pickd.c.name; P.role = role.id; P.text = fill(role.jobs[pickd.i]); P.amt = fill(role.amt); P.sid = uid('s');
@@ -155,11 +185,12 @@ function missionView(P) {
   var extra = (P.take.length ? '<p class="jm-need">' + emb('backpack', 22) + '<span><b>Dabei:</b> ' + esc(P.take.map(packLabel).join(', ')) + '</span></p>' : '') +
     (P.buy ? '<p class="jm-need">' + emb('bag', 22) + '<span><b>Unterwegs besorgen:</b> ' + esc(P.buy) + '</span></p>' : '');
   var say = P.title + '. ' + P.text + ' ' + P.win;
-  var body = bigCard(lv.c, 'Mission · ' + lv.name, esc(P.title),
+  var who = P.who || 'fremd', fair = who === 'truppe' ? 'Die Truppe macht mit, niemand muss. Wer nicht will, feuert an.' : who === 'solo' ? esc(mp.name) + ' allein, die Truppe ist Publikum und Jury. Nichts Verbotenes.' : 'Wer Nein sagt, wird in Ruhe gelassen, dann fragt ' + esc(mp.name) + ' einfach jemand anderen. Nichts Verbotenes, niemand unter 18.';
+  var body = bigCard(lv.c, 'Mission · ' + lv.name + ' · ' + JGA_WHO_NAME[who], esc(P.title),
     '<p class="g-how">' + esc(P.text) + '</p><p class="g-win">' + icon('i-flag', 15) + '<span>' + esc(P.win) + '</span></p>' + extra +
     '<div class="row" style="position:relative;gap:8px;justify-content:space-between;flex-wrap:wrap">' + heatHtml(P.lvl, 22) + '<button type="button" class="g-say" data-act="speak" data-t="' + esc(say) + '">' + icon('i-play', 13) + 'Vorlesen</button></div>');
   body += '<div class="mt18 row" style="justify-content:center">' + face(mp, 84, '', P.lvl === 3 ? 'cool' : '') + '</div>' +
-    '<p class="jm-fair">' + emb('shield', 22) + '<span>Wer Nein sagt, wird in Ruhe gelassen, dann fragt ' + esc(mp.name) + ' einfach jemand anderen. Nichts Verbotenes, niemand unter 18.</span></p>' +
+    '<p class="jm-fair">' + emb(who === 'truppe' ? 'cheers' : who === 'solo' ? 'mask' : 'shield', 22) + '<span>' + fair + '</span></p>' +
     (P.result ? '' : timerBlock(P.s, 'm' + P.mid));
   var foot = '<div class="cta-row"><button type="button" class="btn-dark" style="flex:1" data-act="stepResolve" data-v="fail">Nicht geschafft</button><button type="button" class="cta mint" style="flex:1" data-act="stepResolve" data-v="ok">' + icon('i-check', 18) + 'Geschafft</button></div>' +
     '<button type="button" class="linkbtn" style="align-self:center" data-act="stepResolve" data-v="refuse">Verweigert, das kostet 1 ' + esc(U()) + '</button>';

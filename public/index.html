@@ -3842,7 +3842,9 @@ function gameTx(g, fmt) { var k = fmt === 'duellGast' ? 'duell' : fmt; return g 
    Placeholders: {N} name, {Ns} possessive, {P} partner (the one to be married),
    {I} an interest and {T} a trait from the guests' two words, {M} a memory a guest wrote.
    Fields: [level, title, text, how it counts, options]
-   options: take (packed items), buy (to get on the way), dat (P, I, T, TI, M), s (seconds), bar (works indoors too)
+   options: take (packed items), buy (to get on the way), dat (P, I, T, TI, M), s (seconds), bar (works indoors too),
+   w: who the mission involves: 'fremd' (people on the street, the default), 'truppe' (the crew plays along),
+   'solo' (the person alone, the crew is the audience). The evening keeps the three in balance (jgaWho).
    ========================================================= */
 var JGA_PACK = [
   ['stift', 'Kugelschreiber oder Edding'], ['klebezettel', 'Klebezettel'], ['pappschild', 'Pappschild'], ['sonnenbrille', 'Sonnenbrille'],
@@ -3892,6 +3894,21 @@ var JGA_RAW = [
   [1, 'Fan gesucht', '{N} sucht jemanden, der auch {I} mag.', 'Geschafft in 10 Minuten.', { dat: 'I', bar: true, s: 600 }],
   [1, 'Kartenglück', '{N} lässt einen Fremden eine Karte ziehen. {N} rät die Farbe, drei Versuche.', 'Geschafft, wenn die Farbe stimmt.', { take: ['kartenspiel'], bar: true }],
   [1, 'Ohne Handy', '{N} führt die Truppe zum nächsten Ziel und darf dafür nur Passanten nach dem Weg fragen, kein Handy.', 'Geschafft, wenn ihr ankommt.', {}],
+  /* ---------- 1: harmlos, in der Truppe oder solo ---------- */
+  [1, 'Ja-Wort-Probe', 'Die Truppe stellt {N} fünf Fragen über {P}: Lieblingsessen, Schuhgröße, erster gemeinsamer Urlaub, was auch immer. {N} antwortet ohne Zögern.', 'Geschafft bei vier von fünf Antworten, die die Truppe glaubt.', { w: 'truppe', dat: 'P', bar: true }],
+  [1, 'Koffer für die Flitterwochen', 'Die Truppe packt reihum den Koffer: Jeder wiederholt alles Bisherige und legt etwas dazu. {N} ist zuletzt dran und muss den ganzen Koffer aufzählen.', 'Geschafft, wenn {N} nichts vergisst.', { w: 'truppe', bar: true }],
+  [1, 'Wunsch-Runde', 'Jeder aus der Truppe wünscht {N} in einem Satz etwas für die Ehe. {N} hört zu und wiederholt am Ende drei der Wünsche.', 'Geschafft, wenn drei Wünsche richtig wiederholt sind.', { w: 'truppe', bar: true }],
+  [1, 'Reiseplanung', 'Jeder aus der Truppe schlägt ein Ziel für die Flitterwochen vor und wirbt 15 Sekunden dafür. {N} wählt am Ende eines und begründet die Wahl.', 'Geschafft, wenn ein Ziel feststeht.', { w: 'truppe', bar: true }],
+  [1, 'Seit wann?', 'Jeder aus der Truppe nennt das Jahr, seit dem er {N} kennt. {N} stellt alle in eine Reihe, vom ältesten Freund zum neuesten, ohne nachzufragen.', 'Geschafft, wenn die Reihe stimmt.', { w: 'truppe', bar: true }],
+  [1, 'Standbild Standesamt', 'Die Truppe stellt in 30 Sekunden die Trauung nach: {N} verteilt die Rollen, vom Standesbeamten bis zur weinenden Tante. Foto.', 'Geschafft mit Foto, auf dem jeder eine Rolle hat.', { w: 'truppe', s: 30, bar: true }],
+  [1, 'Trinkspruch-Werkstatt', 'Drei aus der Truppe sagen je ein Wort. {N} baut daraus in 30 Sekunden einen Trinkspruch auf die Ehe. Wasser zählt.', 'Geschafft, wenn alle drei Wörter drin sind.', { w: 'truppe', s: 30, bar: true }],
+  [1, 'Zehn Jahre später', 'Jeder aus der Truppe sagt voraus, wo {N} und {P} in zehn Jahren leben und was die beiden dann machen. {N} kürt die beste Vorhersage.', 'Geschafft, wenn eine Vorhersage gekürt ist.', { w: 'truppe', dat: 'P', bar: true }],
+  [1, 'Zehn Dinge', '{N} zählt in 30 Sekunden zehn Dinge auf, die {N} an {P} liebt. Die Truppe zählt laut mit.', 'Geschafft bei zehn Dingen in 30 Sekunden.', { w: 'solo', dat: 'P', s: 30, bar: true }],
+  [1, 'Hochzeits-ABC', '{N} sagt von A bis J zu jedem Buchstaben ein Wort, das mit der Hochzeit zu tun hat, ohne lange zu überlegen.', 'Geschafft in 30 Sekunden ohne Hänger.', { w: 'solo', s: 30, bar: true }],
+  [1, 'Das Hochzeitsfoto', '{N} stellt das Hochzeitsfoto des nächsten Jahres allein nach: Pose, Blick, Hand am Herzen. Die Truppe fotografiert aus drei Richtungen.', 'Geschafft mit drei Fotos.', { w: 'solo', bar: true }],
+  [1, 'Dankbar', '{N} sagt 30 Sekunden lang ohne Pause, wofür {N} in diesem Leben dankbar ist. Die Truppe hört still zu.', 'Geschafft, wenn die 30 Sekunden voll sind.', { w: 'solo', s: 30, bar: true }],
+  [1, 'Beweis für die Truppe', 'Die Gäste beschreiben {N} als „{T}“. {N} beweist es der Truppe in 30 Sekunden, ohne ein Wort zu sagen.', 'Geschafft, wenn die Truppe zustimmt.', { w: 'solo', dat: 'T', s: 30, bar: true }],
+  [1, 'Brief an später', '{N} diktiert der Truppe drei Sätze an sich selbst in zehn Jahren. Jemand tippt mit und schickt sie {N} am ersten Hochzeitstag.', 'Geschafft, wenn die drei Sätze getippt sind.', { w: 'solo', bar: true }],
   /* ---------- 2: mutig ---------- */
   [2, 'Liebeslied', '{N} singt einem Fremden die erste Zeile eines bekannten Liebeslieds vor. Der Fremde soll den Titel erraten.', 'Geschafft, wenn er den Titel errät.', { bar: true }],
   [2, 'Tanzstunde', '{N} lässt sich von einem Fremden einen Tanzschritt zeigen und tanzt ihn 20 Sekunden lang vor.', 'Geschafft, wenn der Schritt sitzt.', { s: 20, bar: true }],
@@ -3931,6 +3948,21 @@ var JGA_RAW = [
   [2, 'Blumengruß', '{N} kauft eine einzelne Blume und schenkt sie einem Paar mit den besten Wünschen.', 'Geschafft, wenn die Blume verschenkt ist.', { buy: 'eine einzelne Blume' }],
   [2, 'Hochzeitsfoto gestellt', '{N} stellt mit einem Fremden ein Hochzeitsfoto nach: Er spielt den Trauzeugen, die Truppe die Gäste.', 'Geschafft mit Foto.', {}],
   [2, 'Wetterbericht', '{N} moderiert für einen Fremden 20 Sekunden lang den Wetterbericht für den Hochzeitstag.', 'Geschafft, wenn der Fremde zuschaut.', { s: 20, bar: true }],
+  /* ---------- 2: mutig, in der Truppe oder solo ---------- */
+  [2, 'Rede-Staffel', 'Die Truppe hält eine Hochzeitsrede auf {N}: jeder genau einen Satz, reihum, ohne Pause. {N} hört mit ernstem Gesicht zu.', 'Geschafft, wenn niemand länger als drei Sekunden hängt und {N} nicht lacht.', { w: 'truppe', bar: true }],
+  [2, 'Schwiegermutter-Training', 'Jemand aus der Truppe spielt die künftige Schwiegermutter beim ersten Besuch. {N} muss sie in 60 Sekunden um den Finger wickeln.', 'Geschafft, wenn die Schwiegermutter {N} am Ende zum Essen einlädt.', { w: 'truppe', s: 60, bar: true }],
+  [2, 'Streitschlichter', 'Zwei aus der Truppe spielen ein Paar im Streit um den Abwasch. {N} schlichtet in 60 Sekunden, bis beide zufrieden sind.', 'Geschafft, wenn sich das Paar versöhnt.', { w: 'truppe', s: 60, bar: true }],
+  [2, 'Erinnerung ohne Worte', 'Jemand aus der Truppe spielt eine gemeinsame Erinnerung mit {N} pantomimisch vor. {N} muss sie in 30 Sekunden erraten.', 'Geschafft, wenn {N} die Erinnerung nennt.', { w: 'truppe', s: 30, bar: true }],
+  [2, 'Hochzeitsplaylist', 'Jeder aus der Truppe nennt einen Song für die Hochzeit. {N} singt oder summt von jedem die erste Zeile.', 'Geschafft, wenn die Truppe jeden Song erkennt.', { w: 'truppe', bar: true }],
+  [2, 'Blind geführt', '{N} geht mit geschlossenen Augen zehn Meter, nur von den Zurufen der Truppe geführt. Einer geht sichernd daneben.', 'Geschafft, wenn {N} ankommt, ohne irgendwo anzustoßen.', { w: 'truppe' }],
+  [2, 'Gelübde aus drei Wörtern', 'Die Truppe gibt {N} drei Wörter, die nichts mit Liebe zu tun haben. {N} spricht daraus ein Ehegelübde von fünf Sätzen an {P}.', 'Geschafft, wenn alle drei Wörter drin sind und die Truppe gerührt tut.', { w: 'truppe', dat: 'P', bar: true }],
+  [2, 'Schlagzeile', 'Die Truppe denkt sich die Schlagzeile der Hochzeitszeitung aus. {N} liest sie als Nachrichtensprecher vor, ernst und mit Jingle.', 'Geschafft, wenn {N} dabei nicht lacht.', { w: 'truppe', bar: true }],
+  [2, 'Lachverbot', '{N} darf zwei Minuten lang nicht lachen. Die Truppe versucht alles, ohne zu berühren.', 'Geschafft, wenn {N} zwei Minuten ernst bleibt.', { w: 'solo', s: 120, bar: true }],
+  [2, 'Rede ohne Worte', '{N} hält der Truppe eine Rede nur mit Gesten. Die Truppe übersetzt laut, was sie versteht.', 'Geschafft, wenn die Truppe das Thema der Rede errät.', { w: 'solo', s: 45, bar: true }],
+  [2, 'Sprachnachricht', '{N} spricht {P} eine Sprachnachricht: eine Minute, ehrlich, ohne Äh. Die Truppe darf mithören.', 'Geschafft, wenn die Nachricht ohne Neustart verschickt ist.', { w: 'solo', dat: 'P', s: 60, bar: true }],
+  [2, 'Drei Versionen vom Antrag', '{N} erzählt der Truppe drei Versionen, wie der Antrag lief. Nur eine stimmt, die Truppe muss sie erkennen.', 'Geschafft, wenn mindestens die Hälfte der Truppe daneben liegt.', { w: 'solo', dat: 'P', bar: true }],
+  [2, 'Die Geschichte dahinter', 'Ein Gast hat aufgeschrieben: „{M}“ {N} erzählt der Truppe die ganze Geschichte dahinter, mit allem, was dazugehört.', 'Geschafft, wenn die Truppe keine Fragen mehr hat.', { w: 'solo', dat: 'M', bar: true }],
+  [2, 'Freestyle', '{N} reimt vier Zeilen über {P}, aus dem Stegreif. Die Truppe gibt den Beat.', 'Geschafft bei vier Zeilen, die sich reimen.', { w: 'solo', dat: 'P', bar: true }],
   /* ---------- 3: wild ---------- */
   [3, 'Platzkonzert', '{N} singt in einer Fußgängerzone oder auf einem Platz laut einen Refrain. Die Truppe steht im Halbkreis und klatscht.', 'Geschafft, wenn der Refrain komplett ist.', {}],
   [3, 'Antrag an die Statue', '{N} macht einer Statue, einem Denkmal oder einer Laterne einen Heiratsantrag, mit Kniefall und Rede. Die Truppe jubelt.', 'Geschafft, wenn die Rede 20 Sekunden dauert.', { s: 20 }],
@@ -3962,39 +3994,49 @@ var JGA_RAW = [
   [3, 'Zirkusdirektor', '{N} kündigt die Truppe an wie im Zirkus: Jedes Mitglied bekommt eine Ansage, die Passanten sind das Publikum.', 'Geschafft, wenn jemand klatscht.', {}],
   [3, 'Karaoke-Anfrage', '{N} fragt in einer Bar nach dem Mikro oder einem Lied über die Anlage und singt den Refrain.', 'Geschafft, wenn der Refrain gesungen ist. Gibt es kein Mikro, singt {N} ohne.', { bar: true }],
   [3, 'Brautstrauß', '{N} wirft einen Strauß aus Servietten oder Blumen über die Schulter in eine Gruppe Fremder, die vorher zugestimmt hat.', 'Geschafft, wenn jemand fängt. Danach wird aufgesammelt.', { buy: 'Servietten oder ein paar Blumen' }],
-  [3, 'Ehrenrunde', '{N} läuft eine Runde um einen Platz oder Brunnen und lässt sich von Fremden zuwinken. Die Truppe feuert an.', 'Geschafft, wenn mindestens drei Fremde winken.', {}]
+  [3, 'Ehrenrunde', '{N} läuft eine Runde um einen Platz oder Brunnen und lässt sich von Fremden zuwinken. Die Truppe feuert an.', 'Geschafft, wenn mindestens drei Fremde winken.', {}],
+  /* ---------- 3: wild, in der Truppe oder solo ---------- */
+  [3, 'Spalier', 'Die Truppe bildet ein Spalier mit erhobenen Armen, mitten auf dem Weg. {N} schreitet hindurch, die Truppe jubelt wie vor dem Standesamt.', 'Geschafft, wenn {N} am Ende ankommt und sich verbeugt.', { w: 'truppe' }],
+  [3, 'Zeitlupen-Einzug', 'Die ganze Truppe geht 20 Meter in Zeitlupe, {N} vorneweg, alle summen den Hochzeitsmarsch.', 'Geschafft, wenn niemand aus der Zeitlupe fällt.', { w: 'truppe' }],
+  [3, 'Der Antrag, nachgespielt', 'Die Truppe spielt {Ns} Antrag nach: {N} spielt {P}, jemand aus der Truppe spielt {N}. Mit Kniefall und Rede.', 'Geschafft, wenn {N} als {P} Ja sagt.', { w: 'truppe', dat: 'P', bar: true }],
+  [3, 'Chor', 'Die Truppe singt {N} mitten auf dem Platz ein Ständchen, {N} dirigiert mit großen Armen.', 'Geschafft nach einer ganzen Strophe.', { w: 'truppe' }],
+  [3, 'Menschen-Torte', 'Die Truppe baut in 60 Sekunden eine Hochzeitstorte aus sich selbst: hinten stehend, davor kniend, vorn sitzend. {N} steht als Figur in der Mitte und streckt die Arme hoch.', 'Geschafft mit Foto.', { w: 'truppe', s: 60 }],
+  [3, 'Ja, ich will!', '{N} ruft zehnmal laut „Ja, ich will!“, jedes Mal in einer anderen Stimmlage, die die Truppe vorgibt: Opernsänger, Flüsterer, Sportreporter, Roboter.', 'Geschafft nach zehn Rufen.', { w: 'solo' }],
+  [3, 'Tanz ohne Musik', '{N} tanzt 30 Sekunden lang den Hochzeitstanz allein auf dem Platz, die Truppe summt die Musik.', 'Geschafft nach 30 Sekunden ohne Abbruch.', { w: 'solo', s: 30 }],
+  [3, 'Lobrede auf die Truppe', '{N} steigt auf eine Stufe und hält eine Lobrede, in der jeder aus der Truppe namentlich vorkommt, laut und mit Pathos.', 'Geschafft, wenn niemand vergessen wurde.', { w: 'solo', s: 60 }]
 ];
-var JGA_TASKS = JGA_RAW.map(function (x, i) { var o = x[4] || {}; return { id: 'j' + (i + 1), lvl: x[0], title: x[1], t: x[2], win: x[3], take: o.take || [], buy: o.buy || '', dat: o.dat || '', s: o.s || 0, bar: !!o.bar }; });
+var JGA_WHO_FIX = { 'Star-Auftritt': 'solo', 'Kiosk-Rarität': 'truppe', 'Doppelgänger': 'solo', 'Buchstabenjagd': 'solo', 'Mini-Geschenk': 'solo', 'Alt, neu, geliehen, blau': 'truppe', 'Kronkorken-Jagd': 'solo', 'Laufsteg': 'solo', 'Nur noch Reime': 'solo', 'Statue': 'solo', 'Kreide-Botschaft': 'solo', 'Wahlkampf-Rede': 'solo', 'Platzkonzert': 'solo', 'Antrag an die Statue': 'solo', 'Flashmob': 'truppe', 'Sportreporter': 'solo', 'Klopapier-Outfit': 'truppe', 'Abschied vom Single-Leben': 'solo', 'Marktschreier': 'solo', 'Liebeserklärung': 'solo', 'Zirkusdirektor': 'truppe', 'Karaoke-Anfrage': 'solo', 'Gedichtvortrag': 'solo' };
+var JGA_TASKS = JGA_RAW.map(function (x, i) { var o = x[4] || {}; return { id: 'j' + (i + 1), lvl: x[0], title: x[1], t: x[2], win: x[3], take: o.take || [], buy: o.buy || '', dat: o.dat || '', s: o.s || 0, bar: !!o.bar, who: o.w || JGA_WHO_FIX[x[1]] || 'fremd' }; });
 
 /* the crew: roles the master hands out, each with a small office and a few jobs.
    {C} is the crew member, {N} the one who gets married. */
 var JGA_ROLES = [
   { id: 'trauzeuge', name: 'Der Trauzeuge', art: 'crown', amt: 'Hat das Kommando und kündigt jede Mission feierlich an.',
-    jobs: ['{C} hält eine 30-Sekunden-Rede auf {N}, laut, an einem Ort mit Publikum.', '{C} erzählt einem Fremden in einem Satz die peinlichste Geschichte, die er über {N} kennt.', '{C} lässt sich von einem Fremden erklären, wie die perfekte Trauzeugen-Rede klingt, und hält sofort eine Probe.'] },
+    jobs: ['{C} hält eine 30-Sekunden-Rede auf {N}, laut, an einem Ort mit Publikum.', '{C} erzählt einem Fremden in einem Satz die peinlichste Geschichte, die er über {N} kennt.', '{C} lässt sich von einem Fremden erklären, wie die perfekte Trauzeugen-Rede klingt, und hält sofort eine Probe.', '{C} verleiht {N} feierlich einen Orden aus einem Bierdeckel, mit kurzer Rede und Handschlag.'], w: 'ffft' },
   { id: 'fotograf', name: 'Der Fotograf', art: 'camera', amt: 'Hält alles fest. Ohne Beweisfoto keine Mission.',
-    jobs: ['{C} macht ein Gruppenfoto, auf dem ein Fremder mitten in der Truppe steht.', '{C} lässt sich von einem Fremden zeigen, wie man ein richtig gutes Porträt macht, und fotografiert {N} genau so.', '{C} macht ein Foto der Truppe aus der Froschperspektive, liegend auf dem Boden.'] },
+    jobs: ['{C} macht ein Gruppenfoto, auf dem ein Fremder mitten in der Truppe steht.', '{C} lässt sich von einem Fremden zeigen, wie man ein richtig gutes Porträt macht, und fotografiert {N} genau so.', '{C} macht ein Foto der Truppe aus der Froschperspektive, liegend auf dem Boden.', '{C} inszeniert ein Foto der Truppe als Albumcover: {N} in der Mitte, alle mit demselben Blick.'], w: 'ffft' },
   { id: 'navigator', name: 'Der Navigator', art: 'compass', amt: 'Führt die Truppe. Gibt nie zu, dass er sich verlaufen hat.',
-    jobs: ['{C} fragt einen Passanten nach dem Weg zu einem Ort, der direkt nebenan ist, und tut sehr überrascht.', '{C} lässt sich von jemandem aus der Gegend den besten Imbiss in der Nähe empfehlen. Da geht es als Nächstes hin.', '{C} führt die Truppe zwei Minuten lang nur mit Handzeichen, ohne ein Wort.'] },
+    jobs: ['{C} fragt einen Passanten nach dem Weg zu einem Ort, der direkt nebenan ist, und tut sehr überrascht.', '{C} lässt sich von jemandem aus der Gegend den besten Imbiss in der Nähe empfehlen. Da geht es als Nächstes hin.', '{C} führt die Truppe zwei Minuten lang nur mit Handzeichen, ohne ein Wort.', '{C} verkündet der Truppe das nächste Ziel wie ein Reiseleiter, mit drei erfundenen Fakten über den Ort.'], w: 'ffft' },
   { id: 'dolmetscher', name: 'Der Dolmetscher', art: 'plauder', amt: 'Übersetzt alles, was {N} sagt, in eine erfundene Sprache.',
-    jobs: ['{C} übersetzt die nächste Bestellung von {N} laut und mit Händen in eine erfundene Sprache.', '{C} bringt einem Fremden drei Wörter der erfundenen Sprache bei.', '{C} fragt einen Fremden in der erfundenen Sprache nach dem Weg und übersetzt danach feierlich selbst.'] },
+    jobs: ['{C} übersetzt die nächste Bestellung von {N} laut und mit Händen in eine erfundene Sprache.', '{C} bringt einem Fremden drei Wörter der erfundenen Sprache bei.', '{C} fragt einen Fremden in der erfundenen Sprache nach dem Weg und übersetzt danach feierlich selbst.', '{C} übersetzt den nächsten Trinkspruch von {N} für die Truppe in die erfundene Sprache, mit großen Gesten.'], w: 'ffft' },
   { id: 'bodyguard', name: 'Der Bodyguard', art: 'agent', amt: 'Weicht {N} nicht von der Seite. Sonnenbrille, ernster Blick.',
-    jobs: ['{C} schirmt {N} 30 Sekunden lang vor unsichtbaren Fans ab, mit Funkgerät-Geste und ernster Miene.', '{C} fragt einen Fremden höflich, ob er schon ein Autogramm von {N} hat.', '{C} sichert den nächsten Eingang: hält die Tür auf und meldet laut „Bereich gesichert“.'] },
+    jobs: ['{C} schirmt {N} 30 Sekunden lang vor unsichtbaren Fans ab, mit Funkgerät-Geste und ernster Miene.', '{C} fragt einen Fremden höflich, ob er schon ein Autogramm von {N} hat.', '{C} sichert den nächsten Eingang: hält die Tür auf und meldet laut „Bereich gesichert“.', '{C} macht eine Sicherheitskontrolle in der Truppe: Jeder muss ein Passwort nennen, {N} legt es fest.'], w: 'ffft' },
   { id: 'schatzmeister', name: 'Der Schatzmeister', art: 'coin', amt: 'Verwaltet die Kasse und verhandelt jeden Preis.',
-    jobs: ['{C} handelt beim nächsten Kauf einen kleinen Rabatt oder eine Zugabe raus.', '{C} wechselt bei einem Fremden eine Münze in kleinere Münzen und bedankt sich mit einer tiefen Verbeugung.', '{C} fragt in einem Laden ganz ernst, ob es Rabatt für Junggesellenabschiede gibt.'] },
+    jobs: ['{C} handelt beim nächsten Kauf einen kleinen Rabatt oder eine Zugabe raus.', '{C} wechselt bei einem Fremden eine Münze in kleinere Münzen und bedankt sich mit einer tiefen Verbeugung.', '{C} fragt in einem Laden ganz ernst, ob es Rabatt für Junggesellenabschiede gibt.', '{C} verkündet den Kassenstand wie einen Börsenbericht, mit Tagesgewinner und Tagesverlierer.'], w: 'ffft' },
   { id: 'animateur', name: 'Der Animateur', art: 'popper', amt: 'Stimmt die Gesänge an und hält die Stimmung hoch.',
-    jobs: ['{C} bringt mindestens drei Fremde dazu, einmal „Hoch soll {N} leben“ mitzurufen.', '{C} startet mit der Truppe eine La-Ola-Welle, mindestens ein Fremder macht mit.', '{C} denkt sich einen Schlachtruf für die Truppe aus und lässt ihn dreimal laut rufen.'] },
+    jobs: ['{C} bringt mindestens drei Fremde dazu, einmal „Hoch soll {N} leben“ mitzurufen.', '{C} startet mit der Truppe eine La-Ola-Welle, mindestens ein Fremder macht mit.', '{C} denkt sich einen Schlachtruf für die Truppe aus und lässt ihn dreimal laut rufen.', '{C} dirigiert die Truppe durch eine La-Ola-Welle, dreimal hintereinander, die letzte in Zeitlupe.'], w: 'ffft' },
   { id: 'reporter', name: 'Der Reporter', art: 'millionen', amt: 'Interviewt Passanten über {N}.',
-    jobs: ['{C} interviewt einen Passanten: Was ist sein bester Ehetipp?', '{C} fragt drei Leute, wie alt sie {N} schätzen, und verkündet den Durchschnitt.', '{C} macht mit einem Fremden ein 20-Sekunden-Interview im Stil der Abendnachrichten über diesen Junggesellenabschied.'] },
+    jobs: ['{C} interviewt einen Passanten: Was ist sein bester Ehetipp?', '{C} fragt drei Leute, wie alt sie {N} schätzen, und verkündet den Durchschnitt.', '{C} macht mit einem Fremden ein 20-Sekunden-Interview im Stil der Abendnachrichten über diesen Junggesellenabschied.', '{C} interviewt {N} 30 Sekunden lang wie beim Sportfunk: Wie fühlt sich die letzte Mission an, was kommt als Nächstes?'], w: 'ffft' },
   { id: 'sanitaeter', name: 'Der Sanitäter', art: 'medkit', amt: 'Hat Wasser dabei und fragt regelmäßig, ob alles gut ist.',
-    jobs: ['{C} besorgt für die ganze Truppe eine Runde Leitungswasser.', '{C} misst bei {N} feierlich den Puls und verkündet laut die Diagnose.', '{C} fragt einen Fremden nach seinem besten Hausmittel gegen Kater.'] },
+    jobs: ['{C} besorgt für die ganze Truppe eine Runde Leitungswasser.', '{C} misst bei {N} feierlich den Puls und verkündet laut die Diagnose.', '{C} fragt einen Fremden nach seinem besten Hausmittel gegen Kater.', '{C} verordnet der ganzen Truppe eine Minute Dehnen, mit Ansage wie im Kurs.'], w: 'ffft' },
   { id: 'stylist', name: 'Der Stylist', art: 'palette', amt: 'Zuständig für das Outfit von {N}.',
-    jobs: ['{C} lässt einen Fremden ein Accessoire für {N} aussuchen, das ihr euch kurz leihen dürft.', '{C} frisiert {N} 60 Sekunden lang neu, mit Beratung durch einen Fremden.', '{C} bittet einen Fremden, das Outfit der Truppe mit Noten von 1 bis 10 zu bewerten.'] },
+    jobs: ['{C} lässt einen Fremden ein Accessoire für {N} aussuchen, das ihr euch kurz leihen dürft.', '{C} frisiert {N} 60 Sekunden lang neu, mit Beratung durch einen Fremden.', '{C} bittet einen Fremden, das Outfit der Truppe mit Noten von 1 bis 10 zu bewerten.', '{C} richtet {N} in 30 Sekunden für das nächste Foto her: Kragen, Haare, Haltung, Kommentar.'], w: 'ffft' },
   { id: 'dj', name: 'Der DJ', art: 'note', amt: 'Bestimmt die Musik des Abends.',
-    jobs: ['{C} wünscht sich in der nächsten Bar einen Song, der zu {N} passt.', '{C} summt einem Fremden einen Hit vor, bis er ihn errät.', '{C} singt den ersten Satz eines Liebeslieds, ein Fremder soll weitersingen.'] },
+    jobs: ['{C} wünscht sich in der nächsten Bar einen Song, der zu {N} passt.', '{C} summt einem Fremden einen Hit vor, bis er ihn errät.', '{C} singt den ersten Satz eines Liebeslieds, ein Fremder soll weitersingen.', '{C} summt der Truppe drei Songs vor, {N} muss alle drei erraten.'], w: 'ffft' },
   { id: 'gewissen', name: 'Das Gewissen', art: 'bulb', amt: 'Passt auf, dass alle nett bleiben, und erinnert ans Wasser.',
-    jobs: ['{C} erklärt einem Fremden in 30 Sekunden, warum {N} ein wunderbarer Mensch ist.', '{C} entschuldigt sich bei einem Fremden schon mal vorsorglich für alles, was die Truppe heute noch anstellt.', '{C} sammelt von drei Fremden je einen guten Vorsatz für die Ehe von {N}.'] },
+    jobs: ['{C} erklärt einem Fremden in 30 Sekunden, warum {N} ein wunderbarer Mensch ist.', '{C} entschuldigt sich bei einem Fremden schon mal vorsorglich für alles, was die Truppe heute noch anstellt.', '{C} sammelt von drei Fremden je einen guten Vorsatz für die Ehe von {N}.', '{C} fragt jeden in der Truppe, wie es ihm geht, und holt für den Durstigsten ein Wasser.'], w: 'ffft' },
   { id: 'wettkoenig', name: 'Der Wettkönig', art: 'dice', amt: 'Wettet auf jede Mission.',
-    jobs: ['{C} wettet mit einem Fremden um ein High Five, dass {N} die nächste Mission schafft.', '{C} lässt einen Fremden schätzen, wie viele Missionen {N} heute schafft, und merkt sich die Zahl für den Abspann.', '{C} tritt gegen einen Fremden an: Wer sagt einen Zungenbrecher schneller fehlerfrei?'] }
+    jobs: ['{C} wettet mit einem Fremden um ein High Five, dass {N} die nächste Mission schafft.', '{C} lässt einen Fremden schätzen, wie viele Missionen {N} heute schafft, und merkt sich die Zahl für den Abspann.', '{C} tritt gegen einen Fremden an: Wer sagt einen Zungenbrecher schneller fehlerfrei?', '{C} nimmt in der Truppe Wetten an, ob {N} die nächste Mission schafft. Wer falsch liegt, klatscht bei der nächsten doppelt so laut.'], w: 'ffft' }
 ];
 /* =========================================================
    v22: household games, reaction games on the phone and games
@@ -10682,6 +10724,12 @@ function rulesFor(P) {
     if (q && (q.type === 'schaetzen' || q.type === 'bereich')) { r = KIND_RULES.schaetzen; return { a: 'Schätzfrage von den Gästen! {N} tippt, die Gruppe hält dagegen. Wer näher dran ist, gewinnt.', f: r.f.concat(KIND_RULES.frage.f.slice(1), [ALWAYS_FAQ]) }; }
     r = KIND_RULES[key]; return { a: r.a, f: r.f.concat([ALWAYS_FAQ]) };
   }
+  /* a mission inside the crew or for the person alone gets its own announcement */
+  if (P.kind === 'mission' && P.who && P.who !== 'fremd') {
+    r = KIND_RULES.mission;
+    var ma = P.who === 'truppe' ? 'Mission! Diesmal in der Truppe: {N} hat einen Auftrag, die Truppe spielt mit. Wer verweigert, trinkt.' : 'Mission! {N} allein, die Truppe ist Publikum und Jury. Wer verweigert, trinkt.';
+    return { a: ma, f: r.f.slice(1).concat([ALWAYS_FAQ]) };
+  }
   r = KIND_RULES[P.kind];
   return r ? { a: r.a, f: r.f.concat([ALWAYS_FAQ]) } : null;
 }
@@ -11359,6 +11407,26 @@ function jgaLevel(pid, x, first) {
 }
 function jgaModeOf(r) { return r && r.jga ? r.jga.mode : (S.runCfg && S.runCfg.jgaMode) || 'stadt'; }
 
+/* ---------- who the mission involves: strangers, the crew, the person alone ----------
+   An evening in the city is not a string of „ask a stranger“: the three kinds take turns.
+   Shares by boldness (shy people get more inside the crew), the recent missions pull the
+   weights back toward the shares, never three of a kind in a row, the first one stays inside. */
+var JGA_WHO = ['fremd', 'truppe', 'solo'];
+var JGA_WHO_NAME = { fremd: 'Mit Fremden', truppe: 'In der Truppe', solo: 'Solo' };
+var JGA_WHO_SHARE = { 1: { fremd: 0.3, truppe: 0.42, solo: 0.28 }, 2: { fremd: 0.4, truppe: 0.35, solo: 0.25 }, 3: { fremd: 0.48, truppe: 0.3, solo: 0.22 } };
+function whoHist(r) { return r && Array.isArray(r.jwho) ? r.jwho : []; }
+function whoNote(r, w) { if (!r || !w) return; r.jwho = whoHist(r).concat([w]).slice(-8); }
+function jgaWho(r, pid, first) {
+  var base = JGA_WHO_SHARE[jgaMut(pid)] || JGA_WHO_SHARE[2], h = whoHist(r), n = h.length;
+  if (first || !n) return pick(['truppe', 'solo', 'truppe']);
+  var last = h[n - 1], twice = n >= 2 && h[n - 2] === last, win = h.slice(-6);
+  return weighted(JGA_WHO.map(function (w) {
+    var cnt = win.filter(function (x) { return x === w; }).length, want = base[w] * win.length;
+    var f = cnt > want ? Math.max(0.15, 1 - (cnt - want) / 2.5) : 1 + (want - cnt) / 3;
+    if (w === last) f *= twice ? 0 : 0.45;
+    return [w, base[w] * f];
+  }));
+}
 /* ---------- picking a mission ---------- */
 function missionData(pid) {
   var f = guestFacts(pid), p = person(pid);
@@ -11380,12 +11448,17 @@ function missionFill(s, pid, fill) {
   var n = person(pid).name;
   return String(s).replace(/\{Ns\}/g, possessive(n)).replace(/\{N\}/g, n).replace(/\{P\}/g, fill.P || '').replace(/\{I\}/g, fill.I || '').replace(/\{T\}/g, fill.T || '').replace(/\{M\}/g, fill.M || '');
 }
-/* a fresh mission of level L; when that level is used up, the nearest one below, then above (never above max) */
-function jgaPick(L, max, d, mode, not) {
+/* a fresh mission of level L for the counterpart who; first the level with that counterpart, then a
+   neighbouring level with it, then the level with anyone, then further out (never above max) */
+function jgaPick(L, max, d, mode, not, who) {
   var used = missionsUsed(), order = [L];
   for (var k = 1; k < 3; k++) { if (L - k >= 1) order.push(L - k); if (L + k <= max) order.push(L + k); }
-  for (var i = 0; i < order.length; i++) {
-    var c = JGA_TASKS.filter(function (m) { return m.lvl === order[i] && m.id !== not && used.indexOf(m.id) < 0 && missionOk(m, d, mode); });
+  var tries = [];
+  order.forEach(function (l, i) { if (who) tries.push([l, who]); if (i === 0 || i === order.length - 1 || Math.abs(l - L) >= 2) tries.push([l, null]); });
+  order.forEach(function (l) { tries.push([l, null]); });
+  for (var i = 0; i < tries.length; i++) {
+    var lv = tries[i][0], w = tries[i][1];
+    var c = JGA_TASKS.filter(function (m) { return m.lvl === lv && m.id !== not && used.indexOf(m.id) < 0 && (!w || m.who === w) && missionOk(m, d, mode); });
     if (c.length) return pick(c);
   }
   /* everything played: the one played longest ago */
@@ -11401,10 +11474,11 @@ function makeMissionStep(main, r, opt) {
   var x = opt.x != null ? opt.x : (r ? maxProgress(r) : 0.5);
   var first = r ? !(r.kinds || []).some(function (k) { return k === 'mission'; }) : false;
   var max = Math.min(opt.max || 3, jgaMaxLvl(main)), L = Math.min(max, jgaLevel(main, x, first));
-  var m = jgaPick(L, max, d, mode, opt.not); if (!m) return null;
+  var who = opt.who || jgaWho(r, main, first);
+  var m = jgaPick(L, max, d, mode, opt.not, who); if (!m) return null;
   var used = missionsUsed(), at = used.indexOf(m.id); if (at >= 0) used.splice(at, 1); used.push(m.id);
   var fill = { P: d.P, I: d.I.length ? pick(d.I) : '', T: d.T.length ? pick(d.T) : '', M: d.M.length ? pick(d.M) : '' };
-  return { kind: 'mission', mid: m.id, lvl: m.lvl, main: main, title: missionFill(m.title, main, fill), text: missionFill(m.t, main, fill), win: missionFill(m.win, main, fill), take: m.take.slice(), buy: m.buy, s: m.s, sid: uid('s') };
+  return { kind: 'mission', mid: m.id, lvl: m.lvl, who: m.who, main: main, title: missionFill(m.title, main, fill), text: missionFill(m.t, main, fill), win: missionFill(m.win, main, fill), take: m.take.slice(), buy: m.buy, s: m.s, sid: uid('s') };
 }
 /* refusing costs a drink, unless max, tempo brake or a breather say no, or the person is already one over the personal target */
 function refuseRow(pid) {
@@ -11414,6 +11488,7 @@ function refuseRow(pid) {
 }
 function noteMission(r, P, how) {
   if (!r) return;
+  whoNote(r, P.who);
   var s = r.jstat = r.jstat || { ok: 0, fail: 0, refuse: 0, wild: 0, best: '' };
   s[how] += 1;
   if (how === 'ok' && P.lvl === 3) { s.wild += 1; s.best = P.title; }
@@ -11440,7 +11515,10 @@ function crewInjection(r) {
 function prepCrewStep(r, P) {
   var st = crewState(r), left = crewJobsLeft(r);
   var low = Math.min.apply(null, left.map(function (x) { return st.by[x.c.id] || 0; }));
-  var pickd = pick(left.filter(function (x) { return (st.by[x.c.id] || 0) === low; }));
+  var cand = left.filter(function (x) { return (st.by[x.c.id] || 0) === low; }), h = whoHist(r);
+  var inside = cand.filter(function (x) { var ro = jgaRole(x.c.role); return ro.w && ro.w[x.i] === 't'; });
+  if (h.length && h[h.length - 1] === 'fremd' && inside.length && Math.random() < 0.7) cand = inside;
+  var pickd = pick(cand);
   st.n += 1; st.last = r.steps; st.used.push(pickd.k); st.by[pickd.c.id] = (st.by[pickd.c.id] || 0) + 1;
   var role = jgaRole(pickd.c.role), fill = function (s) { return String(s).replace(/\{C\}/g, pickd.c.name).replace(/\{N\}/g, person(P.main).name); };
   P.cid = pickd.c.id; P.name = pickd.c.name; P.role = role.id; P.text = fill(role.jobs[pickd.i]); P.amt = fill(role.amt); P.sid = uid('s');
@@ -11464,11 +11542,12 @@ function missionView(P) {
   var extra = (P.take.length ? '<p class="jm-need">' + emb('backpack', 22) + '<span><b>Dabei:</b> ' + esc(P.take.map(packLabel).join(', ')) + '</span></p>' : '') +
     (P.buy ? '<p class="jm-need">' + emb('bag', 22) + '<span><b>Unterwegs besorgen:</b> ' + esc(P.buy) + '</span></p>' : '');
   var say = P.title + '. ' + P.text + ' ' + P.win;
-  var body = bigCard(lv.c, 'Mission · ' + lv.name, esc(P.title),
+  var who = P.who || 'fremd', fair = who === 'truppe' ? 'Die Truppe macht mit, niemand muss. Wer nicht will, feuert an.' : who === 'solo' ? esc(mp.name) + ' allein, die Truppe ist Publikum und Jury. Nichts Verbotenes.' : 'Wer Nein sagt, wird in Ruhe gelassen, dann fragt ' + esc(mp.name) + ' einfach jemand anderen. Nichts Verbotenes, niemand unter 18.';
+  var body = bigCard(lv.c, 'Mission · ' + lv.name + ' · ' + JGA_WHO_NAME[who], esc(P.title),
     '<p class="g-how">' + esc(P.text) + '</p><p class="g-win">' + icon('i-flag', 15) + '<span>' + esc(P.win) + '</span></p>' + extra +
     '<div class="row" style="position:relative;gap:8px;justify-content:space-between;flex-wrap:wrap">' + heatHtml(P.lvl, 22) + '<button type="button" class="g-say" data-act="speak" data-t="' + esc(say) + '">' + icon('i-play', 13) + 'Vorlesen</button></div>');
   body += '<div class="mt18 row" style="justify-content:center">' + face(mp, 84, '', P.lvl === 3 ? 'cool' : '') + '</div>' +
-    '<p class="jm-fair">' + emb('shield', 22) + '<span>Wer Nein sagt, wird in Ruhe gelassen, dann fragt ' + esc(mp.name) + ' einfach jemand anderen. Nichts Verbotenes, niemand unter 18.</span></p>' +
+    '<p class="jm-fair">' + emb(who === 'truppe' ? 'cheers' : who === 'solo' ? 'mask' : 'shield', 22) + '<span>' + fair + '</span></p>' +
     (P.result ? '' : timerBlock(P.s, 'm' + P.mid));
   var foot = '<div class="cta-row"><button type="button" class="btn-dark" style="flex:1" data-act="stepResolve" data-v="fail">Nicht geschafft</button><button type="button" class="cta mint" style="flex:1" data-act="stepResolve" data-v="ok">' + icon('i-check', 18) + 'Geschafft</button></div>' +
     '<button type="button" class="linkbtn" style="align-self:center" data-act="stepResolve" data-v="refuse">Verweigert, das kostet 1 ' + esc(U()) + '</button>';

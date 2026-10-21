@@ -67,6 +67,12 @@ function rulesFor(P) {
     if (q && (q.type === 'schaetzen' || q.type === 'bereich')) { r = KIND_RULES.schaetzen; return { a: 'Schätzfrage von den Gästen! {N} tippt, die Gruppe hält dagegen. Wer näher dran ist, gewinnt.', f: r.f.concat(KIND_RULES.frage.f.slice(1), [ALWAYS_FAQ]) }; }
     r = KIND_RULES[key]; return { a: r.a, f: r.f.concat([ALWAYS_FAQ]) };
   }
+  /* a mission inside the crew or for the person alone gets its own announcement */
+  if (P.kind === 'mission' && P.who && P.who !== 'fremd') {
+    r = KIND_RULES.mission;
+    var ma = P.who === 'truppe' ? 'Mission! Diesmal in der Truppe: {N} hat einen Auftrag, die Truppe spielt mit. Wer verweigert, trinkt.' : 'Mission! {N} allein, die Truppe ist Publikum und Jury. Wer verweigert, trinkt.';
+    return { a: ma, f: r.f.slice(1).concat([ALWAYS_FAQ]) };
+  }
   r = KIND_RULES[P.kind];
   return r ? { a: r.a, f: r.f.concat([ALWAYS_FAQ]) } : null;
 }
