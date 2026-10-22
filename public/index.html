@@ -1221,11 +1221,15 @@ body.desk .scr.tourscr .foot { max-width: 520px; margin: 0 auto; width: 100%; bo
 .bz-arena.solo { height: 220px; }
 .bz-pad { flex: 1; border: 0; margin: 0; padding: 0; background: #3A3463; color: var(--white); font: 800 15px var(--display); display: flex; align-items: center; justify-content: center; transition: background .05s; }
 .bz-pad.top span { transform: rotate(180deg); }
-.bz-arena.st-wait .bz-pad { background: #FF7A45; }
+.bz-arena.st-wait .bz-pad { background: #1B1733; }
+.bz-arena.st-wait .bz-mid { background: #FF8A73; color: #15122B; }
 .bz-arena.st-go .bz-pad { background: #48D9A6; color: #15122B; }
 .bz-mid { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 8px 16px; border-radius: 99px; background: #15122B; color: var(--white); font: 900 15px var(--display); white-space: nowrap; pointer-events: none; max-width: 90%; overflow: hidden; text-overflow: ellipsis; }
 .bz-arena.solo .bz-mid { top: auto; bottom: 14px; transform: translateX(-50%); }
 .bz-arena.st-go .bz-mid { color: var(--mint); font-size: 22px; }
+.bz-go { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2; display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 22px; border: 0; border-radius: 99px; background: var(--accent); color: var(--ink); font: 800 16px var(--body); white-space: nowrap; box-shadow: inset 0 -5px 0 rgba(0,0,0,.18), 0 0 0 5px #15122B; }
+.bz-go:active { transform: translate(-50%, calc(-50% + 2px)); box-shadow: inset 0 -2px 0 rgba(0,0,0,.18), 0 0 0 5px #15122B; }
+.bz-arena.solo .bz-go { top: auto; bottom: 14px; transform: translateX(-50%); }
 .bz-list { display: flex; flex-wrap: wrap; gap: 6px; }
 .bz-r { padding: 5px 10px; border-radius: 99px; background: var(--surface-2); font-size: 12.5px; font-weight: 800; color: var(--text); }
 /* Löffel-Reflex */
@@ -4075,7 +4079,7 @@ var JGA_ROLES = [
 ['pfanne', 'topf', 'plastikflasche'].forEach(function (id) { if (MAT_PRESET_PARTY.indexOf(id) < 0) MAT_PRESET_PARTY.push(id); });
 
 [
-  { id: 'daumenblitz', name: 'Daumen-Blitz', cat: 'Reaktion', mat: '', needs: [], min: 1, sp: 'blitz' },
+  { id: 'daumenblitz', name: 'Daumen-Blitz', cat: 'Reaktion', mat: '', needs: [], min: 2, sp: 'blitz' },
   { id: 'loeffelreflex', name: 'Löffel-Reflex', cat: 'Reaktion', mat: 'Ein Löffel', needs: ['loeffel'], min: 2, sp: 'loeffel' },
   { id: 'lippenlesen', name: 'Lippenlesen', cat: 'Kopf', mat: '', needs: [], min: 3, sp: 'lippen' },
   { id: 'gedankenleser', name: 'Gedankenleser', cat: 'Kopf', mat: '', needs: [], min: 2, sp: 'gedanken' },
@@ -4093,9 +4097,8 @@ var JGA_ROLES = [
 (function () {
   var T = {
     daumenblitz: {
-      s: ['Das Handy liegt vor dir. Sobald die Fläche grün wird, so schnell wie möglich draufdrücken. Wer zu früh drückt, verschenkt den Versuch. Drei Versuche.', 'Geschafft, wenn zwei der drei Versuche schneller als 0,4 Sekunden sind.'],
-      d: ['Das Handy liegt zwischen euch, jeder hat seine Hälfte. Sobald es grün wird: draufdrücken. Wer zu früh drückt, verliert die Runde.', 'Gewonnen hat, wer zuerst zwei Runden holt.'],
-      f: [['Was zählt als zu früh?', 'Jeder Druck, bevor die Fläche grün ist.'], ['Beide fast gleichzeitig?', 'Das Handy entscheidet auf die Millisekunde.']]
+      d: ['Das Handy liegt flach zwischen euch, jeder legt einen Daumen auf seine Hälfte. Die Fläche wird erst dunkel, dann grün. Erst bei Grün draufdrücken, wer vorher drückt, verliert die Runde.', 'Gewonnen hat, wer zuerst zwei Runden holt.'],
+      f: [['Gegen wen spiele ich?', 'Gegen die andere Hauptperson oder einen Gast. Mit Gästeliste sucht ihr ihn aus oder lasst das Rad entscheiden.'], ['Was zählt als zu früh?', 'Jeder Druck, bevor die Fläche grün ist.'], ['Beide fast gleichzeitig?', 'Das Handy entscheidet auf die Millisekunde.']]
     },
     loeffelreflex: {
       d: ['Ein Löffel liegt zwischen euch, beide Hände flach auf dem Tisch. Die App ruft Wörter. Nur beim Wort „Löffel“ zugreifen. Wer bei einem anderen Wort greift, verliert die Runde.', 'Gewonnen hat, wer zuerst zwei Runden holt.'],
@@ -12168,15 +12171,19 @@ function bzSoloOk(P) { return P.bz.res.filter(function (x) { return x.ms != null
 function bzDone(P) { if (P.format === 'solo') return P.bz.res.length >= 3; var w = bzWins(P); return w[0] >= 2 || w[1] >= 2; }
 SPV.blitz = function (P, g) {
   var st = bzState(P), duel = P.format !== 'solo', done = bzDone(P), mp = person(P.main), names = [mp.name, duel ? oppName(P) : ''];
-  var msg = st.state === 'wait' ? 'Warten …' : st.state === 'go' ? 'JETZT!' : done ? 'Entschieden!' : 'Bereit? Noch nicht drücken!';
+  var secs = function (ms) { return (ms / 1000).toFixed(2).replace('.', ',') + ' s'; };
   var res = duel ? bzWins(P) : null;
-  var list = P.bz.res.map(function (x, i) { return '<span class="bz-r">' + (duel ? (i + 1) + '. ' + esc(names[x.w]) + (x.early != null ? ' (Fehlstart ' + esc(names[x.early]) + ')' : x.ms != null ? ' · ' + (x.ms / 1000).toFixed(2).replace('.', ',') + ' s' : '') : (i + 1) + '. ' + (x.ms == null ? 'Zu früh' : (x.ms / 1000).toFixed(2).replace('.', ',') + ' s')) + '</span>'; }).join('');
+  var list = P.bz.res.map(function (x, i) { return '<span class="bz-r">' + (duel ? (i + 1) + '. ' + esc(names[x.w]) + (x.early != null ? ' (Fehlstart ' + esc(names[x.early]) + ')' : x.ms != null ? ' · ' + secs(x.ms) : '') : (i + 1) + '. ' + (x.ms == null ? 'Zu früh' : secs(x.ms))) + '</span>'; }).join('');
+  /* the round starts from the middle of the pads: there is nothing to look for below */
+  var startLabel = duel ? 'Runde ' + (P.bz.res.length + 1) + ' starten' : 'Versuch ' + (P.bz.res.length + 1) + ' von 3';
+  var mid = st.state === 'idle' && !done
+    ? '<button type="button" class="bz-go" data-act="bzStart">' + emb('bolt', 20) + startLabel + '</button>'
+    : '<div class="bz-mid" id="bzMid">' + (st.state === 'wait' ? 'Noch nicht! Gleich wird’s grün …' : st.state === 'go' ? 'JETZT!' : 'Entschieden!') + '</div>';
   var arena = duel
-    ? '<div class="bz-arena st-' + st.state + '" id="bzArena"><button type="button" class="bz-pad top" data-bz="1"><span>' + esc(names[1]) + ' · ' + res[1] + '</span></button><div class="bz-mid" id="bzMid">' + msg + '</div><button type="button" class="bz-pad bot" data-bz="0"><span>' + esc(names[0]) + ' · ' + res[0] + '</span></button></div>'
-    : '<div class="bz-arena solo st-' + st.state + '" id="bzArena"><button type="button" class="bz-pad bot" data-bz="0"><span>' + esc(mp.name) + '</span></button><div class="bz-mid" id="bzMid">' + msg + '</div></div>';
+    ? '<div class="bz-arena st-' + st.state + '" id="bzArena"><button type="button" class="bz-pad top" data-bz="1"><span>' + esc(names[1]) + ' · ' + res[1] + '</span></button>' + mid + '<button type="button" class="bz-pad bot" data-bz="0"><span>' + esc(names[0]) + ' · ' + res[0] + '</span></button></div>'
+    : '<div class="bz-arena solo st-' + st.state + '" id="bzArena"><button type="button" class="bz-pad bot" data-bz="0"><span>' + esc(mp.name) + '</span></button>' + mid + '</div>';
   var hi = done ? (duel ? (res[0] >= 2 ? 'main' : 'opp') : (bzSoloOk(P) ? 'main' : 'opp')) : '';
   var body = spielCard(P, g) + arena + (list ? '<div class="bz-list mt10">' + list + '</div>' : '') +
-    (!done && st.state === 'idle' ? '<button type="button" class="btn-dark mt14" style="width:100%" data-act="bzStart">' + emb('bolt', 22) + (duel ? 'Runde ' + (P.bz.res.length + 1) + ' starten' : 'Versuch ' + (P.bz.res.length + 1) + ' von 3') + '</button>' : '') +
     (done ? '<p class="small mt10" style="text-align:center">' + (duel ? esc(names[res[0] >= 2 ? 0 : 1]) + ' holt zwei Runden.' : bzSoloOk(P) ? 'Zwei Versuche unter 0,4 Sekunden. Geschafft!' : 'Nicht zweimal unter 0,4 Sekunden.') + ' Unten bestätigen.</p>' : '');
   return { body: body, foot: spielButtons(P, hi) };
 };

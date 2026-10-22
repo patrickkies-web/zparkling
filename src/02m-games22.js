@@ -16,7 +16,7 @@
 ['pfanne', 'topf', 'plastikflasche'].forEach(function (id) { if (MAT_PRESET_PARTY.indexOf(id) < 0) MAT_PRESET_PARTY.push(id); });
 
 [
-  { id: 'daumenblitz', name: 'Daumen-Blitz', cat: 'Reaktion', mat: '', needs: [], min: 1, sp: 'blitz' },
+  { id: 'daumenblitz', name: 'Daumen-Blitz', cat: 'Reaktion', mat: '', needs: [], min: 2, sp: 'blitz' },
   { id: 'loeffelreflex', name: 'Löffel-Reflex', cat: 'Reaktion', mat: 'Ein Löffel', needs: ['loeffel'], min: 2, sp: 'loeffel' },
   { id: 'lippenlesen', name: 'Lippenlesen', cat: 'Kopf', mat: '', needs: [], min: 3, sp: 'lippen' },
   { id: 'gedankenleser', name: 'Gedankenleser', cat: 'Kopf', mat: '', needs: [], min: 2, sp: 'gedanken' },
@@ -34,9 +34,8 @@
 (function () {
   var T = {
     daumenblitz: {
-      s: ['Das Handy liegt vor dir. Sobald die Fläche grün wird, so schnell wie möglich draufdrücken. Wer zu früh drückt, verschenkt den Versuch. Drei Versuche.', 'Geschafft, wenn zwei der drei Versuche schneller als 0,4 Sekunden sind.'],
-      d: ['Das Handy liegt zwischen euch, jeder hat seine Hälfte. Sobald es grün wird: draufdrücken. Wer zu früh drückt, verliert die Runde.', 'Gewonnen hat, wer zuerst zwei Runden holt.'],
-      f: [['Was zählt als zu früh?', 'Jeder Druck, bevor die Fläche grün ist.'], ['Beide fast gleichzeitig?', 'Das Handy entscheidet auf die Millisekunde.']]
+      d: ['Das Handy liegt flach zwischen euch, jeder legt einen Daumen auf seine Hälfte. Die Fläche wird erst dunkel, dann grün. Erst bei Grün draufdrücken, wer vorher drückt, verliert die Runde.', 'Gewonnen hat, wer zuerst zwei Runden holt.'],
+      f: [['Gegen wen spiele ich?', 'Gegen die andere Hauptperson oder einen Gast. Mit Gästeliste sucht ihr ihn aus oder lasst das Rad entscheiden.'], ['Was zählt als zu früh?', 'Jeder Druck, bevor die Fläche grün ist.'], ['Beide fast gleichzeitig?', 'Das Handy entscheidet auf die Millisekunde.']]
     },
     loeffelreflex: {
       d: ['Ein Löffel liegt zwischen euch, beide Hände flach auf dem Tisch. Die App ruft Wörter. Nur beim Wort „Löffel“ zugreifen. Wer bei einem anderen Wort greift, verliert die Runde.', 'Gewonnen hat, wer zuerst zwei Runden holt.'],

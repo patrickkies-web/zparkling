@@ -158,15 +158,19 @@ function bzSoloOk(P) { return P.bz.res.filter(function (x) { return x.ms != null
 function bzDone(P) { if (P.format === 'solo') return P.bz.res.length >= 3; var w = bzWins(P); return w[0] >= 2 || w[1] >= 2; }
 SPV.blitz = function (P, g) {
   var st = bzState(P), duel = P.format !== 'solo', done = bzDone(P), mp = person(P.main), names = [mp.name, duel ? oppName(P) : ''];
-  var msg = st.state === 'wait' ? 'Warten …' : st.state === 'go' ? 'JETZT!' : done ? 'Entschieden!' : 'Bereit? Noch nicht drücken!';
+  var secs = function (ms) { return (ms / 1000).toFixed(2).replace('.', ',') + ' s'; };
   var res = duel ? bzWins(P) : null;
-  var list = P.bz.res.map(function (x, i) { return '<span class="bz-r">' + (duel ? (i + 1) + '. ' + esc(names[x.w]) + (x.early != null ? ' (Fehlstart ' + esc(names[x.early]) + ')' : x.ms != null ? ' · ' + (x.ms / 1000).toFixed(2).replace('.', ',') + ' s' : '') : (i + 1) + '. ' + (x.ms == null ? 'Zu früh' : (x.ms / 1000).toFixed(2).replace('.', ',') + ' s')) + '</span>'; }).join('');
+  var list = P.bz.res.map(function (x, i) { return '<span class="bz-r">' + (duel ? (i + 1) + '. ' + esc(names[x.w]) + (x.early != null ? ' (Fehlstart ' + esc(names[x.early]) + ')' : x.ms != null ? ' · ' + secs(x.ms) : '') : (i + 1) + '. ' + (x.ms == null ? 'Zu früh' : secs(x.ms))) + '</span>'; }).join('');
+  /* the round starts from the middle of the pads: there is nothing to look for below */
+  var startLabel = duel ? 'Runde ' + (P.bz.res.length + 1) + ' starten' : 'Versuch ' + (P.bz.res.length + 1) + ' von 3';
+  var mid = st.state === 'idle' && !done
+    ? '<button type="button" class="bz-go" data-act="bzStart">' + emb('bolt', 20) + startLabel + '</button>'
+    : '<div class="bz-mid" id="bzMid">' + (st.state === 'wait' ? 'Noch nicht! Gleich wird’s grün …' : st.state === 'go' ? 'JETZT!' : 'Entschieden!') + '</div>';
   var arena = duel
-    ? '<div class="bz-arena st-' + st.state + '" id="bzArena"><button type="button" class="bz-pad top" data-bz="1"><span>' + esc(names[1]) + ' · ' + res[1] + '</span></button><div class="bz-mid" id="bzMid">' + msg + '</div><button type="button" class="bz-pad bot" data-bz="0"><span>' + esc(names[0]) + ' · ' + res[0] + '</span></button></div>'
-    : '<div class="bz-arena solo st-' + st.state + '" id="bzArena"><button type="button" class="bz-pad bot" data-bz="0"><span>' + esc(mp.name) + '</span></button><div class="bz-mid" id="bzMid">' + msg + '</div></div>';
+    ? '<div class="bz-arena st-' + st.state + '" id="bzArena"><button type="button" class="bz-pad top" data-bz="1"><span>' + esc(names[1]) + ' · ' + res[1] + '</span></button>' + mid + '<button type="button" class="bz-pad bot" data-bz="0"><span>' + esc(names[0]) + ' · ' + res[0] + '</span></button></div>'
+    : '<div class="bz-arena solo st-' + st.state + '" id="bzArena"><button type="button" class="bz-pad bot" data-bz="0"><span>' + esc(mp.name) + '</span></button>' + mid + '</div>';
   var hi = done ? (duel ? (res[0] >= 2 ? 'main' : 'opp') : (bzSoloOk(P) ? 'main' : 'opp')) : '';
   var body = spielCard(P, g) + arena + (list ? '<div class="bz-list mt10">' + list + '</div>' : '') +
-    (!done && st.state === 'idle' ? '<button type="button" class="btn-dark mt14" style="width:100%" data-act="bzStart">' + emb('bolt', 22) + (duel ? 'Runde ' + (P.bz.res.length + 1) + ' starten' : 'Versuch ' + (P.bz.res.length + 1) + ' von 3') + '</button>' : '') +
     (done ? '<p class="small mt10" style="text-align:center">' + (duel ? esc(names[res[0] >= 2 ? 0 : 1]) + ' holt zwei Runden.' : bzSoloOk(P) ? 'Zwei Versuche unter 0,4 Sekunden. Geschafft!' : 'Nicht zweimal unter 0,4 Sekunden.') + ' Unten bestätigen.</p>' : '');
   return { body: body, foot: spielButtons(P, hi) };
 };
