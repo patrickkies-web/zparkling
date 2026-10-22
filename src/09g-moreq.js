@@ -37,6 +37,8 @@ var ENT_PAIRS = [
   ['navi', 'Fragt nach dem Weg', 'Findet es allein'], ['feier', 'Große Party', 'Kleiner Kreis'], ['lotto', 'Lottogewinn: Weltreise', 'Lottogewinn: Haus'], ['fruehstueck', 'Frühstück ausgiebig', 'Frühstück im Gehen']
 ];
 var ENT_NEED = 3;
+/* pairs that are no longer asked; answers already given stay readable */
+var ENT_OUT = [];
 function entPair(id) { return ENT_PAIRS.filter(function (p) { return p[0] === id; })[0] || null; }
 /* how many guests answered which pair about this person (the form counts what is not sent yet too) */
 function entCounts(forId, pend) {
@@ -48,7 +50,7 @@ function entCounts(forId, pend) {
 /* the three pairs for a new card: the ones with the fewest answers so far, in a fixed order, so answers pile up on the same questions */
 function entPick(forId) {
   var c = entCounts(forId, true), seed = strHash('ent:' + (S.collectCode || '') + ':' + (forId || ''));
-  var order = ENT_PAIRS.map(function (p, i) { return { id: p[0], n: c[p[0]] || 0, r: (i * 7919 + seed) % 97 }; });
+  var order = ENT_PAIRS.filter(function (p) { return ENT_OUT.indexOf(p[0]) < 0; }).map(function (p, i) { return { id: p[0], n: c[p[0]] || 0, r: (i * 7919 + seed) % 97 }; });
   order.sort(function (a, b) { return (a.n >= ENT_NEED) - (b.n >= ENT_NEED) || b.n - a.n || a.r - b.r; });
   /* pairs still filling up first (most answers first, so they finish), then fresh ones */
   var open = order.filter(function (x) { return x.n < ENT_NEED; }), full = order.filter(function (x) { return x.n >= ENT_NEED; });

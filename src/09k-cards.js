@@ -70,6 +70,8 @@ var UMFRAGE = [
   ['app', 'Welche App öffnet {N} am häufigsten?', 'z. B. Instagram'],
   ['superkraft', 'Welche Superkraft hätte {N} gern?', 'z. B. Fliegen']
 ];
+/* questions that are no longer asked; answers already given stay readable */
+var UMFRAGE_OUT = [];
 function umfrageQ(id) { return UMFRAGE.filter(function (q) { return q[0] === id; })[0] || null; }
 function umfrageText(id, name) { var q = umfrageQ(id); return q ? q[1].replace(/\{N\}/g, name) : ''; }
 /* one-word answers: the same word in other spelling counts as the same answer */
@@ -130,13 +132,14 @@ function gkUmfragePick() {
   gkSubs().forEach(function (q) { if (q.type === 'umfrage') { var k = (q.forId || '') + '|' + q.qk; cnt[k] = (cnt[k] || 0) + 1; } });
   ids.forEach(function (id) {
     UMFRAGE.forEach(function (q) {
+      if (UMFRAGE_OUT.indexOf(q[0]) >= 0) return;
       var n = cnt[id + '|' + q[0]] || 0;
       if (n >= GK_UMF_CAP) return;
       if (n > best) { best = n; cands = []; }
       if (n === best) cands.push({ forId: id, qk: q[0] });
     });
   });
-  return cands.length ? pick(cands) : { forId: ids[0], qk: pick(UMFRAGE)[0] };
+  return cands.length ? pick(cands) : { forId: ids[0], qk: pick(UMFRAGE.filter(function (q) { return UMFRAGE_OUT.indexOf(q[0]) < 0; }))[0] };
 }
 /* a card put back is used up too: two draws per guest, whatever happens to them */
 function gkLeft() { var P = gPass(); return Math.max(0, GK_MAX - (P.cards || 0) - (P.burned || 0) - (gForm().cards || []).length); }

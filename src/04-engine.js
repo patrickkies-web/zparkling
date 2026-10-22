@@ -655,7 +655,7 @@ function deckOf(cat, list) {
   return d;
 }
 /* safety first: these games pause once a player is halfway to the maximum */
-var RISKY_GAMES = ['treppenhuepfen', 'stufenbecher', 'hahnenkampf', 'sackhuepfen', 'limbo', 'ballonkampf', 'kerzenblind', 'nagel', 'laserparcours', 'klinkenblitz', 'schuhsalat', 'kerzenzwei', 'sockenrutscher', 'eimerhelm', 'blindfuehren'];
+var RISKY_GAMES = ['treppenhuepfen', 'stufenbecher', 'hahnenkampf', 'sackhuepfen', 'limbo', 'ballonkampf', 'kerzenblind', 'nagel', 'laserparcours', 'klinkenblitz', 'schuhsalat', 'kerzenzwei', 'sockenrutscher', 'eimerhelm', 'blindfuehren', 'seiltanz', 'schnick', 'hulahoop', 'lappenbalance', 'sockenklauen', 'besentauziehen', 'schachtelskates'];
 function isRisky(g) { return !!g && RISKY_GAMES.indexOf(g.id) >= 0; }
 function tooTipsy(ids) { var e = E(); if (!e) return false; return (ids || []).some(function (id) { return isFocus(id) && drinksOf(id) >= e.max * 0.5; }); }
 function safeFor(g, ids) { return !isRisky(g) || !tooTipsy(ids); }
